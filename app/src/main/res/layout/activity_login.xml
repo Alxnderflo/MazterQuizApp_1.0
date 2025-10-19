@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="#F5F5F5"
     android:orientation="vertical">
-
     <!-- Espacio de arriba -->
     <View
         android:layout_width="match_parent"
@@ -135,6 +134,7 @@
                 android:textColor="#00E5CC"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
     </LinearLayout>
