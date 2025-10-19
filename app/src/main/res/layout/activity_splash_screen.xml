@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- Fondo con gradiente animado -->
+    <View
+        android:id="@+id/fondoGradiente"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/fondo_gradiente_splash" />
+
+    <!-- Nombre Completo -->
+    <ImageView
+        android:id="@+id/nombreCompleto"
+        android:layout_width="280dp"
+        android:layout_height="200dp"
+        android:contentDescription="@string/app_name"
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/nombre_master_quiz" />
+
+    <!-- Nombre Abreviado -->
+    <ImageView
+        android:id="@+id/nombreAbreviado"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/app_name"
+        android:alpha="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/logo_master_quiz_noback" />
+
+    <!-- Indicador de progreso -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="220dp"
+        android:layout_height="4dp"
+        android:progressTint="#26dad1"
+        android:layout_marginBottom="80dp"
+        android:alpha="0"
+        android:progress="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
