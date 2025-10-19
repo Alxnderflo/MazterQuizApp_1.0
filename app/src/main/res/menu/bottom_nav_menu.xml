@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/Home"
+        android:icon="@drawable/ico_home"
+        android:title="Home" />
+    <item
+        android:id="@+id/Score"
+        android:icon="@drawable/ico_score"
+        android:title="Estadisticas" />
+    <item
+        android:id="@+id/Teacher"
+        android:icon="@drawable/ico_teacher"
+        android:title="Profesor" />
+</menu>

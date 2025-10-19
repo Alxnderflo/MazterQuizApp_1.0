@@ -1,60 +1,83 @@
 package sv.edu.itca.masterquizapp;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import sv.edu.itca.masterquizapp.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
+    ActivityMainBinding binding;
+    private ViewPager2 viewPager;
 
-    private Button btnLogout;
-    private FirebaseAuth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_main);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, 0);
             return insets;
         });
+        configViewPager();
+        configBottomNavigation();
 
-        // Codigo generico para logout
-        btnLogout = findViewById(R.id.btnLogout);
-        auth = FirebaseAuth.getInstance();
+    }
 
-        // Botón de logout simple
-        btnLogout.setOnClickListener(v -> {
-            auth.signOut();
-            Toast.makeText(MainActivity.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-            finish();
+    private void configViewPager() {
+        viewPager = findViewById(R.id.viewPager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+
+        //Agregar fragmentos en orden
+        adapter.addFragment(new HomeFragment());      // Posición 0
+        adapter.addFragment(new ScoreFragment());  // Posición 1
+        adapter.addFragment(new TeacherFragment());   // Posición 2
+
+        viewPager.setAdapter(adapter);
+    }
+
+    private void configBottomNavigation() {
+
+        binding.btnNavView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.Home) {
+                viewPager.setCurrentItem(0, true);
+            } else if (item.getItemId() == R.id.Score) {
+                viewPager.setCurrentItem(1, true);
+            } else if (item.getItemId() == R.id.Teacher) {
+                viewPager.setCurrentItem(2, true);
+            }
+            return true;
         });
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+
+                switch (position) {
+                    case 0:
+                        binding.btnNavView.setSelectedItemId(R.id.Home);
+                        break;
+                    case 1:
+                        binding.btnNavView.setSelectedItemId(R.id.Score);
+                        break;
+                    case 2:
+                        binding.btnNavView.setSelectedItemId(R.id.Teacher);
+                        break;
+                }
+            }
+        });
+
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Verificación básica de sesión
-        if (auth.getCurrentUser() == null) {
-            startActivity(new Intent(this, LoginActivity.class));
-            finish();
-        }
-    }
+
 }
