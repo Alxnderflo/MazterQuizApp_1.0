@@ -26,11 +26,6 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
     private EditText editEmail, editPassword;
@@ -73,6 +68,11 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // Cambiar estado de los botones
+                btnGoogle.setEnabled(false);
+                btnGoogle.setText("Iniciando...");
+                btnLogin.setEnabled(false);
+
                 Intent i = client.getSignInIntent();
                 startActivityForResult(i, RC_SIGN_IN);
             }
@@ -89,6 +89,13 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+                // Cambiar estado de los botones
+                btnLogin.setEnabled(false);
+                btnLogin.setText("Iniciando sesión...");
+                btnGoogle.setEnabled(false);
+                editEmail.setEnabled(false);
+                editPassword.setEnabled(false);
+
                 auth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
@@ -96,6 +103,13 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, MainActivity.class));
                             finish();
                         } else {
+                            // Restaurar estado de los botones en caso de error
+                            btnLogin.setEnabled(true);
+                            btnLogin.setText("Iniciar Sesión");
+                            btnGoogle.setEnabled(true);
+                            editEmail.setEnabled(true);
+                            editPassword.setEnabled(true);
+
                             Toast.makeText(LoginActivity.this, "Error al iniciar sesión", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -128,51 +142,39 @@ public class LoginActivity extends AppCompatActivity {
                                 if (task.isSuccessful()) {
                                     FirebaseUser user = auth.getCurrentUser();
                                     if (user != null) {
-                                        //Verificar si es usuario nuevo
+                                        // Verificar si es usuario nuevo
                                         if (task.getResult().getAdditionalUserInfo().isNewUser()) {
-                                            // Usuario nuevo: guardar en Firestore
-                                            guardarUsuarioEnFirestore(user);
+                                            // USUARIO NUEVO: Redirigir a selección de rol
+                                            Intent intent = new Intent(getApplicationContext(), RoleSelectionActivity.class);
+                                            startActivity(intent);
+                                            finish();
                                         } else {
-                                            // Usuario existente: redirigir directamente
+                                            // USUARIO EXISTENTE: Redirigir directamente
                                             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                                             startActivity(intent);
                                             finish();
                                         }
                                     }
                                 } else {
+                                    // Restaurar estado de los botones si hay errores
+                                    btnGoogle.setEnabled(true);
+                                    btnGoogle.setText("Continuar con Google");
+                                    btnLogin.setEnabled(true);
+
                                     Toast.makeText(LoginActivity.this, "Error en la autenticación: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
 
             } catch (ApiException e) {
+                // Restaurar estado de los botones en caso de error
+                btnGoogle.setEnabled(true);
+                btnGoogle.setText("Continuar con Google");
+                btnLogin.setEnabled(true);
+
                 Toast.makeText(LoginActivity.this, "Error al iniciar sesión con Google: " + e.getMessage(), Toast.LENGTH_LONG).show();
             }
         }
-    }
-
-    // Guardar usuario en Firestore (solo para usuarios nuevos)
-    private void guardarUsuarioEnFirestore(FirebaseUser user) {
-        Map<String, Object> usuario = new HashMap<>();
-        usuario.put("nombre", user.getDisplayName());
-        usuario.put("email", user.getEmail());
-        usuario.put("rol", "estudiante");
-        usuario.put("fechaRegistro", new Date());
-        usuario.put("proveedor", "google");
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("usuarios")
-                .document(user.getUid())
-                .set(usuario)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(LoginActivity.this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                    startActivity(intent);
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(LoginActivity.this, "Error al guardar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
     }
 
     @Override
