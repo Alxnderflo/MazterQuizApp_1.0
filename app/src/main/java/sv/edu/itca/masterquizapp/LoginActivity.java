@@ -100,8 +100,26 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                            finish();
+                            FirebaseUser user = auth.getCurrentUser();
+                            if (user != null) {
+                                // Verificar si el correo está confirmado
+                                if (user.isEmailVerified()) {
+                                    // Correo verificado, permitir acceso
+                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                    finish();
+                                } else {
+                                    // Correo no verificado, mostrar mensaje y cerrar sesión
+                                    auth.signOut();
+                                    Toast.makeText(LoginActivity.this, "Por favor, verifica tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.", Toast.LENGTH_LONG).show();
+
+                                    // Restaurar estado de los botones
+                                    btnLogin.setEnabled(true);
+                                    btnLogin.setText("Iniciar Sesión");
+                                    btnGoogle.setEnabled(true);
+                                    editEmail.setEnabled(true);
+                                    editPassword.setEnabled(true);
+                                }
+                            }
                         } else {
                             // Restaurar estado de los botones en caso de error
                             btnLogin.setEnabled(true);
@@ -182,7 +200,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         // Verificar si ya está logueado
         FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser != null) {
+        if (currentUser != null && currentUser.isEmailVerified()) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
         }
