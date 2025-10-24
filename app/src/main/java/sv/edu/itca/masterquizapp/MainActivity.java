@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private void configBottomNavigation() {
 
         binding.btnNavView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.Home) {
+            if (item.getItemId() == R.id.Inicio) {
                 viewPager.setCurrentItem(0, true);
             } else if (item.getItemId() == R.id.Score) {
                 viewPager.setCurrentItem(1, true);
@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
 
                 switch (position) {
                     case 0:
-                        binding.btnNavView.setSelectedItemId(R.id.Home);
+                        binding.btnNavView.setSelectedItemId(R.id.Inicio);
                         break;
                     case 1:
                         binding.btnNavView.setSelectedItemId(R.id.Score);

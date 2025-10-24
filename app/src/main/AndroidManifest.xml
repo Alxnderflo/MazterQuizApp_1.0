@@ -12,6 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MasterQuizApp">
         <activity
+            android:name=".CrearPreguntasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PreguntasActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CrearQuizzActivity"
+            android:exported="false" />
+        <activity
             android:name=".VerificacionEmailActivity"
             android:exported="false" />
         <activity
@@ -19,13 +28,13 @@
             android:exported="false" />
         <activity
             android:name=".RegistroActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
-            android:windowSoftInputMode="adjustResize"/>
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".SplashScreen"
             android:exported="true">

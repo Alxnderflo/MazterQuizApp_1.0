@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+        <!-- Título principal centrado -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Agregar Preguntas"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+        <!-- Título: Enunciado de la pregunta con asterisco -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enunciado de la pregunta"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Campo de texto: Pregunta -->
+        <EditText
+            android:id="@+id/etPregunta"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Escribe una pregunta"
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#CCCCCC"
+            android:textSize="16sp" />
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+
+        <!-- Título: Respuesta correcta con asterisco -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Respuesta correcta"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Campo de texto: Respuesta correcta -->
+        <EditText
+            android:id="@+id/etRespuestaCorrecta"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Escribe la respuesta correcta"
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#CCCCCC"
+            android:textSize="16sp" />
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+
+        <!-- Título: Respuestas incorrectas con asterisco -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Respuestas incorrectas"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- Campo de texto: Respuesta incorrecta 1 -->
+        <EditText
+            android:id="@+id/etRespuestaIncorrecta1"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Respuesta incorrecta."
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#CCCCCC"
+            android:textSize="16sp" />
+
+        <!-- Campo de texto: Respuesta incorrecta 2 -->
+        <EditText
+            android:id="@+id/etRespuestaIncorrecta2"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Respuesta incorrecta."
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#CCCCCC"
+            android:textSize="16sp" />
+
+        <!-- Campo de texto: Respuesta incorrecta 3 -->
+        <EditText
+            android:id="@+id/etRespuestaIncorrecta3"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="32dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Respuesta incorrecta."
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#CCCCCC"
+            android:textSize="16sp" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+
+        <!-- Botón Guardar Pregunta -->
+        <Button
+            android:id="@+id/btnGuardarPregunta"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#6B7EF7"
+            android:elevation="4dp"
+            android:text="Guardar Pregunta"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</ScrollView>

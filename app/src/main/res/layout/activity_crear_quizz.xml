@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:overScrollMode="always"
+    android:fillViewport="true"
+    android:id="@+id/main">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+        <!-- Título principal centrado -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Crear Nuevo Quiz"
+            android:textColor="#000000"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginBottom="24dp"/>
+        <!-- Título: Título del Quiz con asterisco -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Título del Quiz"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="2dp"
+                android:text="*"
+                android:textColor="#FF0000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <!-- Campo de texto: Título -->
+        <EditText
+            android:id="@+id/etTituloQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Escribe el título"
+            android:inputType="text"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#AAAAAA"
+            android:textSize="16sp" />
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+        <!-- Título: Descripción (Opcional) -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Descripción (Opcional)"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+        <!-- Campo de texto: Descripción -->
+        <EditText
+            android:id="@+id/etDescripcionQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="top|start"
+            android:hint="Describe el tema del quiz"
+            android:inputType="textMultiLine"
+            android:padding="16dp"
+            android:textColor="#333333"
+            android:textColorHint="#AAAAAA"
+            android:textSize="16sp" />
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+        <!-- Título: Portada o imagen -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Portada o imagen"
+            android:textColor="#000000"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+        <!-- Contenedor para subir imagen -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cvImageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="180dp"
+            android:layout_marginBottom="32dp"
+            app:cardBackgroundColor="#FAFAFA"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="2dp">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+                <!-- Ícono de imagen -->
+                <ImageView
+                    android:id="@+id/imgPreview"
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:contentDescription="Subir imagen"
+                    android:src="@drawable/ico_add_img"
+                    app:tint="#6B7EF7" />
+                <!-- Texto opcional -->
+                <TextView
+                    android:id="@+id/tvImgHint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Toca para agregar imagen"
+                    android:textColor="#999999"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+        <!-- Botón Guardar Quiz -->
+        <Button
+            android:id="@+id/btnGuardarQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:backgroundTint="#6B7EF7"
+            android:elevation="4dp"
+            android:text="Guardar Quizz"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>
