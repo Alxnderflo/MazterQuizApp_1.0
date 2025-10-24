@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/Home"
+        android:id="@+id/Inicio"
         android:icon="@drawable/ico_home"
         android:title="Home" />
     <item

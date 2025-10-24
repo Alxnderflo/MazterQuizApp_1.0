@@ -1,6 +1,5 @@
 package sv.edu.itca.masterquizapp;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -8,10 +7,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -19,10 +14,6 @@ import com.google.firebase.auth.FirebaseAuth;
  * create an instance of this fragment.
  */
 public class HomeFragment extends Fragment {
-
-    // Variables para el logout
-    private Button btnLogout;
-    private FirebaseAuth auth;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -62,51 +53,12 @@ public class HomeFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        // Código agregado para inicializar Firebase Auth
-        auth = FirebaseAuth.getInstance();
-
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // INICIO: Código modificado para inicializar componentes del layout
-        // Inflar el layout y guardar la referencia View
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
-        // Inicializar el botón de logout usando la view inflada
-        btnLogout = view.findViewById(R.id.btnLogout);
-
-        btnLogout.setOnClickListener(v -> {
-            auth.signOut();
-            Toast.makeText(getActivity(), "Sesión cerrada", Toast.LENGTH_SHORT).show();
-
-            //Redirigir al login
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-
-            // Cerrar la actividad actual
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
-        });
-        return view;
-
-    }
-
-    //Metodo para verificación de sesión
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Verificar si el usuario no está autenticado
-        if (auth.getCurrentUser() == null) {
-            // Redirigir al login si no hay sesión
-            Intent intent = new Intent(getActivity(), LoginActivity.class);
-            startActivity(intent);
-            if (getActivity() != null) {
-                getActivity().finish();
-            }
-        }
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 }
