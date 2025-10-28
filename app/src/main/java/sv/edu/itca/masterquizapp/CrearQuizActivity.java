@@ -1,8 +1,12 @@
 package sv.edu.itca.masterquizapp;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -35,13 +39,14 @@ import java.util.Map;
 public class CrearQuizActivity extends AppCompatActivity {
     private EditText etTituloQuiz, etDescripcionQuiz;
     private Button btnGuardarQuiz;
-    private CardView cvImageContainer;
+    private CardView cvContenedorImg;
     private ImageView imgPreview;
     private TextView tvImgHint;
     private FirebaseFirestore db;
     private String imagenUrl = null;
-    private static final int PICK_IMAGE_REQUEST = 1;
-    private static final int PERMISSION_REQUEST_CODE = 100;
+    private static final int CODIGO_SELECCION_IMG = 1;
+    private static final int CODIGO_SOLICITUD_PERMISO = 100;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +58,11 @@ public class CrearQuizActivity extends AppCompatActivity {
         etTituloQuiz = findViewById(R.id.etTituloQuiz);
         etDescripcionQuiz = findViewById(R.id.etDescripcionQuiz);
         btnGuardarQuiz = findViewById(R.id.btnGuardarQuiz);
-        cvImageContainer = findViewById(R.id.cvImageContainer);
+        cvContenedorImg = findViewById(R.id.cvImgContenedor);
         imgPreview = findViewById(R.id.imgPreview);
         tvImgHint = findViewById(R.id.tvImgHint);
 
-        cvImageContainer.setOnClickListener(v -> verificarPermisos());
+        cvContenedorImg.setOnClickListener(v -> verificarPermisos());
         btnGuardarQuiz.setOnClickListener(v -> guardarQuiz());
     }
 
@@ -73,7 +78,7 @@ public class CrearQuizActivity extends AppCompatActivity {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (checkSelfPermission(permission) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{permission}, PERMISSION_REQUEST_CODE);
+                requestPermissions(new String[]{permission}, CODIGO_SOLICITUD_PERMISO);
             } else {
                 abrirSelectorImagen();
             }
@@ -89,13 +94,13 @@ public class CrearQuizActivity extends AppCompatActivity {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
-        startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), PICK_IMAGE_REQUEST);
+        startActivityForResult(Intent.createChooser(intent, "Selecciona una imagen"), CODIGO_SELECCION_IMG);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+        if (requestCode == CODIGO_SELECCION_IMG && resultCode == RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
             Log.d("CrearQuiz", "Imagen seleccionada: " + imageUri.toString());
             subirImagen(imageUri);
@@ -104,8 +109,25 @@ public class CrearQuizActivity extends AppCompatActivity {
         }
     }
 
+    //para verificar conexión a internet
+    private boolean hayConexionInternet() {
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (connectivityManager != null) {
+            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+            return activeNetwork != null && activeNetwork.isConnected();
+        }
+        return false;
+    }
+
     private void subirImagen(Uri imageUri) {
         Log.d("CrearQuiz", "Iniciando subida de imagen: " + imageUri.toString());
+
+        // Verificar conexión a internet
+        if (!hayConexionInternet()) {
+            Log.d("CrearQuiz", "Sin conexión a internet, usando imagen por defecto");
+            usarImagenPorDefecto();
+            return;
+        }
 
         // Mostrar indicador de carga
         btnGuardarQuiz.setEnabled(false);
@@ -141,8 +163,8 @@ public class CrearQuizActivity extends AppCompatActivity {
                             // Limpiar el tint del ImageView antes de cargar la imagen
                             imgPreview.setImageTintList(null);
                             Glide.with(CrearQuizActivity.this)
-                                .load(imagenUrl)
-                                .into(imgPreview);
+                                    .load(imagenUrl)
+                                    .into(imgPreview);
                             tvImgHint.setVisibility(View.GONE);
                             btnGuardarQuiz.setEnabled(true);
                             btnGuardarQuiz.setText("Guardar Quiz");
@@ -169,6 +191,26 @@ public class CrearQuizActivity extends AppCompatActivity {
                     }
                 })
                 .dispatch();
+    }
+
+    private void usarImagenPorDefecto() {
+        runOnUiThread(() -> {
+            // Establecer imagen por defecto
+            imagenUrl = null; // Esto hará que use la imagen por defecto del placeholder
+
+            // Mostrar imagen por defecto
+            imgPreview.setImageResource(R.drawable.ico_empty_quiz);
+            imgPreview.setImageTintList(ColorStateList.valueOf(getColor(R.color.colorDefaultImg)));
+            tvImgHint.setVisibility(View.VISIBLE);
+            tvImgHint.setText("Imagen por defecto");
+
+            btnGuardarQuiz.setEnabled(true);
+            btnGuardarQuiz.setText("Guardar Quiz");
+
+            Toast.makeText(this,
+                    "¡Sin conexión a internet. Se usará imagen por defecto.",
+                    Toast.LENGTH_LONG).show();
+        });
     }
 
     private void guardarQuiz() {
@@ -227,7 +269,7 @@ public class CrearQuizActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PERMISSION_REQUEST_CODE) {
+        if (requestCode == CODIGO_SOLICITUD_PERMISO) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 abrirSelectorImagen();
             } else {

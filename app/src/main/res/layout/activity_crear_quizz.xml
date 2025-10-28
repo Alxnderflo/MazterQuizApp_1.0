@@ -103,7 +103,7 @@
             android:textStyle="bold" />
         <!-- Contenedor para subir imagen -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cvImageContainer"
+            android:id="@+id/cvImgContenedor"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_marginBottom="32dp"
