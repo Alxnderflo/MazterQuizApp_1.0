@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -34,6 +35,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class CrearQuizActivity extends AppCompatActivity {
@@ -46,6 +48,10 @@ public class CrearQuizActivity extends AppCompatActivity {
     private String imagenUrl = null;
     private static final int CODIGO_SELECCION_IMG = 1;
     private static final int CODIGO_SOLICITUD_PERMISO = 100;
+
+    //VARIABLES DE EDICIÓN
+    private boolean esEdicion = false;
+    private String quizIdEdit = null;
 
 
     @Override
@@ -61,6 +67,46 @@ public class CrearQuizActivity extends AppCompatActivity {
         cvContenedorImg = findViewById(R.id.cvImgContenedor);
         imgPreview = findViewById(R.id.imgPreview);
         tvImgHint = findViewById(R.id.tvImgHint);
+
+
+        // CAMBIO: Verificar si estamos en modo edición
+        esEdicion = getIntent().getBooleanExtra("MODO_EDICION", false);
+        if (esEdicion) {
+            setTitle("Editar Quiz");
+            quizIdEdit = getIntent().getStringExtra("quiz_id");
+            String titulo = getIntent().getStringExtra("quiz_titulo");
+            String descripcion = getIntent().getStringExtra("quiz_descripcion");
+            imagenUrl = getIntent().getStringExtra("quiz_imagenUrl");
+
+            etTituloQuiz.setText(titulo);
+            etDescripcionQuiz.setText(descripcion);
+
+            // Cargar la imagen si existe
+            if (imagenUrl != null && !imagenUrl.isEmpty()) {
+                // Limpiar el tint del ImageView antes de cargar la imagen
+                imgPreview.setImageTintList(null);
+                // Ajustar el tamaño del ImageView para que ocupe todo el contenedor
+                imgPreview.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                imgPreview.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                imgPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                imgPreview.requestLayout();
+                Glide.with(this)
+                        .load(imagenUrl)
+                        .into(imgPreview);
+                tvImgHint.setVisibility(View.GONE);
+            } else {
+                // Restaurar el tamaño original del ícono
+                imgPreview.getLayoutParams().width = (int) (64 * getResources().getDisplayMetrics().density);
+                imgPreview.getLayoutParams().height = (int) (64 * getResources().getDisplayMetrics().density);
+                imgPreview.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                imgPreview.requestLayout();
+                imgPreview.setImageResource(R.drawable.ico_empty_quiz);
+                imgPreview.setImageTintList(ColorStateList.valueOf(getColor(R.color.colorDefaultImg)));
+                tvImgHint.setVisibility(View.VISIBLE);
+            }
+        } else {
+            setTitle("Crear Quiz");
+        }
 
         cvContenedorImg.setOnClickListener(v -> verificarPermisos());
         btnGuardarQuiz.setOnClickListener(v -> guardarQuiz());
@@ -162,12 +208,17 @@ public class CrearQuizActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             // Limpiar el tint del ImageView antes de cargar la imagen
                             imgPreview.setImageTintList(null);
+                            // Ajustar el tamaño del ImageView para que ocupe todo el contenedor
+                            imgPreview.getLayoutParams().width = ViewGroup.LayoutParams.MATCH_PARENT;
+                            imgPreview.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                            imgPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            imgPreview.requestLayout();
                             Glide.with(CrearQuizActivity.this)
                                     .load(imagenUrl)
                                     .into(imgPreview);
                             tvImgHint.setVisibility(View.GONE);
                             btnGuardarQuiz.setEnabled(true);
-                            btnGuardarQuiz.setText("Guardar Quiz");
+                            btnGuardarQuiz.setText(esEdicion ? "Actualizar Quiz" : "Guardar Quiz");
                             Toast.makeText(CrearQuizActivity.this, "Imagen subida exitosamente", Toast.LENGTH_SHORT).show();
                         });
                     }
@@ -180,7 +231,7 @@ public class CrearQuizActivity extends AppCompatActivity {
                         runOnUiThread(() -> {
                             Toast.makeText(CrearQuizActivity.this, "Error al subir imagen: " + error.getDescription(), Toast.LENGTH_SHORT).show();
                             btnGuardarQuiz.setEnabled(true);
-                            btnGuardarQuiz.setText("Guardar Quiz");
+                            btnGuardarQuiz.setText(esEdicion ? "Actualizar Quiz" : "Guardar Quiz");
                         });
                     }
 
@@ -205,7 +256,7 @@ public class CrearQuizActivity extends AppCompatActivity {
             tvImgHint.setText("Imagen por defecto");
 
             btnGuardarQuiz.setEnabled(true);
-            btnGuardarQuiz.setText("Guardar Quiz");
+            btnGuardarQuiz.setText(esEdicion ? "Actualizar Quiz" : "Guardar Quiz");
 
             Toast.makeText(this,
                     "¡Sin conexión a internet. Se usará imagen por defecto.",
@@ -239,24 +290,44 @@ public class CrearQuizActivity extends AppCompatActivity {
                         String userNombre = documentSnapshot.getString("nombre");
                         String userRol = documentSnapshot.getString("rol");
 
-                        DocumentReference nuevoDocumento = db.collection("quizzes").document();
-                        String nuevoId = nuevoDocumento.getId();
+                        //codigo para edicion
+                        if (esEdicion) {
+                            DocumentReference documentoQuiz = db.collection("quizzes").document(quizIdEdit);
 
-                        Quiz quiz = new Quiz(titulo, descripcion, imagenUrl, userId, userNombre, userRol);
+                            //Actualizar los campos editabes
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("titulo", titulo);
+                            updates.put("descripcion", descripcion);
+                            updates.put("imagenUrl", imagenUrl);
 
-                        nuevoDocumento.set(quiz)
-                                .addOnSuccessListener(aVoid -> {
-                                    Log.d("CrearQuiz", "Quiz guardado en Firestore");
-                                })
-                                .addOnFailureListener(e -> {
-                                    Log.e("CrearQuiz", "Error al sincronizar: " + e.getMessage());
-                                });
+                            documentoQuiz.update(updates).
+                                    addOnSuccessListener(aVoid -> {
+                                        Toast.makeText(this, "Quizz actualizado exitosamente", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    });
 
-                        Toast.makeText(this, "Quiz guardado exitosamente", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
-                        intent.putExtra("quiz_id", nuevoId);
-                        startActivity(intent);
-                        finish();
+                        } else {
+
+                            // Modo creación: crear un nuevo quiz
+                            DocumentReference nuevoDocumento = db.collection("quizzes").document();
+                            String nuevoId = nuevoDocumento.getId();
+
+                            Quiz quiz = new Quiz(titulo, descripcion, imagenUrl, userId, userNombre, userRol);
+
+                            nuevoDocumento.set(quiz)
+                                    .addOnSuccessListener(aVoid -> {
+                                        Log.d("CrearQuiz", "Quiz guardado en Firestore");
+                                        Toast.makeText(this, "Quiz guardado exitosamente", Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
+                                        intent.putExtra("quiz_id", nuevoId);
+                                        startActivity(intent);
+                                        finish();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("CrearQuiz", "Error al sincronizar: " + e.getMessage());
+                                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                    });
+                        }
                     } else {
                         Toast.makeText(this, "Error: No se encontraron datos del usuario", Toast.LENGTH_SHORT).show();
                     }
@@ -264,6 +335,7 @@ public class CrearQuizActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error al obtener datos del usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
+
     }
 
     @Override

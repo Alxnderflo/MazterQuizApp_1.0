@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,15 +25,25 @@ public class QuizzesAdapter extends RecyclerView.Adapter<QuizzesAdapter.ViewHold
         void onQuizClick(Quiz quiz, String quizId);
     }
 
-    private List<Quiz> listaQuizzes;
-    private List<String> listaQuizzesIds;
-    private Context contexto;
-    private OnQuizClickListener listener;
+    public interface OnQuizMenuClickListener {
+        void onEditQuiz(Quiz quiz, String quizId);
 
-    public QuizzesAdapter(List<Quiz> listaQuizzes, Context context, OnQuizClickListener listener) {
+        void onDeleteQuiz(Quiz quiz, String quizId);
+
+    }
+
+
+    private final List<Quiz> listaQuizzes;
+    private final List<String> listaQuizzesIds;
+    private final Context contexto;
+    private final OnQuizClickListener listener;
+    private OnQuizMenuClickListener menuListener; //listener para ell menu de 3 puntitos
+
+    public QuizzesAdapter(List<Quiz> listaQuizzes, Context context, OnQuizClickListener listener, OnQuizMenuClickListener menuListener) {
         this.listaQuizzes = listaQuizzes;
         this.contexto = context;
         this.listener = listener;
+        this.menuListener = menuListener;
         this.listaQuizzesIds = new ArrayList<>();
     }
 
@@ -79,7 +91,37 @@ public class QuizzesAdapter extends RecyclerView.Adapter<QuizzesAdapter.ViewHold
                 listener.onQuizClick(quiz, quizId);
             }
         });
+        holder.btnMore.setOnClickListener(v -> {
+            if (quizId != null) {
+                mostrarMenuContextual(v, quiz, quizId);
+
+            }
+        });
+
     }
+
+    private void mostrarMenuContextual(View v, Quiz quiz, String quizId) {
+        PopupMenu popupMenu = new PopupMenu(contexto, v);
+        popupMenu.inflate(R.menu.menu_quiz_item);
+        popupMenu.setOnMenuItemClickListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.mquiz_edit) {
+                if (menuListener != null) {
+                    menuListener.onEditQuiz(quiz, quizId);
+                }
+                return true;
+            } else if (id == R.id.mquizz_delete) {
+                if (menuListener != null) {
+                    menuListener.onDeleteQuiz(quiz, quizId);
+                }
+                return true;
+            }
+            return false;
+        });
+        popupMenu.show();
+
+    }
+
 
     @Override
     public int getItemCount() {
@@ -91,6 +133,7 @@ public class QuizzesAdapter extends RecyclerView.Adapter<QuizzesAdapter.ViewHold
         TextView txtTitulo;
         TextView txtNumPreguntas;
         TextView txtFecha;
+        ImageButton btnMore;
 
         public ViewHolderQuiz(@NonNull View itemView) {
             super(itemView);
@@ -98,6 +141,8 @@ public class QuizzesAdapter extends RecyclerView.Adapter<QuizzesAdapter.ViewHold
             txtTitulo = itemView.findViewById(R.id.txtQuizT);
             txtNumPreguntas = itemView.findViewById(R.id.txtContarP);
             txtFecha = itemView.findViewById(R.id.txtFechaQ);
+            btnMore = itemView.findViewById(R.id.btnMore);
+
         }
     }
 }

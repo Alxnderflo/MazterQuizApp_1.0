@@ -38,7 +38,8 @@ public class HomeFragment extends Fragment {
     private LinearLayout layoutVacio;
     private EditText searchBar;
 
-    public HomeFragment() {}
+    public HomeFragment() {
+    }
 
     public static HomeFragment newInstance() {
         return new HomeFragment();
@@ -92,6 +93,24 @@ public class HomeFragment extends Fragment {
                     Log.e("HomeFragment", "quizId es null o vacío");
                 }
             }
+        }, new QuizzesAdapter.OnQuizMenuClickListener() {
+            @Override
+            public void onEditQuiz(Quiz quiz, String quizId) {
+                //iniciar el activity en modo edición
+                Intent ventana = new Intent(getActivity(), CrearQuizActivity.class);
+                ventana.putExtra("MODO_EDICION", true);
+                ventana.putExtra("quiz_id", quizId);
+                ventana.putExtra("quiz_titulo", quiz.getTitulo());
+                ventana.putExtra("quiz_descripcion", quiz.getDescripcion());
+                ventana.putExtra("quiz_imagenUrl", quiz.getImagenUrl());
+                startActivity(ventana);
+            }
+
+            @Override
+            public void onDeleteQuiz(Quiz quiz, String quizId) {
+                //BORRAR IMPLEMENTA DESPUES
+
+            }
         });
         rvQuizzes.setAdapter(adapterQuizzes);
 
@@ -116,38 +135,35 @@ public class HomeFragment extends Fragment {
         }
         String userId = currentUser.getUid();
 
-        bd.collection("quizzes")
-                .whereEqualTo("userId", userId)
-                .orderBy("fechaCreacion", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        if (error != null) {
-                            Log.e("HomeFragment", "Error cargando quizzes: " + error.getMessage());
-                            return;
-                        }
-                        if (value != null) {
-                            listaQuizzes.clear();
-                            listaQuizzesIds.clear();
-                            for (DocumentSnapshot snapshot : value.getDocuments()) {
-                                Quiz quiz = snapshot.toObject(Quiz.class);
-                                if (quiz != null) {
-                                    listaQuizzes.add(quiz);
-                                    listaQuizzesIds.add(snapshot.getId());
-                                }
-                            }
-                            adapterQuizzes.actualizarIds(listaQuizzesIds);
-                            adapterQuizzes.notifyDataSetChanged();
-
-                            if (listaQuizzes.isEmpty()) {
-                                layoutVacio.setVisibility(View.VISIBLE);
-                                rvQuizzes.setVisibility(View.GONE);
-                            } else {
-                                layoutVacio.setVisibility(View.GONE);
-                                rvQuizzes.setVisibility(View.VISIBLE);
-                            }
+        bd.collection("quizzes").whereEqualTo("userId", userId).orderBy("fechaCreacion", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("HomeFragment", "Error cargando quizzes: " + error.getMessage());
+                    return;
+                }
+                if (value != null) {
+                    listaQuizzes.clear();
+                    listaQuizzesIds.clear();
+                    for (DocumentSnapshot snapshot : value.getDocuments()) {
+                        Quiz quiz = snapshot.toObject(Quiz.class);
+                        if (quiz != null) {
+                            listaQuizzes.add(quiz);
+                            listaQuizzesIds.add(snapshot.getId());
                         }
                     }
-                });
+                    adapterQuizzes.actualizarIds(listaQuizzesIds);
+                    adapterQuizzes.notifyDataSetChanged();
+
+                    if (listaQuizzes.isEmpty()) {
+                        layoutVacio.setVisibility(View.VISIBLE);
+                        rvQuizzes.setVisibility(View.GONE);
+                    } else {
+                        layoutVacio.setVisibility(View.GONE);
+                        rvQuizzes.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
     }
 }
