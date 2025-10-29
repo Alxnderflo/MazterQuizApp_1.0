@@ -17,6 +17,8 @@ public class CrearPreguntasActivity extends AppCompatActivity {
     private Button btnGuardarPregunta;
     private FirebaseFirestore db;
     private String quizId;
+    private String preguntaIdEdicion; // CAMBIO: ID de la pregunta en modo edición
+    private boolean esModoEdicion = false; // CAMBIO: Bandera para modo edición
 
     public static Intent newIntent(Context context, String quizId) {
         Intent intent = new Intent(context, CrearPreguntasActivity.class);
@@ -44,6 +46,26 @@ public class CrearPreguntasActivity extends AppCompatActivity {
         etRespuestaIncorrecta3 = findViewById(R.id.etRespuestaIncorrecta3);
         btnGuardarPregunta = findViewById(R.id.btnGuardarPregunta);
 
+        // CAMBIO: Verificar si estamos en modo edición
+        esModoEdicion = getIntent().getBooleanExtra("MODO_EDICION", false);
+        if (esModoEdicion) {
+            setTitle("Editar Pregunta");
+            preguntaIdEdicion = getIntent().getStringExtra("pregunta_id");
+            String enunciado = getIntent().getStringExtra("pregunta_enunciado");
+            String correcta = getIntent().getStringExtra("pregunta_correcta");
+            String incorrecta1 = getIntent().getStringExtra("pregunta_incorrecta1");
+            String incorrecta2 = getIntent().getStringExtra("pregunta_incorrecta2");
+            String incorrecta3 = getIntent().getStringExtra("pregunta_incorrecta3");
+
+            etPregunta.setText(enunciado);
+            etRespuestaCorrecta.setText(correcta);
+            etRespuestaIncorrecta1.setText(incorrecta1);
+            etRespuestaIncorrecta2.setText(incorrecta2);
+            etRespuestaIncorrecta3.setText(incorrecta3);
+        } else {
+            setTitle("Crear Pregunta");
+        }
+
         btnGuardarPregunta.setOnClickListener(v -> guardarPregunta());
     }
 
@@ -59,30 +81,73 @@ public class CrearPreguntasActivity extends AppCompatActivity {
             return;
         }
 
+        // CAMBIO: Decidir si actualizar o crear nueva
+        if (esModoEdicion) {
+            actualizarPregunta(existingPregunta -> {
+                // Actualizar la pregunta existente
+                existingPregunta.setEnunciado(enunciado);
+                existingPregunta.setCorrecta(correcta);
+                existingPregunta.setIncorrecta1(incorrecta1);
+                existingPregunta.setIncorrecta2(incorrecta2);
+                existingPregunta.setIncorrecta3(incorrecta3);
+                // El orden se mantiene
+
+                db.collection("quizzes").document(quizId)
+                        .collection("preguntas").document(preguntaIdEdicion)
+                        .set(existingPregunta)
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(CrearPreguntasActivity.this, "Pregunta actualizada", Toast.LENGTH_SHORT).show();
+                            finish(); // CAMBIO: Cerrar la actividad después de actualizar
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(CrearPreguntasActivity.this, "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            });
+        } else {
+            // Modo creación: crear nueva pregunta
+            db.collection("quizzes").document(quizId)
+                    .collection("preguntas")
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        int orden = queryDocumentSnapshots.size() + 1;
+
+                        Pregunta pregunta = new Pregunta(enunciado, correcta, incorrecta1, incorrecta2, incorrecta3, orden);
+
+                        db.collection("quizzes").document(quizId)
+                                .collection("preguntas")
+                                .add(pregunta)
+                                .addOnSuccessListener(documentReference -> {
+                                    actualizarContadorPreguntas(orden);
+                                    Toast.makeText(CrearPreguntasActivity.this, "Pregunta guardada", Toast.LENGTH_SHORT).show();
+                                    limpiarCampos();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("CrearPregunta", "Error al sincronizar: " + e.getMessage());
+                                });
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("CrearPregunta", "Error al obtener el número de preguntas: " + e.getMessage());
+                    });
+        }
+    }
+
+    // CAMBIO: Metodo para obtener la pregunta existente y luego actualizarla
+    private void actualizarPregunta(final FirestoreCallback<Pregunta> callback) {
         db.collection("quizzes").document(quizId)
-                .collection("preguntas")
+                .collection("preguntas").document(preguntaIdEdicion)
                 .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int orden = queryDocumentSnapshots.size() + 1;
-
-                    Pregunta pregunta = new Pregunta(enunciado, correcta, incorrecta1, incorrecta2, incorrecta3, orden);
-
-                    db.collection("quizzes").document(quizId)
-                            .collection("preguntas")
-                            .add(pregunta)
-                            .addOnSuccessListener(documentReference -> {
-                                actualizarContadorPreguntas(orden);
-                            })
-                            .addOnFailureListener(e -> {
-                                Log.e("CrearPregunta", "Error al sincronizar: " + e.getMessage());
-                            });
-
-                    Toast.makeText(this, "Pregunta guardada localmente", Toast.LENGTH_SHORT).show();
-                    limpiarCampos();
+                .addOnSuccessListener(documentSnapshot -> {
+                    Pregunta existingPregunta = documentSnapshot.toObject(Pregunta.class);
+                    callback.onCallback(existingPregunta);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("CrearPregunta", "Error al obtener el número de preguntas: " + e.getMessage());
+                    Toast.makeText(this, "Error al cargar pregunta existente", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    // CAMBIO: Interfaz para el callback de Firestore
+    private interface FirestoreCallback<T> {
+        void onCallback(T data);
     }
 
     private void actualizarContadorPreguntas(int nuevoContador) {
