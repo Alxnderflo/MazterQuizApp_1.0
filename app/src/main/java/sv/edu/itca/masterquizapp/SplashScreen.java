@@ -77,7 +77,7 @@ public class SplashScreen extends Activity {
         progressFadeIn.start();
 
         // Animar barra de progreso
-        ObjectAnimator progressAnim = ObjectAnimator.ofInt(progressBar, "progress", 0, 80);
+        ObjectAnimator progressAnim = ObjectAnimator.ofInt(progressBar, "progress", 0, 20);
         progressAnim.setDuration(DURACION_NOMBRE_COMPLETO);
         progressAnim.start();
     }
@@ -122,7 +122,7 @@ public class SplashScreen extends Activity {
         setIn.start();
 
         // Continuar la barra de progreso
-        ObjectAnimator progressAnim = ObjectAnimator.ofInt(progressBar, "progress", 80, 100);
+        ObjectAnimator progressAnim = ObjectAnimator.ofInt(progressBar, "progress", 20, 100);
         progressAnim.setDuration(DURACION_NOMBRE_ABREVIADO);
         progressAnim.start();
     }
