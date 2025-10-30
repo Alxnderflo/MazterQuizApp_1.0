@@ -9,10 +9,13 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:elevation="4dp"
-        app:cardBackgroundColor="#B5B8E8"
-        app:cardCornerRadius="20dp">
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="6dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -23,9 +26,9 @@
 
             <!-- Contenedor de imagen con fondo redondeado -->
             <androidx.cardview.widget.CardView
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                app:cardBackgroundColor="#E8E8F0"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                app:cardBackgroundColor="#E8E8F4"
                 app:cardCornerRadius="12dp"
                 app:cardElevation="0dp">
 
@@ -42,7 +45,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
+                android:layout_marginStart="14dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -58,50 +61,75 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:ellipsize="end"
-                        android:maxLines="2"
+                        android:maxLines="1"
                         android:text="Título del quiz"
-                        android:textColor="#3D3D5C"
-                        android:textSize="18sp"
+                        android:textColor="#1F1F1F"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <!-- Botón de 3 puntitos para menú -->
                     <ImageButton
                         android:id="@+id/btnMore"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_marginStart="8dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Más opciones"
                         android:padding="4dp"
                         android:src="@drawable/ico_more_vert"
-                        app:tint="#3D3D5C"
-                        tools:ignore="TouchTargetSizeCheck" />
+                        app:tint="#7A7A7A" />
 
                 </LinearLayout>
 
+                <!-- Información del quiz -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <!-- Icono de lista para preguntas -->
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ico_list"
+                        app:tint="#9E9E9E"
+                        android:contentDescription="Preguntas icon" />
 
                     <TextView
                         android:id="@+id/txtContarP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="4dp"
                         android:text="num de preguntas"
-                        android:textColor="#3D3D5C"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textColor="#7A7A7A"
+                        android:textSize="13sp" />
+
+                    <!-- Separador vertical -->
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="12dp"
+                        android:layout_marginStart="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="#E0E0E0" />
+
+                    <!-- Icono de calendario -->
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:src="@drawable/ico_date"
+                        app:tint="#9E9E9E"
+                        android:contentDescription="Fecha icon" />
 
                     <TextView
                         android:id="@+id/txtFechaQ"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
+                        android:layout_marginStart="4dp"
                         android:text="fecha de creación"
-                        android:textColor="#3D3D5C"
-                        android:textSize="14sp" />
+                        android:textColor="#7A7A7A"
+                        android:textSize="13sp" />
 
                 </LinearLayout>
 
@@ -110,14 +138,5 @@
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <!-- Línea divisoria debajo del CardView -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
-        android:background="#E0E0E0" />
 
 </LinearLayout>
