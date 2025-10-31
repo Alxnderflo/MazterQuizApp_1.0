@@ -1,19 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
-
     <!-- Permisos de Internet -->
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
-    <!-- Permisos para seleccionar imágenes (opcional según la versión de Android) -->
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" />
-    <!-- Para Android 13+ (API 33+) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-
-    <!-- Permisos para cámara (si quieres tomar fotos) -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- Permisos para seleccionar imágenes (opcional según la versión de Android) -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" /> <!-- Para Android 13+ (API 33+) -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" /> <!-- Permisos para cámara (si quieres tomar fotos) -->
     <uses-permission android:name="android.permission.CAMERA" />
+
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
@@ -24,6 +20,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MasterQuizApp">
+        <activity
+            android:name=".ResultadosActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResolverQuizActivity"
+            android:exported="false" />
         <activity
             android:name=".CrearPreguntasActivity"
             android:exported="false" />

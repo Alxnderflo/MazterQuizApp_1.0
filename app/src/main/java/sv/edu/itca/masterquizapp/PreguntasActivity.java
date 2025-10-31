@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +36,8 @@ public class PreguntasActivity extends AppCompatActivity {
     private Button btnAdd, btnCrearPregunta;
     private PreguntasAdapter adapter;
     private List<Pregunta> listaPreguntas;
-    private List<String> listaPreguntasIds; // CAMBIO: Lista de IDs
+    private MaterialButton btnIniciarQuiz; // CAMBIO: Agregar referencia al botón
+    private List<String> listaPreguntasIds; // CAMBIO-CRUD: Lista de IDs
     private FirebaseFirestore db;
     private String quizId;
 
@@ -84,8 +86,9 @@ public class PreguntasActivity extends AppCompatActivity {
         tvHeaderFecha = findViewById(R.id.tvHeaderFecha);
 
         rvQuestions.setLayoutManager(new LinearLayoutManager(this));
+        btnIniciarQuiz = findViewById(R.id.btnIniciarQuiz);
 
-        // CAMBIO: Inicializar el adapter con los listeners
+        // CAMBIO-CRUD: Inicializar el adapter con los listeners
         adapter = new PreguntasAdapter(listaPreguntas, new PreguntasAdapter.OnPreguntaClickListener() {
             @Override
             public void onPreguntaClick(Pregunta pregunta, String preguntaId, int position) {
@@ -105,7 +108,7 @@ public class PreguntasActivity extends AppCompatActivity {
         }, new PreguntasAdapter.OnPreguntaDeleteListener() {
             @Override
             public void onPreguntaDeleteClick(Pregunta pregunta, String preguntaId, int position) {
-                // CAMBIO: Mostrar diálogo de confirmación para eliminar
+                // CAMBIO-CRUD: Mostrar diálogo de confirmación para eliminar
                 mostrarDialogoConfirmacionEliminacion(pregunta, preguntaId, position);
             }
         });
@@ -113,9 +116,27 @@ public class PreguntasActivity extends AppCompatActivity {
 
         btnAdd.setOnClickListener(v -> abrirCrearPregunta());
         btnCrearPregunta.setOnClickListener(v -> abrirCrearPregunta());
+
+        // CAMBIO-QUIZ: Configurar el clic del botón Iniciar Quiz
+        btnIniciarQuiz.setOnClickListener(v -> {
+            if (listaPreguntas.size() >= 5) {
+                iniciarResolverQuiz();
+            } else {
+                Toast.makeText(this, "Se necesitan al menos 5 preguntas para iniciar el quiz", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    // CAMBIO: Método para mostrar diálogo de confirmación de eliminación
+    //CAMBIO-QUIZ: Metodo para iniciar el ResolverQuizActivity
+    private void iniciarResolverQuiz() {
+        Intent intent = new Intent(this, ResolverQuizActivity.class);
+        intent.putExtra("quiz_id", quizId);
+        intent.putExtra("quiz_titulo", tvHeaderT.getText().toString());
+        intent.putExtra("total_preguntas", listaPreguntas.size());
+        startActivity(intent);
+    }
+
+    // CAMBIO-CRUD: Metodo para mostrar diálogo de confirmación de eliminación
     private void mostrarDialogoConfirmacionEliminacion(Pregunta pregunta, String preguntaId, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Eliminar Pregunta");
@@ -127,11 +148,11 @@ public class PreguntasActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
-        // CAMBIO: Personalizar el color del botón eliminar
+        // CAMBIO-CRUD: Personalizar el color del botón eliminar
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
     }
 
-    // CAMBIO: Metodo para eliminar una pregunta
+    //CAMBIO-CRUD: Metodo para eliminar una pregunta
     private void eliminarPregunta(String preguntaId, int position) {
         db.collection("quizzes").document(quizId)
                 .collection("preguntas").document(preguntaId)
@@ -146,7 +167,7 @@ public class PreguntasActivity extends AppCompatActivity {
                 });
     }
 
-    // CAMBIO: Metodo para actualizar el contador de preguntas y reordenar las restantes
+    // CAMBIO-CRUD: Metodo para actualizar el contador de preguntas y reordenar las restantes
     private void actualizarContadorYReordenar() {
         // Volver a cargar las preguntas para reordenar y actualizar el contador
         cargarPreguntas();
@@ -201,29 +222,36 @@ public class PreguntasActivity extends AppCompatActivity {
                         }
                         if (value != null && !value.isEmpty()) {
                             listaPreguntas.clear();
-                            listaPreguntasIds.clear(); // CAMBIO: Limpiar la lista de IDs
+                            listaPreguntasIds.clear();
                             for (DocumentSnapshot snapshot : value.getDocuments()) {
                                 Pregunta pregunta = snapshot.toObject(Pregunta.class);
                                 if (pregunta != null) {
                                     listaPreguntas.add(pregunta);
-                                    listaPreguntasIds.add(snapshot.getId()); // CAMBIO: Guardar el ID
+                                    listaPreguntasIds.add(snapshot.getId());
                                 }
                             }
-                            adapter.actualizarIds(listaPreguntasIds); // CAMBIO: Actualizar los IDs en el adapter
+                            adapter.actualizarIds(listaPreguntasIds);
                             adapter.notifyDataSetChanged();
                             mostrarListaPreguntas();
 
-                            // CAMBIO: Actualizar el contador de preguntas en el quiz (por si hay discrepancias)
+                            // CAMBIO-QUIZ: Actualizar visibilidad del botón Iniciar Quiz
+                            if (listaPreguntas.size() >= 5 && listaPreguntas.size() <= 20) {
+                                btnIniciarQuiz.setVisibility(View.VISIBLE);
+                            } else {
+                                btnIniciarQuiz.setVisibility(View.GONE);
+                            }
+
                             actualizarContadorPreguntasEnQuiz(listaPreguntas.size());
                         } else {
                             mostrarVistaVacia();
+                            btnIniciarQuiz.setVisibility(View.GONE); // CAMBIO-QUIZ: Ocultar botón si no hay preguntas
                             actualizarContadorPreguntasEnQuiz(0);
                         }
                     }
                 });
     }
 
-    // CAMBIO: Metodo para actualizar el contador de preguntas en el quiz
+    // CAMBIO-CRUD: Metodo para actualizar el contador de preguntas en el quiz
     private void actualizarContadorPreguntasEnQuiz(int nuevoContador) {
         db.collection("quizzes").document(quizId)
                 .update("numPreguntas", nuevoContador)

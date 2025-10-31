@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--activity_resolver_quiz.xml-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <!-- ViewPager2 para las preguntas-->
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/vpPreguntas"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <!-- Botón Continuar oculto hasta que el usuario seleccione una opción-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnContinuarQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:layout_margin="20dp"
+            android:text="Continuar"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:backgroundTint="#6B7EF7"
+            app:cornerRadius="12dp"
+            app:elevation="0dp" />
+
+    </LinearLayout>
+
+</FrameLayout>

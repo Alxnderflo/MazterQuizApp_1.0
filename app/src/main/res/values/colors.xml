@@ -3,4 +3,11 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorDefaultImg">#6B7EF7</color>
+
+    <!-- CAMBIO-QUIZ: Colores para el sistema de quizzes -->
+    <color name="color_correcta">#E8F5E9</color>
+    <color name="color_incorrecta">#FFEBEE</color>
+    <color name="color_borde_inicial">#E0E0E0</color>
+    <color name="color_texto_inicial">#2D2D2D</color>
 </resources>
+
