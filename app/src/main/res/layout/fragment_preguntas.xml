@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--fragment_preguntas.xml-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F5F9"
+    android:orientation="vertical">
+
+    <!-- HEADER MORADO que cubre gran parte de la pantalla -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="340dp"
+        android:background="@drawable/gradient_header"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="16dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="40dp">
+
+        <!-- Barra de progreso DENTRO del header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp">
+
+            <ProgressBar
+                android:id="@+id/barraProgreso"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="0dp"
+                android:layout_height="6dp"
+                android:layout_weight="1"
+                android:max="20"
+                android:progress="1"
+                android:progressBackgroundTint="#8B7EF7"
+                android:progressTint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tvProgreso"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="1/20"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Título del quiz -->
+        <TextView
+            android:id="@+id/ivTituloQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="Título del quiz"
+            android:textColor="@android:color/white"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <!-- Número de pregunta -->
+        <TextView
+            android:id="@+id/tvNumPreguntaQuiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="Pregunta: 1"
+            android:textColor="@android:color/white"
+            android:textSize="14sp" />
+
+        <!-- Card blanco interno con el enunciado -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@android:color/white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp">
+
+            <TextView
+                android:id="@+id/tvEnunciadoPregunta"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:gravity="center"
+                android:lineSpacingExtra="2dp"
+                android:padding="24dp"
+                android:text="¿Cuál es la capital de francia?"
+                android:textColor="#2D2D2D"
+                android:textSize="25sp" />
+
+        </com.google.android.material.card.MaterialCardView>
+
+    </LinearLayout>
+
+    <!-- OPCIONES FUERA DEL HEADER (sobre fondo gris) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="20dp">
+
+        <!--Opciones para preguntas, la respuesta correcta se le asignará a uno de ellos en orden aleatorio y las demás serán las incorrectas-->
+        <!-- Opción A -->
+
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpcionA"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="A. Respuesta A"
+            android:textAlignment="textStart"
+            android:textColor="#2D2D2D"
+            android:textSize="14sp"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            app:strokeColor="#E0E0E0"
+            app:strokeWidth="2dp" />
+
+        <!-- Opción B -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpcionB"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="B. Respuesta B"
+            android:textAlignment="textStart"
+            android:textColor="#2D2D2D"
+            android:textSize="14sp"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            app:strokeColor="#E0E0E0"
+            app:strokeWidth="2dp" />
+
+        <!-- Opción C -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpcionC"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="12dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="C. Respuesta C"
+            android:textAlignment="textStart"
+            android:textColor="#2D2D2D"
+            android:textSize="14sp"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            app:strokeColor="#E0E0E0"
+            app:strokeWidth="2dp" />
+
+        <!-- Opción D -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpcionD"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="D. Respuesta D"
+            android:textAlignment="textStart"
+            android:textColor="#2D2D2D"
+            android:textSize="14sp"
+            app:backgroundTint="@android:color/white"
+            app:cornerRadius="12dp"
+            app:elevation="0dp"
+            app:strokeColor="#E0E0E0"
+            app:strokeWidth="2dp" />
+
+    </LinearLayout>
+
+</LinearLayout>

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#7FC1AF">
+    android:background="#F5F5F9">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -13,16 +13,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical">
 
-            <!-- Contenedor superior con esquinas inferiores redondeadas -->
+            <!-- Contenedor superior con gradiente y esquinas inferiores redondeadas -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/gradient_header"
                 android:orientation="vertical"
-                android:paddingBottom="20dp">
+                android:paddingTop="16dp"
+                android:paddingBottom="32dp">
 
                 <!-- Título MasterQuiz -->
                 <TextView
@@ -30,37 +30,38 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginStart="24dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="20dp"
                     android:text="MasterQuiz"
                     android:textColor="@android:color/white"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                    android:textSize="28sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02" />
 
                 <!-- Barra de búsqueda -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    android:layout_height="50dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    app:cardCornerRadius="25dp"
+                    app:cardElevation="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center_vertical"
                         android:orientation="horizontal"
-                        android:paddingStart="16dp"
-                        android:paddingEnd="16dp">
+                        android:paddingStart="20dp"
+                        android:paddingEnd="20dp"
+                        android:background="@android:color/white">
 
                         <ImageView
                             android:layout_width="20dp"
                             android:layout_height="20dp"
                             android:contentDescription="Search Icon"
                             android:src="@drawable/ico_search"
-                            app:tint="#9E9E9E" />
+                            app:tint="#B0B0B0" />
 
                         <EditText
                             android:id="@+id/searchBar"
@@ -73,8 +74,9 @@
                             android:imeOptions="actionSearch"
                             android:importantForAutofill="no"
                             android:inputType="text"
-                            android:textColorHint="#9E9E9E"
-                            android:textSize="16sp" />
+                            android:textColor="#2D2D2D"
+                            android:textColorHint="#B0B0B0"
+                            android:textSize="15sp" />
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
 
@@ -85,24 +87,23 @@
                 android:id="@+id/tvMyQuizzes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="16dp"
                 android:text="Mis Quizzes"
-                android:textColor="#9E9E9E"
-                android:textSize="25sp"
+                android:textColor="#1F1F1F"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <!-- RecyclerView para los quizzes -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvQuizzes"
                 android:layout_width="match_parent"
-                android:layout_height="597dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginBottom="24dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:clipToPadding="false"
-                android:paddingBottom="80dp"
+                android:paddingBottom="100dp"
                 android:visibility="gone" />
 
             <!-- Vista vacía para cuando no hay quizzes -->
@@ -110,8 +111,8 @@
                 android:id="@+id/layoutVacio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
-                android:layout_marginBottom="80dp"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="100dp"
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="24dp"
@@ -119,34 +120,33 @@
 
                 <!-- Ícono de quiz vacío -->
                 <ImageView
-                    android:layout_width="100dp"
-                    android:layout_height="100dp"
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp"
                     android:src="@drawable/ico_empty_quiz"
-                    app:tint="#6B7EF7" />
+                    app:tint="#A855F7"
+                    android:alpha="0.8" />
 
                 <!-- Texto "No hay ningún quizz creado" -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="No hay ningún quizz creado."
-                    android:textColor="#9E9E9E"
-                    android:textSize="20sp"
+                    android:text="No hay ningún quiz creado"
+                    android:textColor="#5A5A5A"
+                    android:textSize="18sp"
                     android:textStyle="bold" />
 
                 <!-- Texto "Crea uno para comenzar" -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="32dp"
                     android:gravity="center"
                     android:text="Crea uno para comenzar"
                     android:textColor="#9E9E9E"
-                    android:textSize="20sp"
-                    android:textStyle="bold" />
+                    android:textSize="15sp" />
 
             </LinearLayout>
 
@@ -162,9 +162,11 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="24dp"
         android:layout_marginBottom="24dp"
-        android:contentDescription="Boton FAB"
+        android:contentDescription="Crear nuevo quiz"
         android:src="@drawable/ico_add"
         app:backgroundTint="#6B7EF7"
-        app:tint="@android:color/white" />
+        app:tint="@android:color/white"
+        app:elevation="6dp"
+        app:borderWidth="0dp" />
 
 </FrameLayout>
