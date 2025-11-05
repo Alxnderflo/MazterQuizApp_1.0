@@ -15,6 +15,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -124,7 +125,6 @@ public class RegistroActivity extends AppCompatActivity {
         FirebaseUser user = auth.getCurrentUser();
 
         if (user == null) {
-            // Si el usuario es nulo, habilitar botón y mostrar error
             btnRegister.setEnabled(true);
             btnRegister.setText("Registrar");
             Toast.makeText(this, "Error: No se pudo obtener el usuario autenticado", Toast.LENGTH_SHORT).show();
@@ -136,6 +136,13 @@ public class RegistroActivity extends AppCompatActivity {
         usuario.put("email", email);
         usuario.put("rol", rol);
         usuario.put("fechaRegistro", new Date());
+
+        // NUEVOS CAMPOS PARA SISTEMA PROFESOR-ALUMNO
+        if (rol.equals("profesor")) {
+            usuario.put("codigoProfesor", ""); // Se generará en FASE 2
+        } else if (rol.equals("estudiante")) {
+            usuario.put("profesoresAgregados", new ArrayList<String>()); // Lista vacía inicial
+        }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios")
@@ -151,12 +158,10 @@ public class RegistroActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    // Error al guardar en Firestore - IMPORTANTE: Re-habilitar el botón
+                    // Error al guardar en Firestore
                     btnRegister.setEnabled(true);
                     btnRegister.setText("Registrar");
                     Toast.makeText(RegistroActivity.this, "Error al guardar datos del usuario: " + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Opcional: eliminar el usuario de Auth si falla Firestore
                     user.delete().addOnCompleteListener(deleteTask -> {
                         if (deleteTask.isSuccessful()) {
                             Toast.makeText(RegistroActivity.this, "Se eliminó el usuario por error en los datos", Toast.LENGTH_SHORT).show();
@@ -164,4 +169,5 @@ public class RegistroActivity extends AppCompatActivity {
                     });
                 });
     }
+
 }
