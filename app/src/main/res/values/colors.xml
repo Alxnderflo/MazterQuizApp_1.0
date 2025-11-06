@@ -9,5 +9,15 @@
     <color name="color_incorrecta">#FFEBEE</color>
     <color name="color_borde_inicial">#E0E0E0</color>
     <color name="color_texto_inicial">#2D2D2D</color>
+
+<!--PROFESORES-->
+    <color name="color_profesor_1">#FF6B6B</color>
+    <color name="color_profesor_2">#4ECDC4</color>
+    <color name="color_profesor_3">#45B7D1</color>
+    <color name="color_profesor_4">#96CEB4</color>
+    <color name="color_profesor_5">#FFEAA7</color>
+    <color name="color_profesor_6">#DDA0DD</color>
 </resources>
+
+
 
