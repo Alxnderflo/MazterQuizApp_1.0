@@ -92,6 +92,40 @@
             android:layout_height="1dp"
             android:layout_marginBottom="20dp"
             android:background="#E0E0E0" />
+
+        <!-- NUEVO: Switch para controlar visibilidad -->
+        <LinearLayout
+            android:id="@+id/switchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hacer público"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchEsPublico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+
+        </LinearLayout>
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+
         <!-- Título: Portada o imagen -->
         <TextView
             android:layout_width="wrap_content"

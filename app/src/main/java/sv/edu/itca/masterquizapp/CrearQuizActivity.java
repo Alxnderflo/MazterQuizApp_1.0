@@ -16,15 +16,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.cloudinary.android.MediaManager;
@@ -49,15 +49,19 @@ public class CrearQuizActivity extends AppCompatActivity {
     private static final int CODIGO_SELECCION_IMG = 1;
     private static final int CODIGO_SOLICITUD_PERMISO = 100;
 
-    //VARIABLES DE EDICIÓN
+    // VARIABLES DE EDICIÓN
     private boolean esEdicion = false;
     private String quizIdEdit = null;
 
+    // NUEVAS VARIABLES PARA CONTROL DE VISIBILIDAD
+    private LinearLayout switchContainer;
+    private SwitchCompat switchEsPublico;
+    private String userRol = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_crear_quizz);
+        setContentView(R.layout.activity_crear_quiz);
 
         db = FirebaseFirestore.getInstance();
 
@@ -68,6 +72,9 @@ public class CrearQuizActivity extends AppCompatActivity {
         imgPreview = findViewById(R.id.imgPreview);
         tvImgHint = findViewById(R.id.tvImgHint);
 
+        // NUEVO: Inicializar vistas del switch
+        switchContainer = findViewById(R.id.switchContainer);
+        switchEsPublico = findViewById(R.id.switchEsPublico);
 
         // CAMBIO: Verificar si estamos en modo edición
         esEdicion = getIntent().getBooleanExtra("MODO_EDICION", false);
@@ -108,8 +115,71 @@ public class CrearQuizActivity extends AppCompatActivity {
             setTitle("Crear Quiz");
         }
 
+        // Obtener el usuario actual y configurar el rol
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser != null) {
+            String userId = currentUser.getUid();
+            obtenerRolYConfigurarInterfaz(userId, null);
+        }
+
         cvContenedorImg.setOnClickListener(v -> verificarPermisos());
         btnGuardarQuiz.setOnClickListener(v -> guardarQuiz());
+    }
+
+    // NUEVO MÉTODO: Obtener rol del usuario y configurar interfaz
+    private void obtenerRolYConfigurarInterfaz(String userId, Runnable onComplete) {
+        FirebaseFirestore.getInstance().collection("usuarios").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        userRol = documentSnapshot.getString("rol");
+                        Log.d("CrearQuiz", "Rol obtenido: " + userRol);
+
+                        // Configurar visibilidad del switch según el rol
+                        if ("profesor".equals(userRol)) {
+                            switchContainer.setVisibility(View.VISIBLE);
+                            // Para profesores, valor por defecto es true
+                            switchEsPublico.setChecked(true);
+                            Log.d("CrearQuiz", "Switch visible - checked: " + switchEsPublico.isChecked());
+
+                            // Si estamos editando, cargar el estado actual de esPublico
+                            if (esEdicion) {
+                                cargarEstadoEsPublico();
+                            }
+                        } else {
+                            // Para estudiantes, ocultar el switch
+                            switchContainer.setVisibility(View.GONE);
+                            Log.d("CrearQuiz", "Switch oculto (estudiante)");
+                        }
+
+                        if (onComplete != null) {
+                            onComplete.run();
+                        }
+                    } else {
+                        Toast.makeText(this, "Error: No se encontraron datos del usuario", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Error al obtener datos del usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+    // NUEVO MÉTODO: Cargar estado de esPublico al editar
+    private void cargarEstadoEsPublico() {
+        if (quizIdEdit != null) {
+            db.collection("quizzes").document(quizIdEdit)
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Boolean esPublico = documentSnapshot.getBoolean("esPublico");
+                            if (esPublico != null) {
+                                switchEsPublico.setChecked(esPublico);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("CrearQuiz", "Error al cargar estado de esPublico: " + e.getMessage());
+                    });
+        }
     }
 
     private void verificarPermisos() {
@@ -283,59 +353,72 @@ public class CrearQuizActivity extends AppCompatActivity {
 
         String userId = currentUser.getUid();
 
-        FirebaseFirestore.getInstance().collection("usuarios").document(userId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String userNombre = documentSnapshot.getString("nombre");
-                        String userRol = documentSnapshot.getString("rol");
+        // Determinar el valor de esPublico según el rol ya obtenido
+        boolean esPublico;
+        if ("profesor".equals(userRol)) {
+            esPublico = switchEsPublico.isChecked();
+            Log.d("CrearQuiz", "Profesor - esPublico: " + esPublico);
+        } else {
+            // Estudiantes siempre crean quizzes privados
+            esPublico = false;
+            Log.d("CrearQuiz", "Estudiante - esPublico: " + esPublico);
+        }
 
-                        //codigo para edicion
-                        if (esEdicion) {
-                            DocumentReference documentoQuiz = db.collection("quizzes").document(quizIdEdit);
+        //codigo para edicion
+        if (esEdicion) {
+            DocumentReference documentoQuiz = db.collection("quizzes").document(quizIdEdit);
 
-                            //Actualizar los campos editabes
-                            Map<String, Object> updates = new HashMap<>();
-                            updates.put("titulo", titulo);
-                            updates.put("descripcion", descripcion);
-                            updates.put("imagenUrl", imagenUrl);
+            //Actualizar los campos editables
+            Map<String, Object> updates = new HashMap<>();
+            updates.put("titulo", titulo);
+            updates.put("descripcion", descripcion);
+            updates.put("imagenUrl", imagenUrl);
+            updates.put("esPublico", esPublico); // NUEVO: Actualizar visibilidad
 
-                            documentoQuiz.update(updates).
-                                    addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(this, "Quizz actualizado exitosamente", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    });
+            documentoQuiz.update(updates)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Quizz actualizado exitosamente", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Error al actualizar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
 
-                        } else {
+        } else {
+            // Modo creación: crear un nuevo quiz
 
-                            // Modo creación: crear un nuevo quiz
-                            DocumentReference nuevoDocumento = db.collection("quizzes").document();
-                            String nuevoId = nuevoDocumento.getId();
+            // NUEVO: Obtener el nombre del usuario
+            String userNombre = currentUser.getDisplayName();
+            if (userNombre == null || userNombre.isEmpty()) {
+                // Si no tiene display name, usar el email sin dominio
+                String email = currentUser.getEmail();
+                if (email != null && email.contains("@")) {
+                    userNombre = email.substring(0, email.indexOf("@"));
+                } else {
+                    userNombre = "Usuario";
+                }
+            }
 
-                            Quiz quiz = new Quiz(titulo, descripcion, imagenUrl, userId, userNombre, userRol);
+            DocumentReference nuevoDocumento = db.collection("quizzes").document();
+            String nuevoId = nuevoDocumento.getId();
 
-                            nuevoDocumento.set(quiz)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d("CrearQuiz", "Quiz guardado en Firestore");
-                                        Toast.makeText(this, "Quiz guardado exitosamente", Toast.LENGTH_SHORT).show();
-                                        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
-                                        intent.putExtra("quiz_id", nuevoId);
-                                        startActivity(intent);
-                                        finish();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.e("CrearQuiz", "Error al sincronizar: " + e.getMessage());
-                                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    });
-                        }
-                    } else {
-                        Toast.makeText(this, "Error: No se encontraron datos del usuario", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al obtener datos del usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+            // NUEVO: Usar el constructor corregido
+            Quiz quiz = new Quiz(titulo, descripcion, imagenUrl, userId, userNombre, userRol, esPublico);
 
+            nuevoDocumento.set(quiz)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d("CrearQuiz", "Quiz guardado en Firestore - esPublico: " + esPublico);
+                        Toast.makeText(this, "Quiz guardado exitosamente", Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
+                        intent.putExtra("quiz_id", nuevoId);
+                        startActivity(intent);
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("CrearQuiz", "Error al sincronizar: " + e.getMessage());
+                        Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
     }
 
     @Override

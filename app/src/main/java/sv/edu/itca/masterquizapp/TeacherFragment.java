@@ -1,16 +1,7 @@
 package sv.edu.itca.masterquizapp;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -22,26 +13,35 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link TeacherFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class TeacherFragment extends Fragment {
     private RecyclerView rvProfesores, rvQuizzesProfesores;
     private ProfesoresAdapter adapterProfesores;
-    private QuizzesAdapter adapterQuizzesProfesores;
+    private QuizzesProfesorAdapter adapterQuizzesProfesores;
     private List<Usuario> listaProfesores;
     private List<Quiz> listaQuizzesProfesores;
     private List<String> listaQuizzesIdsProfesores;
@@ -52,6 +52,11 @@ public class TeacherFragment extends Fragment {
 
     // Colores predefinidos
     private int[] coloresProfesores;
+    private Map<String, Integer> mapaColoresProfesores;
+
+    // Listeners para updates en tiempo real
+    private ListenerRegistration quizzesListener;
+    private ListenerRegistration profesoresListener;
 
     public TeacherFragment() {
         // Required empty public constructor
@@ -68,6 +73,7 @@ public class TeacherFragment extends Fragment {
         listaProfesores = new ArrayList<>();
         listaQuizzesProfesores = new ArrayList<>();
         listaQuizzesIdsProfesores = new ArrayList<>();
+        mapaColoresProfesores = new HashMap<>();
     }
 
     @Override
@@ -143,15 +149,23 @@ public class TeacherFragment extends Fragment {
         adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext());
         rvProfesores.setAdapter(adapterProfesores);
 
-        adapterQuizzesProfesores = new QuizzesAdapter(listaQuizzesProfesores, getContext(),
-                (quiz, quizId) -> {
-                    // Para FASE 4 - resolución de quizzes
-                    Toast.makeText(getContext(), "Funcionalidad de resolución próximamente", Toast.LENGTH_SHORT).show();
-                }, null);
+        adapterQuizzesProfesores = new QuizzesProfesorAdapter(
+                listaQuizzesProfesores,
+                getContext(),
+                new QuizzesProfesorAdapter.OnQuizClickListener() {
+                    @Override
+                    public void onQuizClick(Quiz quiz, String quizId) {
+                        // Para FASE 4 - resolución de quizzes
+                        Toast.makeText(getContext(), "Funcionalidad de resolución próximamente", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                coloresProfesores,
+                mapaColoresProfesores
+        );
 
         rvQuizzesProfesores.setAdapter(adapterQuizzesProfesores);
 
-        // Cargar datos
+        // Cargar datos con listeners en tiempo real
         cargarProfesoresAgregados();
     }
 
@@ -229,7 +243,7 @@ public class TeacherFragment extends Fragment {
                 .update("profesoresAgregados", FieldValue.arrayUnion(profesorId))
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Profesor " + nombreProfesor + " agregado exitosamente", Toast.LENGTH_SHORT).show();
-                    cargarProfesoresAgregados();
+                    // No necesitamos recargar manualmente porque el listener se encargará
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(getContext(), "Error al agregar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -240,10 +254,20 @@ public class TeacherFragment extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
 
-        db.collection("usuarios").document(currentUser.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+        // Remover listener anterior si existe
+        if (profesoresListener != null) {
+            profesoresListener.remove();
+        }
+
+        // Usar SnapshotListener para updates en tiempo real
+        profesoresListener = db.collection("usuarios").document(currentUser.getUid())
+                .addSnapshotListener((documentSnapshot, e) -> {
+                    if (e != null) {
+                        Log.e("TeacherFragment", "Error en listener de profesores: " + e.getMessage());
+                        return;
+                    }
+
+                    if (documentSnapshot != null && documentSnapshot.exists()) {
                         List<String> profesoresAgregados = (List<String>) documentSnapshot.get("profesoresAgregados");
                         if (profesoresAgregados != null && !profesoresAgregados.isEmpty()) {
                             cargarDatosProfesores(profesoresAgregados);
@@ -252,23 +276,27 @@ public class TeacherFragment extends Fragment {
                             mostrarVistaVacia();
                         }
                     }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("TeacherFragment", "Error al cargar profesores agregados: " + e.getMessage());
                 });
     }
 
     private void cargarDatosProfesores(List<String> profesoresIds) {
         listaProfesores.clear();
+        mapaColoresProfesores.clear();
 
-        for (String profesorId : profesoresIds) {
+        for (int i = 0; i < profesoresIds.size(); i++) {
+            String profesorId = profesoresIds.get(i);
+
+            // Asignar color al profesor
+            int colorIndex = i % coloresProfesores.length;
+            mapaColoresProfesores.put(profesorId, coloresProfesores[colorIndex]);
+
             db.collection("usuarios").document(profesorId)
                     .get()
                     .addOnSuccessListener(documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             Usuario profesor = documentSnapshot.toObject(Usuario.class);
                             if (profesor != null) {
-                                profesor.setId(documentSnapshot.getId()); // Asignar ID del documento
+                                profesor.setId(documentSnapshot.getId());
                                 listaProfesores.add(profesor);
                                 adapterProfesores.notifyDataSetChanged();
                                 actualizarVisibilidad();
@@ -287,29 +315,41 @@ public class TeacherFragment extends Fragment {
             profesoresIds = profesoresIds.subList(0, 10);
         }
 
-        db.collection("quizzes")
+        // Remover listener anterior si existe
+        if (quizzesListener != null) {
+            quizzesListener.remove();
+        }
+
+        // Usar SnapshotListener para updates en tiempo real
+        quizzesListener = db.collection("quizzes")
                 .whereIn("userId", profesoresIds)
                 .whereEqualTo("esPublico", true)
                 .orderBy("fechaCreacion", Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    listaQuizzesProfesores.clear();
-                    listaQuizzesIdsProfesores.clear();
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.e("TeacherFragment", "Error en listener de quizzes: " + e.getMessage());
+                            return;
+                        }
 
-                    for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
-                        Quiz quiz = snapshot.toObject(Quiz.class);
-                        if (quiz != null) {
-                            listaQuizzesProfesores.add(quiz);
-                            listaQuizzesIdsProfesores.add(snapshot.getId());
+                        if (queryDocumentSnapshots != null) {
+                            listaQuizzesProfesores.clear();
+                            listaQuizzesIdsProfesores.clear();
+
+                            for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                                Quiz quiz = snapshot.toObject(Quiz.class);
+                                if (quiz != null) {
+                                    listaQuizzesProfesores.add(quiz);
+                                    listaQuizzesIdsProfesores.add(snapshot.getId());
+                                }
+                            }
+
+                            adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
+                            adapterQuizzesProfesores.notifyDataSetChanged();
+                            actualizarVisibilidadQuizzes();
                         }
                     }
-
-                    adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
-                    adapterQuizzesProfesores.notifyDataSetChanged();
-                    actualizarVisibilidadQuizzes();
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("TeacherFragment", "Error al cargar quizzes de profesores: " + e.getMessage());
                 });
     }
 
@@ -339,9 +379,39 @@ public class TeacherFragment extends Fragment {
     }
 
     @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // Limpiar listeners cuando el fragment se destruye para evitar memory leaks
+        if (quizzesListener != null) {
+            quizzesListener.remove();
+            quizzesListener = null;
+        }
+        if (profesoresListener != null) {
+            profesoresListener.remove();
+            profesoresListener = null;
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        // Opcional: Limpiar listeners cuando el fragment se pausa
+        if (quizzesListener != null) {
+            quizzesListener.remove();
+        }
+        if (profesoresListener != null) {
+            profesoresListener.remove();
+        }
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         // Recargar datos cuando el fragment se vuelve visible
-        cargarProfesoresAgregados();
+        // PERO ahora usamos listeners en tiempo real, así que solo necesitamos
+        // recargar si los listeners no están activos
+        if (quizzesListener == null || profesoresListener == null) {
+            cargarProfesoresAgregados();
+        }
     }
 }

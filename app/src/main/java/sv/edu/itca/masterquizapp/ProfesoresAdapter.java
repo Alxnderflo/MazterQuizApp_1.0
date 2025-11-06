@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,11 +39,11 @@ public class ProfesoresAdapter extends RecyclerView.Adapter<ProfesoresAdapter.Vi
         // Configurar nombre
         holder.txtNombreProfesor.setText(profesor.getNombre());
 
-        // Asignar color único por profesor
+        // Asignar color al ícono del profesor
         int colorIndex = position % coloresProfesores.length;
-        holder.viewColorIndicator.setBackgroundColor(coloresProfesores[colorIndex]);
+        holder.iconoProfesor.setColorFilter(coloresProfesores[colorIndex]);
 
-        // Opcional: Mostrar email en tooltip o subtítulo si quieres expandir
+        // Opcional: Mostrar email en tooltip
         holder.itemView.setOnClickListener(v -> {
             Toast.makeText(contexto, profesor.getEmail(), Toast.LENGTH_SHORT).show();
         });
@@ -54,12 +55,12 @@ public class ProfesoresAdapter extends RecyclerView.Adapter<ProfesoresAdapter.Vi
     }
 
     public static class ViewHolderProfesor extends RecyclerView.ViewHolder {
-        View viewColorIndicator;
+        ImageView iconoProfesor;
         TextView txtNombreProfesor;
 
         public ViewHolderProfesor(@NonNull View itemView) {
             super(itemView);
-            viewColorIndicator = itemView.findViewById(R.id.viewColorIndicator);
+            iconoProfesor = itemView.findViewById(R.id.iconoProfesor);
             txtNombreProfesor = itemView.findViewById(R.id.txtNombreProfesor);
         }
     }

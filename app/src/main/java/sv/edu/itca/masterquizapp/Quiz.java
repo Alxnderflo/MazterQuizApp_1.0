@@ -28,6 +28,19 @@ public class Quiz {
         this.esPublico = true; // NUEVO: Quiz público por defecto
     }
 
+    // NUEVO CONSTRUCTOR (agregar este)
+    public Quiz(String titulo, String descripcion, String imagenUrl, String userId, String userNombre, String userRol, boolean esPublico) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.imagenUrl = imagenUrl;
+        this.userId = userId;
+        this.userNombre = userNombre;
+        this.userRol = userRol;
+        this.fechaCreacion = new Date();
+        this.numPreguntas = 0;
+        this.esPublico = esPublico; // ← Usa el valor que pasamos
+    }
+
     // Getters y setters
     public String getTitulo() {
         return titulo;
