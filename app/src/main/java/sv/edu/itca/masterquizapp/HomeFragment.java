@@ -144,30 +144,43 @@ public class HomeFragment extends Fragment {
             Toast.makeText(getContext(), "Error: ID del quiz no válido", Toast.LENGTH_SHORT).show();
             return;
         }
+
         // Mostrar progreso
         Toast.makeText(getContext(), "Eliminando quiz...", Toast.LENGTH_SHORT).show();
 
-        bd.collection("quizzes").document(quizId)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Quiz eliminado exitosamente", Toast.LENGTH_SHORT).show();
+        // PRIMERO eliminar las preguntas, LUEGO el quiz
+        eliminarPreguntasDeQuiz(quizId, new OnPreguntasEliminadasListener() {
+            @Override
+            public void onExito() {
+                // Ahora eliminar el quiz
+                bd.collection("quizzes").document(quizId)
+                        .delete()
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getContext(), "Quiz eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Error al eliminar quiz: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            }
 
-                    //TAMBIEN ELIMIAR LAS PREGUNTAS DEL QUIZZ
-                    eliminarPreguntasDeQuiz(quizId);
-
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error al eliminar quiz: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
-
-
+            @Override
+            public void onError(String error) {
+                Toast.makeText(getContext(), "Error al eliminar preguntas: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    private void eliminarPreguntasDeQuiz(String quizId) {
+    // Interface para callback
+    interface OnPreguntasEliminadasListener {
+        void onExito();
+
+        void onError(String error);
+    }
+
+    private void eliminarPreguntasDeQuiz(String quizId, OnPreguntasEliminadasListener listener) {
         bd.collection("quizzes").document(quizId).collection("preguntas")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    //si hay preguntas eliminarlas en masa
                     if (!queryDocumentSnapshots.isEmpty()) {
                         WriteBatch batch = bd.batch();
                         for (DocumentSnapshot documento : queryDocumentSnapshots) {
@@ -176,17 +189,21 @@ public class HomeFragment extends Fragment {
                         batch.commit()
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("HomeFragment", "Preguntas eliminadas para el quiz: " + quizId);
+                                    listener.onExito();
                                 })
                                 .addOnFailureListener(e -> {
                                     Log.e("HomeFragment", "Error al eliminar preguntas: " + e.getMessage());
+                                    listener.onError(e.getMessage());
                                 });
+                    } else {
+                        // No hay preguntas, continuar con eliminación del quiz
+                        listener.onExito();
                     }
-
-                }).addOnFailureListener(e -> {
+                })
+                .addOnFailureListener(e -> {
                     Log.e("HomeFragment", "Error al obtener preguntas para eliminar: " + e.getMessage());
+                    listener.onError(e.getMessage());
                 });
-
-
     }
 
     @Override

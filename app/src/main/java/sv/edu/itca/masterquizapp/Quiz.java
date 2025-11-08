@@ -11,8 +11,10 @@ public class Quiz {
     private String userId;
     private String userNombre;
     private String userRol;
+    private boolean esPublico; // NUEVO CAMPO PARA ROLES
 
-    public Quiz() {}
+    public Quiz() {
+    }
 
     public Quiz(String titulo, String descripcion, String imagenUrl, String userId, String userNombre, String userRol) {
         this.titulo = titulo;
@@ -23,30 +25,92 @@ public class Quiz {
         this.userRol = userRol;
         this.fechaCreacion = new Date();
         this.numPreguntas = 0;
+        this.esPublico = true; // NUEVO: Quiz público por defecto
+    }
+
+    // NUEVO CONSTRUCTOR (agregar este)
+    public Quiz(String titulo, String descripcion, String imagenUrl, String userId, String userNombre, String userRol, boolean esPublico) {
+        this.titulo = titulo;
+        this.descripcion = descripcion;
+        this.imagenUrl = imagenUrl;
+        this.userId = userId;
+        this.userNombre = userNombre;
+        this.userRol = userRol;
+        this.fechaCreacion = new Date();
+        this.numPreguntas = 0;
+        this.esPublico = esPublico; // ← Usa el valor que pasamos
     }
 
     // Getters y setters
-    public String getTitulo() { return titulo; }
-    public void setTitulo(String titulo) { this.titulo = titulo; }
+    public String getTitulo() {
+        return titulo;
+    }
 
-    public String getDescripcion() { return descripcion; }
-    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
+    }
 
-    public String getImagenUrl() { return imagenUrl; }
-    public void setImagenUrl(String imagenUrl) { this.imagenUrl = imagenUrl; }
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-    public Date getFechaCreacion() { return fechaCreacion; }
-    public void setFechaCreacion(Date fechaCreacion) { this.fechaCreacion = fechaCreacion; }
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-    public int getNumPreguntas() { return numPreguntas; }
-    public void setNumPreguntas(int numPreguntas) { this.numPreguntas = numPreguntas; }
+    public String getImagenUrl() {
+        return imagenUrl;
+    }
 
-    public String getUserId() { return userId; }
-    public void setUserId(String userId) { this.userId = userId; }
+    public void setImagenUrl(String imagenUrl) {
+        this.imagenUrl = imagenUrl;
+    }
 
-    public String getUserNombre() { return userNombre; }
-    public void setUserNombre(String userNombre) { this.userNombre = userNombre; }
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
 
-    public String getUserRol() { return userRol; }
-    public void setUserRol(String userRol) { this.userRol = userRol; }
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public int getNumPreguntas() {
+        return numPreguntas;
+    }
+
+    public void setNumPreguntas(int numPreguntas) {
+        this.numPreguntas = numPreguntas;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getUserNombre() {
+        return userNombre;
+    }
+
+    public void setUserNombre(String userNombre) {
+        this.userNombre = userNombre;
+    }
+
+    public String getUserRol() {
+        return userRol;
+    }
+
+    public void setUserRol(String userRol) {
+        this.userRol = userRol;
+    }
+
+    public boolean isEsPublico() {
+        return esPublico;
+    }
+
+    public void setEsPublico(boolean esPublico) {
+        this.esPublico = esPublico;
+    }
 }

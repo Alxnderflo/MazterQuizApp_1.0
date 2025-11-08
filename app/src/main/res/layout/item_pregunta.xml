@@ -79,12 +79,5 @@
     </androidx.cardview.widget.CardView>
 
     <!-- Línea divisoria debajo del CardView -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
-        android:background="#E0E0E0" />
 
 </LinearLayout>

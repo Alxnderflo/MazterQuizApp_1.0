@@ -10,9 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
-
-        <!-- Header Card con información del Quiz -->
+        android:orientation="vertical"> <!-- Header Card con información del Quiz -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -26,9 +24,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="16dp">
-
-                <!-- Imagen del Quiz -->
+                android:padding="16dp"> <!-- Imagen del Quiz -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
@@ -42,18 +38,13 @@
                         android:layout_height="match_parent"
                         android:contentDescription="Quiz Image"
                         android:scaleType="centerCrop" />
-
-                </androidx.cardview.widget.CardView>
-
-                <!-- Contenedor de información del Quiz -->
+                </androidx.cardview.widget.CardView> <!-- Contenedor de información del Quiz -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="14dp"
                     android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <!-- Título del Quiz -->
+                    android:orientation="vertical"> <!-- Título del Quiz -->
                     <TextView
                         android:id="@+id/tvHeaderT"
                         android:layout_width="wrap_content"
@@ -63,9 +54,7 @@
                         android:text="Título Del Quiz"
                         android:textColor="#1F1F1F"
                         android:textSize="17sp"
-                        android:textStyle="bold" />
-
-                    <!-- Descripción del Quiz -->
+                        android:textStyle="bold" /> <!-- Descripción del Quiz -->
                     <TextView
                         android:id="@+id/tvHeaderD"
                         android:layout_width="wrap_content"
@@ -75,47 +64,40 @@
                         android:maxLines="2"
                         android:text="Descripción"
                         android:textColor="#7A7A7A"
-                        android:textSize="14sp" />
-
-                    <!-- Información adicional: preguntas y fecha -->
+                        android:textSize="14sp" /> <!-- Información adicional: preguntas y fecha -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <!-- Icono de lista para preguntas -->
+                        android:orientation="horizontal"> <!-- Icono de lista para preguntas -->
                         <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:src="@drawable/ico_list"
-                            app:tint="#9E9E9E"
                             android:layout_marginEnd="3dp"
-                            android:contentDescription="Preguntas icon" />
+                            android:contentDescription="Preguntas icon"
+                            android:src="@drawable/ico_list"
+                            app:tint="#9E9E9E" />
+
                         <TextView
                             android:id="@+id/tvHeaderNumQ"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="num preguntas"
                             android:textColor="#9E9E9E"
-                            android:textSize="12sp" />
-
-                        <!-- Separador -->
+                            android:textSize="12sp" /> <!-- Separador -->
                         <View
                             android:layout_width="1dp"
                             android:layout_height="12dp"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
-                            android:background="#E0E0E0" />
-                        <!-- Icono de calendario -->
-                        <ImageView
+                            android:background="#E0E0E0" /> <!-- Icono de calendario --> <ImageView
                             android:layout_width="14dp"
                             android:layout_height="14dp"
-                            android:src="@drawable/ico_date"
-                            app:tint="#9E9E9E"
                             android:layout_marginEnd="3dp"
-                            android:contentDescription="Fecha icon" />
+                            android:contentDescription="Fecha icon"
+                            android:src="@drawable/ico_date"
+                            app:tint="#9E9E9E" />
 
                         <TextView
                             android:id="@+id/tvHeaderFecha"
@@ -124,25 +106,17 @@
                             android:text="Fecha"
                             android:textColor="#9E9E9E"
                             android:textSize="12sp" />
-
                     </LinearLayout>
-
                 </LinearLayout>
-
             </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Contenedor principal con padding -->
+        </androidx.cardview.widget.CardView> <!-- Contenedor principal con padding -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="16dp">
-
-            <!-- Título y botón agregar -->
+            android:paddingBottom="16dp"> <!-- Título y botón agregar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -172,9 +146,7 @@
                     android:textSize="15sp"
                     app:cornerRadius="12dp"
                     tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
-            </LinearLayout>
-
-            <!-- Botón Iniciar Quiz (solo visible cuando hay preguntas) -->
+            </LinearLayout> <!-- Botón Iniciar Quiz (solo visible cuando hay preguntas) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnIniciarQuiz"
                 android:layout_width="match_parent"
@@ -189,19 +161,13 @@
                 app:icon="@drawable/ico_play"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp"
-                app:iconTint="@android:color/white" />
-
-            <!-- RecyclerView para cuando hay preguntas -->
+                app:iconTint="@android:color/white" /> <!-- RecyclerView con EXACTAMENTE la misma configuración que en fragment_teacher -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvQuestions"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clipToPadding="false"
-                android:nestedScrollingEnabled="false"
-                android:scrollbars="vertical"
-                android:visibility="gone" />
-
-            <!-- Vista vacía para cuando no hay preguntas -->
+                android:layout_height="match_parent"
+                android:paddingBottom="100dp"
+                android:visibility="gone" /> <!-- Vista vacía para cuando no hay preguntas -->
             <LinearLayout
                 android:id="@+id/layoutVacio"
                 android:layout_width="match_parent"
@@ -211,9 +177,7 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="24dp"
-                android:visibility="visible">
-
-                <!-- Ícono -->
+                android:visibility="visible"> <!-- Ícono -->
                 <ImageView
                     android:layout_width="120dp"
                     android:layout_height="120dp"
@@ -221,10 +185,7 @@
                     android:layout_marginBottom="24dp"
                     android:alpha="0.8"
                     android:src="@drawable/ico_empty_question"
-                    app:tint="#A855F7" />
-
-                <!-- Texto vacío -->
-                <TextView
+                    app:tint="#A855F7" /> <!-- Texto vacío --> <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
@@ -242,9 +203,7 @@
                     android:text="para el quiz."
                     android:textColor="#9E9E9E"
                     android:textSize="16sp"
-                    tools:ignore="TextContrastCheck" />
-
-                <!-- Botón Crear pregunta en la vista vacía -->
+                    tools:ignore="TextContrastCheck" /> <!-- Botón Crear pregunta en la vista vacía -->
                 <Button
                     android:id="@+id/btnCrearPregunta"
                     android:layout_width="match_parent"
@@ -256,11 +215,7 @@
                     android:textSize="16sp"
                     android:textStyle="bold"
                     app:cornerRadius="12dp" />
-
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
-
 </ScrollView>

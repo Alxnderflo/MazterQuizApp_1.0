@@ -12,9 +12,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+
 public class RoleSelectionActivity extends AppCompatActivity {
 
     private Button btnEstudiante, btnProfesor;
@@ -70,6 +72,13 @@ public class RoleSelectionActivity extends AppCompatActivity {
         usuario.put("fechaRegistro", new Date());
         usuario.put("proveedor", "google");
 
+        // NUEVOS CAMPOS PARA SISTEMA PROFESOR-ALUMNO
+        if (rol.equals("profesor")) {
+            usuario.put("codigoProfesor", ""); // Se generará en FASE 2
+        } else if (rol.equals("estudiante")) {
+            usuario.put("profesoresAgregados", new ArrayList<String>()); // Lista vacía inicial
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios")
                 .document(user.getUid())
@@ -81,12 +90,10 @@ public class RoleSelectionActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    // Restaurar estado de los botones en caso de error
                     btnEstudiante.setEnabled(true);
                     btnEstudiante.setText("Estudiante");
                     btnProfesor.setEnabled(true);
                     btnProfesor.setText("Profesor");
-
                     Toast.makeText(RoleSelectionActivity.this, "Error al guardar datos: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }

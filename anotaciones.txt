@@ -1,0 +1,32 @@
+La aplicación MasterQuizApp es una app móvil desarrollada en Android que permite a usuarios crear, gestionar y resolver quizzes de manera interactiva. Utiliza Firebase para autenticación y Firestore como base de datos, además de Cloudinary para el almacenamiento de imágenes. La app está estructurada con roles de usuario: estudiantes y profesores, lo que permite funcionalidades diferenciadas.
+
+La app inicia con una pantalla de splash animada (SplashScreen) que muestra el logo de Master Quiz con transiciones suaves, incluyendo fade in/out, zoom y rotaciones sutiles, durando aproximadamente 4 segundos antes de redirigir al login.
+
+El sistema de autenticación (LoginActivity) soporta login con email/contraseña o Google Sign-In. Requiere verificación de email para cuentas creadas con email, redirigiendo a usuarios no verificados a una pantalla de verificación (VerificacionEmailActivity). Para usuarios nuevos con Google, se redirige a selección de rol (RoleSelectionActivity).
+
+El registro (RegistroActivity) permite crear cuentas con nombre, email, contraseña y selección de rol (estudiante o profesor). Envía un email de verificación y guarda datos en Firestore, incluyendo campos específicos por rol: profesores tienen un campo para código único (generado posteriormente), y estudiantes una lista de profesores agregados.
+
+En la actividad principal (MainActivity), después de autenticación, se muestra un ViewPager con tres pestañas: Inicio (HomeFragment), Puntajes (ScoreFragment) y Profesores (TeacherFragment), con navegación por bottom navigation bar.
+
+El HomeFragment permite a usuarios ver sus quizzes propios en una lista RecyclerView, con opciones para crear nuevos quizzes (botón flotante), editar existentes o eliminarlos. Los quizzes se almacenan en Firestore con campos como título, descripción, imagen URL, fecha de creación, número de preguntas, ID de usuario, nombre de usuario, rol y visibilidad (público/privado). Los profesores pueden marcar quizzes como públicos, mientras que estudiantes siempre los crean privados.
+
+La creación/edición de quizzes (CrearQuizActivity) incluye campos para título, descripción e imagen. Las imágenes se suben a Cloudinary, con manejo de permisos para acceso a galería (diferenciando versiones de Android). Incluye un switch para visibilidad que solo aparece para profesores. En modo edición, carga datos existentes y permite actualizarlos.
+
+El TeacherFragment está diseñado para estudiantes: muestra profesores agregados horizontalmente y sus quizzes públicos verticalmente. Incluye un FAB para agregar profesores mediante un código de 6 caracteres alfanumérico único generado para cada profesor. Los profesores agregados se almacenan en una lista en el documento del estudiante en Firestore. Para profesores, muestra un mensaje indicando que los estudiantes los verán ahí.
+
+El ScoreFragment está actualmente vacío, marcado como TODO para futuras implementaciones de puntajes o estadísticas.
+
+La gestión de preguntas (PreguntasActivity) permite agregar, editar y eliminar preguntas para un quiz específico. Cada pregunta tiene texto, opciones múltiples (A, B, C, D), respuesta correcta y opcionalmente imagen. Se almacenan en una subcolección "preguntas" del documento del quiz en Firestore.
+
+La resolución de quizzes (ResolverQuizActivity) presenta preguntas en un ViewPager, permitiendo navegación entre ellas, selección de respuestas y cálculo de puntaje al finalizar.
+
+
+La app incluye modelos de datos como Quiz, Pregunta, Usuario, ResultadoPregunta, etc., con getters/setters apropiados. Utiliza adapters personalizados para RecyclerViews: QuizzesAdapter, PreguntasAdapter, ProfesoresAdapter, QuizzesProfesorAdapter, ResultadosAdapter.
+
+En MainActivity, para profesores, se genera automáticamente un código único de 6 caracteres alfanuméricos (excluyendo O/0 e I/1 para evitar confusiones), guardándolo en Firestore y mostrando un diálogo para copiarlo al portapapeles, facilitando que estudiantes los agreguen.
+
+La app maneja permisos para internet, acceso a red, lectura de imágenes (con distinción por versión de Android), y cámara (aunque no implementada aún). Usa Glide para cargar imágenes desde URLs.
+
+El diseño incluye layouts XML con temas, colores, íconos vectoriales y fondos gradientes. Incluye manejo de errores, toasts informativos y validaciones básicas en formularios.
+
+En resumen, la app funcional hasta el momento cubre autenticación completa, gestión de quizzes y preguntas, resolución interactiva, sistema de roles con vinculación profesor-estudiante, y almacenamiento en la nube con actualizaciones en tiempo real vía listeners de Firestore.

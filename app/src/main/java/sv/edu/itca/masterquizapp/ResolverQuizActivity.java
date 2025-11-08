@@ -212,9 +212,5 @@ public class ResolverQuizActivity extends AppCompatActivity {
         finish();
     }
 
-    // CAMBIO-QUIZ: Eliminar el método onBackPressed obsoleto
-    // @Override
-    // public void onBackPressed() {
-    //     // ... código eliminado ...
-    // }
+
 }
