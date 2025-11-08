@@ -58,6 +58,13 @@ public class TeacherFragment extends Fragment {
     private ListenerRegistration quizzesListener;
     private ListenerRegistration profesoresListener;
 
+    // 🔥 NUEVO: Interface para callback de eliminación
+    interface OnProfesorEliminadoListener {
+        void onExito();
+
+        void onError(String error);
+    }
+
     public TeacherFragment() {
         // Required empty public constructor
     }
@@ -93,14 +100,7 @@ public class TeacherFragment extends Fragment {
         tvQuizzesProfesores = view.findViewById(R.id.tvQuizzesProfesores);
 
         // Inicializar colores
-        coloresProfesores = new int[]{
-                ContextCompat.getColor(requireContext(), R.color.color_profesor_1),
-                ContextCompat.getColor(requireContext(), R.color.color_profesor_2),
-                ContextCompat.getColor(requireContext(), R.color.color_profesor_3),
-                ContextCompat.getColor(requireContext(), R.color.color_profesor_4),
-                ContextCompat.getColor(requireContext(), R.color.color_profesor_5),
-                ContextCompat.getColor(requireContext(), R.color.color_profesor_6)
-        };
+        coloresProfesores = new int[]{ContextCompat.getColor(requireContext(), R.color.color_profesor_1), ContextCompat.getColor(requireContext(), R.color.color_profesor_2), ContextCompat.getColor(requireContext(), R.color.color_profesor_3), ContextCompat.getColor(requireContext(), R.color.color_profesor_4), ContextCompat.getColor(requireContext(), R.color.color_profesor_5), ContextCompat.getColor(requireContext(), R.color.color_profesor_6)};
 
         // Verificar autenticación y rol
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -115,28 +115,25 @@ public class TeacherFragment extends Fragment {
     }
 
     private void verificarRolYConfigurar(String userId) {
-        db.collection("usuarios").document(userId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String rol = documentSnapshot.getString("rol");
-                        if ("estudiante".equals(rol)) {
-                            // 🔥 CAMBIO: Inicializar adapters PRIMERO
-                            inicializarAdaptersParaEstudiante();
-                            cargarProfesoresAgregados();
-                        } else {
-                            // Si es profesor, ocultar FAB y mostrar mensaje
-                            fabAgregarProfesor.setVisibility(View.GONE);
-                            mostrarMensajeProfesor();
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("TeacherFragment", "Error al verificar rol: " + e.getMessage());
-                });
+        db.collection("usuarios").document(userId).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String rol = documentSnapshot.getString("rol");
+                if ("estudiante".equals(rol)) {
+                    // Inicializar adapters PRIMERO
+                    inicializarAdaptersParaEstudiante();
+                    cargarProfesoresAgregados();
+                } else {
+                    // Si es profesor, ocultar FAB y mostrar mensaje
+                    fabAgregarProfesor.setVisibility(View.GONE);
+                    mostrarMensajeProfesor();
+                }
+            }
+        }).addOnFailureListener(e -> {
+            Log.e("TeacherFragment", "Error al verificar rol: " + e.getMessage());
+        });
     }
 
-    // 🔥 NUEVO MÉTODO: Inicializar todos los adapters para estudiante
+    // MÉTODO: Inicializar todos los adapters para estudiante
     private void inicializarAdaptersParaEstudiante() {
         // Configurar RecyclerViews
         LinearLayoutManager layoutManagerHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
@@ -149,54 +146,60 @@ public class TeacherFragment extends Fragment {
         fabAgregarProfesor.setOnClickListener(v -> mostrarDialogoAgregarProfesor());
 
         // INICIALIZAR ADAPTERS
-        adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext());
+        // 🔥 CAMBIO: Inicializar adapter con listener de eliminación
+        adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext(), (profesor, profesorId, position) -> mostrarDialogoConfirmacionEliminacion(profesor, profesorId, position));
         rvProfesores.setAdapter(adapterProfesores);
 
-        inicializarAdapterQuizzes(); // 🔥 Asegurar que el adapter de quizzes esté listo
+        inicializarAdapterQuizzes(); // Asegurar que el adapter de quizzes esté listo
     }
 
-    private void configurarParaEstudiante() {
-        // Configurar RecyclerViews
-        LinearLayoutManager layoutManagerHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
-        rvProfesores.setLayoutManager(layoutManagerHorizontal);
+    // 🔥 NUEVO MÉTODO: Mostrar diálogo de confirmación para eliminar profesor
+    private void mostrarDialogoConfirmacionEliminacion(Usuario profesor, String profesorId, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Eliminar Profesor");
+        builder.setMessage("¿Estás seguro de que quieres eliminar a " + profesor.getNombre() + " de tu lista?");
 
-        LinearLayoutManager layoutManagerVertical = new LinearLayoutManager(getContext());
-        rvQuizzesProfesores.setLayoutManager(layoutManagerVertical);
+        builder.setPositiveButton("Eliminar", (dialog, which) -> {
+            eliminarProfesor(profesorId, new OnProfesorEliminadoListener() {
+                @Override
+                public void onExito() {
+                    Toast.makeText(getContext(), "Profesor eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                    // El listener de Firestore actualizará automáticamente la UI
+                }
 
-        // Configurar FAB
-        fabAgregarProfesor.setOnClickListener(v -> mostrarDialogoAgregarProfesor());
+                @Override
+                public void onError(String error) {
+                    Toast.makeText(getContext(), "Error al eliminar profesor: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
 
-        // CONFIGURAR ADAPTERS
-        adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext());
-        rvProfesores.setAdapter(adapterProfesores);
+        builder.setNegativeButton("Cancelar", null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
 
-        adapterQuizzesProfesores = new QuizzesProfesorAdapter(
-                listaQuizzesProfesores,
-                getContext(),
-                new QuizzesProfesorAdapter.OnQuizClickListener() {
-                    @Override
-                    public void onQuizClick(Quiz quiz, String quizId) {
-                        // FASE 5: Abrir directamente ResolverQuizActivity para quizzes de profesores
-                        abrirResolverQuiz(quiz, quizId);
-                    }
-                },
-                coloresProfesores,
-                mapaColoresProfesores
-        );
-
-        rvQuizzesProfesores.setAdapter(adapterQuizzesProfesores);
-        // Cargar datos con listeners en tiempo real
-        cargarProfesoresAgregados();
+        // Personalizar color del botón eliminar
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
     }
 
-    private void abrirResolverQuiz(Quiz quiz, String quizId) {
-        if (getActivity() != null) {
-            Intent intent = new Intent(getActivity(), ResolverQuizActivity.class);
-            intent.putExtra("quiz_id", quizId);
-            intent.putExtra("quiz_titulo", quiz.getTitulo());
-            intent.putExtra("total_preguntas", quiz.getNumPreguntas());
-            startActivity(intent);
+    // 🔥 NUEVO MÉTODO: Eliminar profesor de la lista del usuario actual
+    private void eliminarProfesor(String profesorId, OnProfesorEliminadoListener listener) {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            listener.onError("Usuario no autenticado");
+            return;
         }
+
+        db.collection("usuarios").document(currentUser.getUid()).update("profesoresAgregados", FieldValue.arrayRemove(profesorId)).addOnSuccessListener(aVoid -> {
+            Log.d("TeacherFragment", "Profesor eliminado de la lista: " + profesorId);
+            listener.onExito();
+
+            // Los quizzes desaparecerán automáticamente porque el listener
+            // de cargarQuizzesProfesores se actualiza al cambiar profesoresAgregados
+        }).addOnFailureListener(e -> {
+            Log.e("TeacherFragment", "Error al eliminar profesor: " + e.getMessage());
+            listener.onError(e.getMessage());
+        });
     }
 
     private void mostrarMensajeProfesor() {
@@ -233,28 +236,23 @@ public class TeacherFragment extends Fragment {
     }
 
     private void buscarProfesorPorCodigo(String codigo) {
-        db.collection("usuarios")
-                .whereEqualTo("codigoProfesor", codigo)
-                .whereEqualTo("rol", "profesor")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (!queryDocumentSnapshots.isEmpty() && queryDocumentSnapshots.size() > 0) {
-                        DocumentSnapshot snapshot = queryDocumentSnapshots.getDocuments().get(0);
-                        String profesorId = snapshot.getId();
-                        String nombreProfesor = snapshot.getString("nombre");
+        db.collection("usuarios").whereEqualTo("codigoProfesor", codigo).whereEqualTo("rol", "profesor").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (!queryDocumentSnapshots.isEmpty() && queryDocumentSnapshots.size() > 0) {
+                DocumentSnapshot snapshot = queryDocumentSnapshots.getDocuments().get(0);
+                String profesorId = snapshot.getId();
+                String nombreProfesor = snapshot.getString("nombre");
 
-                        if (!estaProfesorAgregado(profesorId)) {
-                            vincularProfesor(profesorId, nombreProfesor);
-                        } else {
-                            Toast.makeText(getContext(), "Ya tienes agregado a este profesor", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        Toast.makeText(getContext(), "Código no válido o no pertenece a un profesor", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error al buscar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+                if (!estaProfesorAgregado(profesorId)) {
+                    vincularProfesor(profesorId, nombreProfesor);
+                } else {
+                    Toast.makeText(getContext(), "Ya tienes agregado a este profesor", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Código no válido o no pertenece a un profesor", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Error al buscar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private boolean estaProfesorAgregado(String profesorId) {
@@ -270,15 +268,12 @@ public class TeacherFragment extends Fragment {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) return;
 
-        db.collection("usuarios").document(currentUser.getUid())
-                .update("profesoresAgregados", FieldValue.arrayUnion(profesorId))
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Profesor " + nombreProfesor + " agregado exitosamente", Toast.LENGTH_SHORT).show();
-                    // No necesitamos recargar manualmente porque el listener se encargará
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error al agregar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                });
+        db.collection("usuarios").document(currentUser.getUid()).update("profesoresAgregados", FieldValue.arrayUnion(profesorId)).addOnSuccessListener(aVoid -> {
+            Toast.makeText(getContext(), "Profesor " + nombreProfesor + " agregado exitosamente", Toast.LENGTH_SHORT).show();
+            // No necesitamos recargar manualmente porque el listener se encargará
+        }).addOnFailureListener(e -> {
+            Toast.makeText(getContext(), "Error al agregar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        });
     }
 
     private void cargarProfesoresAgregados() {
@@ -291,23 +286,22 @@ public class TeacherFragment extends Fragment {
         }
 
         // Usar SnapshotListener para updates en tiempo real
-        profesoresListener = db.collection("usuarios").document(currentUser.getUid())
-                .addSnapshotListener((documentSnapshot, e) -> {
-                    if (e != null) {
-                        Log.e("TeacherFragment", "Error en listener de profesores: " + e.getMessage());
-                        return;
-                    }
+        profesoresListener = db.collection("usuarios").document(currentUser.getUid()).addSnapshotListener((documentSnapshot, e) -> {
+            if (e != null) {
+                Log.e("TeacherFragment", "Error en listener de profesores: " + e.getMessage());
+                return;
+            }
 
-                    if (documentSnapshot != null && documentSnapshot.exists()) {
-                        List<String> profesoresAgregados = (List<String>) documentSnapshot.get("profesoresAgregados");
-                        if (profesoresAgregados != null && !profesoresAgregados.isEmpty()) {
-                            cargarDatosProfesores(profesoresAgregados);
-                            cargarQuizzesProfesores(profesoresAgregados);
-                        } else {
-                            mostrarVistaVacia();
-                        }
-                    }
-                });
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                List<String> profesoresAgregados = (List<String>) documentSnapshot.get("profesoresAgregados");
+                if (profesoresAgregados != null && !profesoresAgregados.isEmpty()) {
+                    cargarDatosProfesores(profesoresAgregados);
+                    cargarQuizzesProfesores(profesoresAgregados);
+                } else {
+                    mostrarVistaVacia();
+                }
+            }
+        });
     }
 
     private void cargarDatosProfesores(List<String> profesoresIds) {
@@ -321,22 +315,19 @@ public class TeacherFragment extends Fragment {
             int colorIndex = i % coloresProfesores.length;
             mapaColoresProfesores.put(profesorId, coloresProfesores[colorIndex]);
 
-            db.collection("usuarios").document(profesorId)
-                    .get()
-                    .addOnSuccessListener(documentSnapshot -> {
-                        if (documentSnapshot.exists()) {
-                            Usuario profesor = documentSnapshot.toObject(Usuario.class);
-                            if (profesor != null) {
-                                profesor.setId(documentSnapshot.getId());
-                                listaProfesores.add(profesor);
-                                adapterProfesores.notifyDataSetChanged();
-                                actualizarVisibilidad();
-                            }
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("TeacherFragment", "Error al cargar datos del profesor: " + e.getMessage());
-                    });
+            db.collection("usuarios").document(profesorId).get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    Usuario profesor = documentSnapshot.toObject(Usuario.class);
+                    if (profesor != null) {
+                        profesor.setId(documentSnapshot.getId());
+                        listaProfesores.add(profesor);
+                        adapterProfesores.notifyDataSetChanged();
+                        actualizarVisibilidad();
+                    }
+                }
+            }).addOnFailureListener(e -> {
+                Log.e("TeacherFragment", "Error al cargar datos del profesor: " + e.getMessage());
+            });
         }
     }
 
@@ -351,66 +342,66 @@ public class TeacherFragment extends Fragment {
             quizzesListener.remove();
         }
 
-        // 🔥 NUEVO: Verificar que el adapter esté inicializado antes de usarlo
+        // Verificar que el adapter esté inicializado antes de usarlo
         if (adapterQuizzesProfesores == null) {
             Log.e("TeacherFragment", "Adapter de quizzes es null - inicializando...");
             inicializarAdapterQuizzes();
         }
 
         // Usar SnapshotListener para updates en tiempo real
-        quizzesListener = db.collection("quizzes")
-                .whereIn("userId", profesoresIds)
-                .whereEqualTo("esPublico", true)
-                .orderBy("fechaCreacion", Query.Direction.DESCENDING)
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
-                        if (e != null) {
-                            Log.e("TeacherFragment", "Error en listener de quizzes: " + e.getMessage());
-                            return;
-                        }
+        quizzesListener = db.collection("quizzes").whereIn("userId", profesoresIds).whereEqualTo("esPublico", true).orderBy("fechaCreacion", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.e("TeacherFragment", "Error en listener de quizzes: " + e.getMessage());
+                    return;
+                }
 
-                        if (queryDocumentSnapshots != null) {
-                            listaQuizzesProfesores.clear();
-                            listaQuizzesIdsProfesores.clear();
+                if (queryDocumentSnapshots != null) {
+                    listaQuizzesProfesores.clear();
+                    listaQuizzesIdsProfesores.clear();
 
-                            for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
-                                Quiz quiz = snapshot.toObject(Quiz.class);
-                                if (quiz != null) {
-                                    listaQuizzesProfesores.add(quiz);
-                                    listaQuizzesIdsProfesores.add(snapshot.getId());
-                                }
-                            }
-
-                            // 🔥 NUEVO: Verificación adicional de null
-                            if (adapterQuizzesProfesores != null) {
-                                adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
-                                adapterQuizzesProfesores.notifyDataSetChanged();
-                                actualizarVisibilidadQuizzes();
-                            } else {
-                                Log.e("TeacherFragment", "Adapter sigue siendo null - no se puede actualizar");
-                            }
+                    for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
+                        Quiz quiz = snapshot.toObject(Quiz.class);
+                        if (quiz != null) {
+                            listaQuizzesProfesores.add(quiz);
+                            listaQuizzesIdsProfesores.add(snapshot.getId());
                         }
                     }
-                });
+
+                    // Verificación adicional de null
+                    if (adapterQuizzesProfesores != null) {
+                        adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
+                        adapterQuizzesProfesores.notifyDataSetChanged();
+                        actualizarVisibilidadQuizzes();
+                    } else {
+                        Log.e("TeacherFragment", "Adapter sigue siendo null - no se puede actualizar");
+                    }
+                }
+            }
+        });
     }
 
-    // 🔥 NUEVO MÉTODO: Inicializar adapter de quizzes
+    // MÉTODO: Inicializar adapter de quizzes
     private void inicializarAdapterQuizzes() {
         if (adapterQuizzesProfesores == null) {
-            adapterQuizzesProfesores = new QuizzesProfesorAdapter(
-                    listaQuizzesProfesores,
-                    getContext(),
-                    new QuizzesProfesorAdapter.OnQuizClickListener() {
-                        @Override
-                        public void onQuizClick(Quiz quiz, String quizId) {
-                            abrirResolverQuiz(quiz, quizId);
-                        }
-                    },
-                    coloresProfesores,
-                    mapaColoresProfesores
-            );
+            adapterQuizzesProfesores = new QuizzesProfesorAdapter(listaQuizzesProfesores, getContext(), new QuizzesProfesorAdapter.OnQuizClickListener() {
+                @Override
+                public void onQuizClick(Quiz quiz, String quizId) {
+                    abrirResolverQuiz(quiz, quizId);
+                }
+            }, coloresProfesores, mapaColoresProfesores);
             rvQuizzesProfesores.setAdapter(adapterQuizzesProfesores);
+        }
+    }
+
+    private void abrirResolverQuiz(Quiz quiz, String quizId) {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), ResolverQuizActivity.class);
+            intent.putExtra("quiz_id", quizId);
+            intent.putExtra("quiz_titulo", quiz.getTitulo());
+            intent.putExtra("total_preguntas", quiz.getNumPreguntas());
+            startActivity(intent);
         }
     }
 
