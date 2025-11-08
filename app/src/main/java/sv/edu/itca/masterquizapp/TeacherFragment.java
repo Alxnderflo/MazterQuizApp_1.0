@@ -58,7 +58,7 @@ public class TeacherFragment extends Fragment {
     private ListenerRegistration quizzesListener;
     private ListenerRegistration profesoresListener;
 
-    // 🔥 NUEVO: Interface para callback de eliminación
+    // Interface para callback de eliminación
     interface OnProfesorEliminadoListener {
         void onExito();
 
@@ -102,7 +102,7 @@ public class TeacherFragment extends Fragment {
         // Inicializar colores
         coloresProfesores = new int[]{ContextCompat.getColor(requireContext(), R.color.color_profesor_1), ContextCompat.getColor(requireContext(), R.color.color_profesor_2), ContextCompat.getColor(requireContext(), R.color.color_profesor_3), ContextCompat.getColor(requireContext(), R.color.color_profesor_4), ContextCompat.getColor(requireContext(), R.color.color_profesor_5), ContextCompat.getColor(requireContext(), R.color.color_profesor_6)};
 
-        // Verificar autenticación y rol
+        // Verificar autenticación
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -110,27 +110,9 @@ public class TeacherFragment extends Fragment {
             return;
         }
 
-        // Verificar si es estudiante
-        verificarRolYConfigurar(currentUser.getUid());
-    }
-
-    private void verificarRolYConfigurar(String userId) {
-        db.collection("usuarios").document(userId).get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                String rol = documentSnapshot.getString("rol");
-                if ("estudiante".equals(rol)) {
-                    // Inicializar adapters PRIMERO
-                    inicializarAdaptersParaEstudiante();
-                    cargarProfesoresAgregados();
-                } else {
-                    // Si es profesor, ocultar FAB y mostrar mensaje
-                    fabAgregarProfesor.setVisibility(View.GONE);
-                    mostrarMensajeProfesor();
-                }
-            }
-        }).addOnFailureListener(e -> {
-            Log.e("TeacherFragment", "Error al verificar rol: " + e.getMessage());
-        });
+        // Inicializar directamente para estudiante
+        inicializarAdaptersParaEstudiante();
+        cargarProfesoresAgregados();
     }
 
     // MÉTODO: Inicializar todos los adapters para estudiante
@@ -146,14 +128,12 @@ public class TeacherFragment extends Fragment {
         fabAgregarProfesor.setOnClickListener(v -> mostrarDialogoAgregarProfesor());
 
         // INICIALIZAR ADAPTERS
-        // 🔥 CAMBIO: Inicializar adapter con listener de eliminación
         adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext(), (profesor, profesorId, position) -> mostrarDialogoConfirmacionEliminacion(profesor, profesorId, position));
         rvProfesores.setAdapter(adapterProfesores);
-
-        inicializarAdapterQuizzes(); // Asegurar que el adapter de quizzes esté listo
+        inicializarAdapterQuizzes();
     }
 
-    // 🔥 NUEVO MÉTODO: Mostrar diálogo de confirmación para eliminar profesor
+    // MÉTODO: Mostrar diálogo de confirmación para eliminar profesor
     private void mostrarDialogoConfirmacionEliminacion(Usuario profesor, String profesorId, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Eliminar Profesor");
@@ -164,7 +144,6 @@ public class TeacherFragment extends Fragment {
                 @Override
                 public void onExito() {
                     Toast.makeText(getContext(), "Profesor eliminado exitosamente", Toast.LENGTH_SHORT).show();
-                    // El listener de Firestore actualizará automáticamente la UI
                 }
 
                 @Override
@@ -177,12 +156,10 @@ public class TeacherFragment extends Fragment {
         builder.setNegativeButton("Cancelar", null);
         AlertDialog dialog = builder.create();
         dialog.show();
-
-        // Personalizar color del botón eliminar
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
     }
 
-    // 🔥 NUEVO MÉTODO: Eliminar profesor de la lista del usuario actual
+    // MÉTODO: Eliminar profesor de la lista del usuario actual
     private void eliminarProfesor(String profesorId, OnProfesorEliminadoListener listener) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
@@ -193,23 +170,10 @@ public class TeacherFragment extends Fragment {
         db.collection("usuarios").document(currentUser.getUid()).update("profesoresAgregados", FieldValue.arrayRemove(profesorId)).addOnSuccessListener(aVoid -> {
             Log.d("TeacherFragment", "Profesor eliminado de la lista: " + profesorId);
             listener.onExito();
-
-            // Los quizzes desaparecerán automáticamente porque el listener
-            // de cargarQuizzesProfesores se actualiza al cambiar profesoresAgregados
         }).addOnFailureListener(e -> {
             Log.e("TeacherFragment", "Error al eliminar profesor: " + e.getMessage());
             listener.onError(e.getMessage());
         });
-    }
-
-    private void mostrarMensajeProfesor() {
-        layoutVacio.setVisibility(View.VISIBLE);
-        TextView titulo = layoutVacio.findViewById(R.id.textViewTitulo);
-        TextView subtitulo = layoutVacio.findViewById(R.id.textViewSubtitulo);
-
-        if (titulo != null) titulo.setText("Vista de Profesor");
-        if (subtitulo != null)
-            subtitulo.setText("Los estudiantes te verán aquí cuando agreguen tu código");
     }
 
     private void mostrarDialogoAgregarProfesor() {
@@ -270,7 +234,6 @@ public class TeacherFragment extends Fragment {
 
         db.collection("usuarios").document(currentUser.getUid()).update("profesoresAgregados", FieldValue.arrayUnion(profesorId)).addOnSuccessListener(aVoid -> {
             Toast.makeText(getContext(), "Profesor " + nombreProfesor + " agregado exitosamente", Toast.LENGTH_SHORT).show();
-            // No necesitamos recargar manualmente porque el listener se encargará
         }).addOnFailureListener(e -> {
             Toast.makeText(getContext(), "Error al agregar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         });
@@ -369,7 +332,6 @@ public class TeacherFragment extends Fragment {
                         }
                     }
 
-                    // Verificación adicional de null
                     if (adapterQuizzesProfesores != null) {
                         adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
                         adapterQuizzesProfesores.notifyDataSetChanged();
@@ -433,7 +395,7 @@ public class TeacherFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        // Limpiar listeners cuando el fragment se destruye para evitar memory leaks
+        // Limpiar listeners cuando el fragment se destruye
         if (quizzesListener != null) {
             quizzesListener.remove();
             quizzesListener = null;
@@ -447,7 +409,6 @@ public class TeacherFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        // Opcional: Limpiar listeners cuando el fragment se pausa
         if (quizzesListener != null) {
             quizzesListener.remove();
         }
@@ -459,9 +420,6 @@ public class TeacherFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        // Recargar datos cuando el fragment se vuelve visible
-        // PERO ahora usamos listeners en tiempo real, así que solo necesitamos
-        // recargar si los listeners no están activos
         if (quizzesListener == null || profesoresListener == null) {
             cargarProfesoresAgregados();
         }

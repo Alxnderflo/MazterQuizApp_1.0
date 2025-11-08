@@ -6,6 +6,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager2 viewPager;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
+    private String userRol;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +52,141 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Log.d("FASE2", "Usuario autenticado: " + currentUser.getUid() + ", email: " + currentUser.getEmail());
-        configViewPager();
-        configBottomNavigation();
 
-        // Verificar y generar código para profesores
-        verificarYGenerarCodigoProfesor(currentUser.getUid());
+        // Primero obtener el rol, luego configurar navegación
+        obtenerRolYConfigurarNavegacion(currentUser.getUid());
+    }
+
+    private void obtenerRolYConfigurarNavegacion(String userId) {
+        db.collection("usuarios").document(userId)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        userRol = documentSnapshot.getString("rol");
+                        Log.d("FASE2", "Rol obtenido: " + userRol);
+
+                        if ("profesor".equals(userRol)) {
+                            configurarMenuProfesor();
+                            // Verificar y generar código para profesores
+                            verificarYGenerarCodigoProfesor(userId);
+                        } else {
+                            configurarMenuEstudiante();
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("FASE2", "Error al obtener rol: " + e.getMessage());
+                    // Por defecto, configurar como estudiante
+                    configurarMenuEstudiante();
+                });
+    }
+
+    private void configurarMenuProfesor() {
+        Log.d("FASE2", "Configurando menú para PROFESOR");
+
+        // Configurar ViewPager para profesor
+        viewPager = findViewById(R.id.viewPager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+
+        adapter.addFragment(new HomeFragment());        // Sus quizzes
+        adapter.addFragment(new ScoreFragment());       // Sus estadísticas
+        adapter.addFragment(new StudentFragment());     // Lista de estudiantes
+
+        viewPager.setAdapter(adapter);
+        configurarBottomNavigationProfesor();
+    }
+
+    private void configurarMenuEstudiante() {
+        Log.d("FASE2", "Configurando menú para ESTUDIANTE");
+
+        // Configurar ViewPager para estudiante
+        viewPager = findViewById(R.id.viewPager);
+        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
+
+        adapter.addFragment(new HomeFragment());        // Quizzes disponibles
+        adapter.addFragment(new ScoreFragment());       // Sus resultados
+        adapter.addFragment(new TeacherFragment());     // Lista de profesores
+
+        viewPager.setAdapter(adapter);
+        configurarBottomNavigationEstudiante();
+    }
+
+    private void configurarBottomNavigationProfesor() {
+        Log.d("FASE2", "Configurando BottomNavigation para PROFESOR");
+
+        binding.btnNavView.getMenu().clear();
+        binding.btnNavView.inflateMenu(R.menu.bottom_nav_menu_teacher);
+
+        binding.btnNavView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.Inicio) {
+                viewPager.setCurrentItem(0, true);
+                Log.d("FASE2", "Profesor - Navegación a Inicio");
+            } else if (item.getItemId() == R.id.Score) {
+                viewPager.setCurrentItem(1, true);
+                Log.d("FASE2", "Profesor - Navegación a Estadísticas");
+            } else if (item.getItemId() == R.id.Students) {  // 🔥 CAMBIO: R.id.Students
+                viewPager.setCurrentItem(2, true);
+                Log.d("FASE2", "Profesor - Navegación a Estudiantes");
+            }
+            return true;
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0:
+                        binding.btnNavView.setSelectedItemId(R.id.Inicio);
+                        break;
+                    case 1:
+                        binding.btnNavView.setSelectedItemId(R.id.Score);
+                        break;
+                    case 2:
+                        binding.btnNavView.setSelectedItemId(R.id.Students);  // 🔥 CAMBIO
+                        break;
+                }
+            }
+        });
+    }
+
+    private void configurarBottomNavigationEstudiante() {
+        Log.d("FASE2", "Configurando BottomNavigation para ESTUDIANTE");
+
+        binding.btnNavView.getMenu().clear();
+        binding.btnNavView.inflateMenu(R.menu.bottom_nav_menu_student);
+
+        binding.btnNavView.setOnItemSelectedListener(item -> {
+            if (item.getItemId() == R.id.Inicio) {
+                viewPager.setCurrentItem(0, true);
+                Log.d("FASE2", "Estudiante - Navegación a Inicio");
+            } else if (item.getItemId() == R.id.Score) {
+                viewPager.setCurrentItem(1, true);
+                Log.d("FASE2", "Estudiante - Navegación a Estadísticas");
+            } else if (item.getItemId() == R.id.Teachers) {  // 🔥 CAMBIO: R.id.Teachers
+                viewPager.setCurrentItem(2, true);
+                Log.d("FASE2", "Estudiante - Navegación a Profesores");
+            }
+            return true;
+        });
+
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                switch (position) {
+                    case 0:
+                        binding.btnNavView.setSelectedItemId(R.id.Inicio);
+                        break;
+                    case 1:
+                        binding.btnNavView.setSelectedItemId(R.id.Score);
+                        break;
+                    case 2:
+                        binding.btnNavView.setSelectedItemId(R.id.Teachers);  // 🔥 CAMBIO
+                        break;
+                }
+            }
+        });
     }
 
     // Verificar si es profesor y generar código si no tiene
@@ -105,7 +237,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < 6; i++) {
             int index = random.nextInt(caracteres.length());
             codigo.append(caracteres.charAt(index));
-            Log.v("FASE2", "Carácter " + (i+1) + ": " + caracteres.charAt(index));
+            Log.v("FASE2", "Carácter " + (i + 1) + ": " + caracteres.charAt(index));
         }
 
         String codigoFinal = codigo.toString();
@@ -173,55 +305,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e("FASE2", "Error al mostrar diálogo: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    private void configViewPager() {
-        Log.d("FASE2", "Configurando ViewPager");
-        viewPager = findViewById(R.id.viewPager);
-        ViewPagerAdapter adapter = new ViewPagerAdapter(this);
-
-        adapter.addFragment(new HomeFragment());
-        adapter.addFragment(new ScoreFragment());
-        adapter.addFragment(new TeacherFragment());
-
-        viewPager.setAdapter(adapter);
-        Log.d("FASE2", "ViewPager configurado");
-    }
-
-    private void configBottomNavigation() {
-        Log.d("FASE2", "Configurando BottomNavigation");
-        binding.btnNavView.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.Inicio) {
-                viewPager.setCurrentItem(0, true);
-                Log.d("FASE2", "Navegación a Inicio");
-            } else if (item.getItemId() == R.id.Score) {
-                viewPager.setCurrentItem(1, true);
-                Log.d("FASE2", "Navegación a Score");
-            } else if (item.getItemId() == R.id.Teacher) {
-                viewPager.setCurrentItem(2, true);
-                Log.d("FASE2", "Navegación a Teacher");
-            }
-            return true;
-        });
-
-        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            @Override
-            public void onPageSelected(int position) {
-                super.onPageSelected(position);
-                Log.d("FASE2", "Página seleccionada: " + position);
-                switch (position) {
-                    case 0:
-                        binding.btnNavView.setSelectedItemId(R.id.Inicio);
-                        break;
-                    case 1:
-                        binding.btnNavView.setSelectedItemId(R.id.Score);
-                        break;
-                    case 2:
-                        binding.btnNavView.setSelectedItemId(R.id.Teacher);
-                        break;
-                }
-            }
-        });
     }
 
     @Override

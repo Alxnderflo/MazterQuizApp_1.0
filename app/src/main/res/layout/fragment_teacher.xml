@@ -62,9 +62,11 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvProfesores"
                 android:layout_width="match_parent"
-                android:layout_height="150dp"
+                android:layout_height="170dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginEnd="16dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:paddingBottom="16dp"
                 android:visibility="gone" />
 

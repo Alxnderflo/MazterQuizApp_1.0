@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="160dp"
-    android:layout_height="120dp"
-    android:orientation="vertical">
+    android:layout_width="176dp"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="8dp"
+        android:layout_height="120dp"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="16dp"
         app:cardElevation="4dp">
 
-        <!-- Cambiado a FrameLayout para permitir posicionamiento libre -->
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- Contenido principal centrado -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -27,7 +26,6 @@
                 android:padding="16dp"
                 android:gravity="center">
 
-                <!-- Ícono de profesor coloreado -->
                 <ImageView
                     android:id="@+id/iconoProfesor"
                     android:layout_width="40dp"
@@ -36,7 +34,6 @@
                     android:contentDescription="Ícono de profesor"
                     app:tint="@color/color_profesor_1" />
 
-                <!-- Nombre del profesor -->
                 <TextView
                     android:id="@+id/txtNombreProfesor"
                     android:layout_width="match_parent"
@@ -51,7 +48,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Botón de eliminar en la esquina superior derecha -->
             <ImageButton
                 android:id="@+id/btnEliminarProfesor"
                 android:layout_width="30dp"
@@ -68,4 +64,4 @@
         </FrameLayout>
 
     </androidx.cardview.widget.CardView>
-</LinearLayout>
+</FrameLayout>
