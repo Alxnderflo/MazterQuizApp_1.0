@@ -93,7 +93,7 @@ public class TeacherFragment extends Fragment {
         tvQuizzesProfesores = view.findViewById(R.id.tvQuizzesProfesores);
 
         // Inicializar colores
-        coloresProfesores = new int[] {
+        coloresProfesores = new int[]{
                 ContextCompat.getColor(requireContext(), R.color.color_profesor_1),
                 ContextCompat.getColor(requireContext(), R.color.color_profesor_2),
                 ContextCompat.getColor(requireContext(), R.color.color_profesor_3),
@@ -121,7 +121,9 @@ public class TeacherFragment extends Fragment {
                     if (documentSnapshot.exists()) {
                         String rol = documentSnapshot.getString("rol");
                         if ("estudiante".equals(rol)) {
-                            configurarParaEstudiante();
+                            // 🔥 CAMBIO: Inicializar adapters PRIMERO
+                            inicializarAdaptersParaEstudiante();
+                            cargarProfesoresAgregados();
                         } else {
                             // Si es profesor, ocultar FAB y mostrar mensaje
                             fabAgregarProfesor.setVisibility(View.GONE);
@@ -132,6 +134,25 @@ public class TeacherFragment extends Fragment {
                 .addOnFailureListener(e -> {
                     Log.e("TeacherFragment", "Error al verificar rol: " + e.getMessage());
                 });
+    }
+
+    // 🔥 NUEVO MÉTODO: Inicializar todos los adapters para estudiante
+    private void inicializarAdaptersParaEstudiante() {
+        // Configurar RecyclerViews
+        LinearLayoutManager layoutManagerHorizontal = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+        rvProfesores.setLayoutManager(layoutManagerHorizontal);
+
+        LinearLayoutManager layoutManagerVertical = new LinearLayoutManager(getContext());
+        rvQuizzesProfesores.setLayoutManager(layoutManagerVertical);
+
+        // Configurar FAB
+        fabAgregarProfesor.setOnClickListener(v -> mostrarDialogoAgregarProfesor());
+
+        // INICIALIZAR ADAPTERS
+        adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext());
+        rvProfesores.setAdapter(adapterProfesores);
+
+        inicializarAdapterQuizzes(); // 🔥 Asegurar que el adapter de quizzes esté listo
     }
 
     private void configurarParaEstudiante() {
@@ -145,7 +166,7 @@ public class TeacherFragment extends Fragment {
         // Configurar FAB
         fabAgregarProfesor.setOnClickListener(v -> mostrarDialogoAgregarProfesor());
 
-        // Configurar adapters
+        // CONFIGURAR ADAPTERS
         adapterProfesores = new ProfesoresAdapter(listaProfesores, coloresProfesores, getContext());
         rvProfesores.setAdapter(adapterProfesores);
 
@@ -155,8 +176,8 @@ public class TeacherFragment extends Fragment {
                 new QuizzesProfesorAdapter.OnQuizClickListener() {
                     @Override
                     public void onQuizClick(Quiz quiz, String quizId) {
-                        // Para FASE 4 - resolución de quizzes
-                        Toast.makeText(getContext(), "Funcionalidad de resolución próximamente", Toast.LENGTH_SHORT).show();
+                        // FASE 5: Abrir directamente ResolverQuizActivity para quizzes de profesores
+                        abrirResolverQuiz(quiz, quizId);
                     }
                 },
                 coloresProfesores,
@@ -164,9 +185,18 @@ public class TeacherFragment extends Fragment {
         );
 
         rvQuizzesProfesores.setAdapter(adapterQuizzesProfesores);
-
         // Cargar datos con listeners en tiempo real
         cargarProfesoresAgregados();
+    }
+
+    private void abrirResolverQuiz(Quiz quiz, String quizId) {
+        if (getActivity() != null) {
+            Intent intent = new Intent(getActivity(), ResolverQuizActivity.class);
+            intent.putExtra("quiz_id", quizId);
+            intent.putExtra("quiz_titulo", quiz.getTitulo());
+            intent.putExtra("total_preguntas", quiz.getNumPreguntas());
+            startActivity(intent);
+        }
     }
 
     private void mostrarMensajeProfesor() {
@@ -175,7 +205,8 @@ public class TeacherFragment extends Fragment {
         TextView subtitulo = layoutVacio.findViewById(R.id.textViewSubtitulo);
 
         if (titulo != null) titulo.setText("Vista de Profesor");
-        if (subtitulo != null) subtitulo.setText("Los estudiantes te verán aquí cuando agreguen tu código");
+        if (subtitulo != null)
+            subtitulo.setText("Los estudiantes te verán aquí cuando agreguen tu código");
     }
 
     private void mostrarDialogoAgregarProfesor() {
@@ -320,6 +351,12 @@ public class TeacherFragment extends Fragment {
             quizzesListener.remove();
         }
 
+        // 🔥 NUEVO: Verificar que el adapter esté inicializado antes de usarlo
+        if (adapterQuizzesProfesores == null) {
+            Log.e("TeacherFragment", "Adapter de quizzes es null - inicializando...");
+            inicializarAdapterQuizzes();
+        }
+
         // Usar SnapshotListener para updates en tiempo real
         quizzesListener = db.collection("quizzes")
                 .whereIn("userId", profesoresIds)
@@ -345,12 +382,36 @@ public class TeacherFragment extends Fragment {
                                 }
                             }
 
-                            adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
-                            adapterQuizzesProfesores.notifyDataSetChanged();
-                            actualizarVisibilidadQuizzes();
+                            // 🔥 NUEVO: Verificación adicional de null
+                            if (adapterQuizzesProfesores != null) {
+                                adapterQuizzesProfesores.actualizarIds(listaQuizzesIdsProfesores);
+                                adapterQuizzesProfesores.notifyDataSetChanged();
+                                actualizarVisibilidadQuizzes();
+                            } else {
+                                Log.e("TeacherFragment", "Adapter sigue siendo null - no se puede actualizar");
+                            }
                         }
                     }
                 });
+    }
+
+    // 🔥 NUEVO MÉTODO: Inicializar adapter de quizzes
+    private void inicializarAdapterQuizzes() {
+        if (adapterQuizzesProfesores == null) {
+            adapterQuizzesProfesores = new QuizzesProfesorAdapter(
+                    listaQuizzesProfesores,
+                    getContext(),
+                    new QuizzesProfesorAdapter.OnQuizClickListener() {
+                        @Override
+                        public void onQuizClick(Quiz quiz, String quizId) {
+                            abrirResolverQuiz(quiz, quizId);
+                        }
+                    },
+                    coloresProfesores,
+                    mapaColoresProfesores
+            );
+            rvQuizzesProfesores.setAdapter(adapterQuizzesProfesores);
+        }
     }
 
     private void mostrarVistaVacia() {

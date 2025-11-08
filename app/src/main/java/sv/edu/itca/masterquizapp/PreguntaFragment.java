@@ -22,6 +22,7 @@ import java.util.Map;
  * Use the {@link PreguntaFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 // CAMBIO-QUIZ: Fragment para mostrar una pregunta individual
 public class PreguntaFragment extends Fragment {
     private static final String ARG_PREGUNTA = "pregunta";

@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,6 +22,7 @@ import java.util.Map;
 import java.util.Random;
 
 import sv.edu.itca.masterquizapp.databinding.ActivityMainBinding;
+
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding binding;
     private ViewPager2 viewPager;
@@ -53,11 +53,11 @@ public class MainActivity extends AppCompatActivity {
         configViewPager();
         configBottomNavigation();
 
-        // NUEVO: Verificar y generar código para profesores
+        // Verificar y generar código para profesores
         verificarYGenerarCodigoProfesor(currentUser.getUid());
     }
 
-    // NUEVO MÉTODO: Verificar si es profesor y generar código si no tiene
+    // Verificar si es profesor y generar código si no tiene
     private void verificarYGenerarCodigoProfesor(String userId) {
         Log.d("FASE2", "Iniciando verificación de código para profesor - UserId: " + userId);
 
@@ -77,7 +77,9 @@ public class MainActivity extends AppCompatActivity {
                             Log.d("FASE2", "Usuario es PROFESOR");
                             if (codigoProfesor == null || codigoProfesor.isEmpty()) {
                                 Log.d("FASE2", "Profesor sin código - Generando código único");
-                                generarCodigoUnico(userId);
+                                // CAMBIO: Generar directamente sin verificar unicidad
+                                String nuevoCodigo = generarCodigo();
+                                guardarCodigoProfesor(userId, nuevoCodigo);
                             } else {
                                 Log.d("FASE2", "Profesor YA TIENE código: " + codigoProfesor);
                             }
@@ -94,37 +96,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    // NUEVO MÉTODO: Generar código único para profesor
-    private void generarCodigoUnico(String userId) {
-        String nuevoCodigo = generarCodigo();
-        Log.d("FASE2", "Código generado: " + nuevoCodigo + " - Verificando unicidad...");
-
-        db.collection("usuarios")
-                .whereEqualTo("codigoProfesor", nuevoCodigo)
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    Log.d("FASE2", "Verificación unicidad - Documentos encontrados: " + queryDocumentSnapshots.size());
-
-                    if (queryDocumentSnapshots.isEmpty()) {
-                        Log.d("FASE2", "✅ Código ÚNICO - Guardando en Firestore");
-                        guardarCodigoProfesor(userId, nuevoCodigo);
-                    } else {
-                        Log.d("FASE2", "❌ Código DUPLICADO - Regenerando...");
-                        generarCodigoUnico(userId);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.e("FASE2", "ERROR al verificar código único: " + e.getMessage());
-                    e.printStackTrace();
-                    // Reintentar después de un breve delay
-                    new Handler().postDelayed(() -> {
-                        Log.d("FASE2", "Reintentando generación de código después de error...");
-                        generarCodigoUnico(userId);
-                    }, 1000);
-                });
-    }
-
-    // NUEVO MÉTODO: Generar código de 6 caracteres alfanuméricos
+    // Generar código de 6 caracteres alfanuméricos
     private String generarCodigo() {
         String caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Excluye O/0, I/1
         Random random = new Random();
@@ -141,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
         return codigoFinal;
     }
 
-    // NUEVO MÉTODO: Guardar código en Firestore y mostrar diálogo
+    // Guardar código en Firestore y mostrar diálogo
     private void guardarCodigoProfesor(String userId, String codigo) {
         Log.d("FASE2", "Guardando código en Firestore - UserId: " + userId + ", Código: " + codigo);
 
@@ -152,14 +124,13 @@ public class MainActivity extends AppCompatActivity {
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("FASE2", "✅ Código guardado EXITOSAMENTE en Firestore");
-                    // Mostrar diálogo con el código asignado
                     mostrarDialogoCodigoAsignado(codigo);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("FASE2", "❌ ERROR al guardar código de profesor: " + e.getMessage());
                     e.printStackTrace();
 
-                    // Intentar con set() si update falla (por si el campo no existe)
+                    // Intentar con set() si update falla
                     Log.d("FASE2", "Intentando guardar con set()...");
                     Map<String, Object> userData = new HashMap<>();
                     userData.put("codigoProfesor", codigo);
@@ -175,7 +146,7 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
-    // NUEVO MÉTODO: Mostrar diálogo con el código asignado
+    // Mostrar diálogo con el código asignado
     private void mostrarDialogoCodigoAsignado(String codigo) {
         Log.d("FASE2", "Mostrando diálogo con código asignado: " + codigo);
 
@@ -183,7 +154,6 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle("Código de Profesor Asignado");
         builder.setMessage("Tu código único es: " + codigo + "\n\nComparte este código con tus estudiantes para que puedan agregarte.");
         builder.setPositiveButton("Copiar Código", (dialog, which) -> {
-            // Copiar al portapapeles
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Código Profesor", codigo);
             clipboard.setPrimaryClip(clip);
@@ -205,15 +175,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    // MÉTODOS EXISTENTES (sin cambios)
     private void configViewPager() {
         Log.d("FASE2", "Configurando ViewPager");
         viewPager = findViewById(R.id.viewPager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
-        adapter.addFragment(new HomeFragment());      // Posición 0
-        adapter.addFragment(new ScoreFragment());     // Posición 1
-        adapter.addFragment(new TeacherFragment());   // Posición 2
+        adapter.addFragment(new HomeFragment());
+        adapter.addFragment(new ScoreFragment());
+        adapter.addFragment(new TeacherFragment());
 
         viewPager.setAdapter(adapter);
         Log.d("FASE2", "ViewPager configurado");
@@ -259,7 +228,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Log.d("FASE2", "MainActivity onStart()");
-        // Verificar autenticación cada vez que la app se reanude
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null || !currentUser.isEmailVerified()) {
             Log.d("FASE2", "Usuario no autenticado en onStart() - redirigiendo");

@@ -1,243 +1,32 @@
-La aplicación MasterQuizApp es una plataforma móvil desarrollada en Android que permite a usuarios crear, gestionar y resolver quizzes interactivos. A continuación se detalla su lógica y funcionalidad actual:
+La aplicación MasterQuizApp es una app móvil desarrollada en Android que permite a usuarios crear, gestionar y resolver quizzes de manera interactiva. Utiliza Firebase para autenticación y Firestore como base de datos, además de Cloudinary para el almacenamiento de imágenes. La app está estructurada con roles de usuario: estudiantes y profesores, lo que permite funcionalidades diferenciadas.
 
-FUNCIONALIDADES PRINCIPALES:
+La app inicia con una pantalla de splash animada (SplashScreen) que muestra el logo de Master Quiz con transiciones suaves, incluyendo fade in/out, zoom y rotaciones sutiles, durando aproximadamente 4 segundos antes de redirigir al login.
 
-1. AUTENTICACIÓN Y GESTIÓN DE USUARIOS:
-- Inicio de sesión mediante email/contraseña o Google Sign-In
-- Registro de nuevos usuarios con selección de rol (estudiante o profesor)
-- Verificación obligatoria de email antes del acceso completo
-- Gestión de sesiones con verificación automática en cada actividad
-- Redirección automática a login si no hay usuario autenticado
+El sistema de autenticación (LoginActivity) soporta login con email/contraseña o Google Sign-In. Requiere verificación de email para cuentas creadas con email, redirigiendo a usuarios no verificados a una pantalla de verificación (VerificacionEmailActivity). Para usuarios nuevos con Google, se redirige a selección de rol (RoleSelectionActivity).
 
-2. NAVEGACIÓN PRINCIPAL:
-- Interfaz principal con navegación inferior (BottomNavigationView)
-- Tres secciones principales: Inicio (Home), Puntajes (Score) y Profesor (Teacher)
-- Implementación con ViewPager2 para deslizamiento entre fragments
+El registro (RegistroActivity) permite crear cuentas con nombre, email, contraseña y selección de rol (estudiante o profesor). Envía un email de verificación y guarda datos en Firestore, incluyendo campos específicos por rol: profesores tienen un campo para código único (generado posteriormente), y estudiantes una lista de profesores agregados.
 
-3. GESTIÓN DE QUIZZES (FRAGMENT INICIO):
-- Creación de quizzes con título, descripción e imagen opcional
-- Subida de imágenes a Cloudinary con manejo de permisos y conexión
-- Edición completa de quizzes existentes
-- Eliminación de quizzes con confirmación y eliminación en cascada de preguntas
-- Lista en tiempo real de quizzes del usuario actual ordenados por fecha
-- Validación de campos obligatorios y límites de caracteres
+En la actividad principal (MainActivity), después de autenticación, se muestra un ViewPager con tres pestañas: Inicio (HomeFragment), Puntajes (ScoreFragment) y Profesores (TeacherFragment), con navegación por bottom navigation bar.
 
-4. GESTIÓN DE PREGUNTAS:
-- Creación de preguntas individuales para cada quiz
-- Cada pregunta incluye enunciado y 4 opciones (1 correcta, 3 incorrectas)
-- Edición de preguntas existentes manteniendo el orden
-- Eliminación de preguntas con reordenamiento automático del resto
-- Validación de que se completen todos los campos
-- Contador automático de preguntas por quiz
-- Límite de 5 a 20 preguntas por quiz para poder resolverlo
+El HomeFragment permite a usuarios ver sus quizzes propios en una lista RecyclerView, con opciones para crear nuevos quizzes (botón flotante), editar existentes o eliminarlos. Los quizzes se almacenan en Firestore con campos como título, descripción, imagen URL, fecha de creación, número de preguntas, ID de usuario, nombre de usuario, rol y visibilidad (público/privado). Los profesores pueden marcar quizzes como públicos, mientras que estudiantes siempre los crean privados.
 
-5. RESOLUCIÓN DE QUIZZES:
-- Interfaz de resolución pregunta por pregunta
-- Navegación secuencial sin posibilidad de regresar
-- Registro automático de respuestas y calificación en tiempo real
-- Diálogo de confirmación al intentar salir durante la resolución
-- Bloqueo de deslizamiento manual del ViewPager2
+La creación/edición de quizzes (CrearQuizActivity) incluye campos para título, descripción e imagen. Las imágenes se suben a Cloudinary, con manejo de permisos para acceso a galería (diferenciando versiones de Android). Incluye un switch para visibilidad que solo aparece para profesores. En modo edición, carga datos existentes y permite actualizarlos.
 
-6. SISTEMA DE RESULTADOS:
-- Pantalla de resultados con puntuación final (X/Y)
-- Lista detallada de cada pregunta con respuesta correcta/incorrecta
-- Color dinámico de la puntuación según desempeño (verde ≥80%, naranja ≥60%, rojo <60%)
-- Separadores visuales entre items de resultados
+El TeacherFragment está diseñado para estudiantes: muestra profesores agregados horizontalmente y sus quizzes públicos verticalmente. Incluye un FAB para agregar profesores mediante un código de 6 caracteres alfanumérico único generado para cada profesor. Los profesores agregados se almacenan en una lista en el documento del estudiante en Firestore. Para profesores, muestra un mensaje indicando que los estudiantes los verán ahí.
 
-7. COMPONENTES ADICIONALES:
-- Splash Screen con animaciones de logo y barra de progreso
-- Manejo de permisos para selección de imágenes
-- Verificación de conexión a internet para subida de imágenes
-- Diálogos de confirmación para acciones destructivas
-- Manejo de errores con mensajes informativos al usuario
+El ScoreFragment está actualmente vacío, marcado como TODO para futuras implementaciones de puntajes o estadísticas.
 
-8. ARQUITECTURA TÉCNICA:
-- Firebase Authentication para gestión de usuarios
-- Firebase Firestore como base de datos NoSQL
-- Cloudinary para almacenamiento de imágenes
-- Arquitectura MVVM con Activities, Fragments y Adapters
-- RecyclerView para listas dinámicas
-- Glide para carga eficiente de imágenes
-- ViewBinding para acceso seguro a vistas
+La gestión de preguntas (PreguntasActivity) permite agregar, editar y eliminar preguntas para un quiz específico. Cada pregunta tiene texto, opciones múltiples (A, B, C, D), respuesta correcta y opcionalmente imagen. Se almacenan en una subcolección "preguntas" del documento del quiz en Firestore.
 
-9. FUNCIONALIDADES PENDIENTES:
-- Fragment Score: Estructura básica sin implementación funcional
-- Fragment Teacher: Estructura básica sin implementación funcional
-- Posiblemente estadísticas avanzadas o funcionalidades de profesor
-
-10. MODELO DE DATOS ACTUAL DE FIREBASE:
-La aplicación utiliza Firebase Firestore como base de datos NoSQL con la siguiente estructura:
-
-Colección: `usuarios`
-- Documento ID: UID del usuario (de Firebase Auth)
-- Campos:
-  - nombre (String): Nombre del usuario
-  - email (String): Correo electrónico
-  - rol (String): "estudiante" o "profesor"
-  - fechaRegistro (Date): Fecha de registro
-  - proveedor (String, opcional): "google" si es login con Google
-
-Colección: `quizzes`
-- Documento ID: ID autogenerado por Firestore
-- Campos:
-  - titulo (String): Título del quiz
-  - descripcion (String): Descripción del quiz
-  - imagenUrl (String, opcional): URL de la imagen subida a Cloudinary
-  - fechaCreacion (Date): Fecha de creación
-  - numPreguntas (int): Número de preguntas en el quiz
-  - userId (String): ID del usuario creador
-  - userNombre (String): Nombre del usuario creador
-  - userRol (String): Rol del usuario creador
-
-Subcolección: `preguntas` (dentro de cada documento de quiz)
-- Documento ID: ID autogenerado por Firestore
-- Campos:
-  - enunciado (String): Texto de la pregunta
-  - correcta (String): Respuesta correcta
-  - incorrecta1 (String): Opción incorrecta 1
-  - incorrecta2 (String): Opción incorrecta 2
-  - incorrecta3 (String): Opción incorrecta 3
-  - orden (int): Posición de la pregunta en el quiz
-
-Nota: Los resultados de resolución de quizzes y estadísticas no se almacenan actualmente en Firebase, solo se procesan en la aplicación.
-
-## GESTIÓN DE USUARIOS:
-La aplicación **NO tiene una clase Usuario.java** como modelo de datos. En su lugar, utiliza directamente el objeto `FirebaseUser` de Firebase Authentication para gestionar la autenticación y obtiene los datos adicionales del usuario desde Firestore.
-
-**Cómo se controla la información de usuarios:**
-- **Firebase Authentication**: Maneja la autenticación (login/logout) y proporciona el objeto `FirebaseUser` con datos básicos como UID, email, displayName, etc.
-- **Firestore Collection "usuarios"**: Almacena datos adicionales del usuario (nombre, rol, fechaRegistro, proveedor) usando el UID como document ID.
-- **Acceso a datos**: En las activities se obtiene el `FirebaseUser` actual y se consulta Firestore cuando se necesitan datos adicionales del perfil.
-
-**Ventajas de este enfoque:**
-- Sincronización automática entre Auth y Firestore usando el mismo UID
-- Firebase Auth maneja automáticamente la persistencia de sesiones
-- No se necesita una clase POJO adicional para el usuario básico
-
-**Ejemplo de uso típico:**
-```java
-FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-if (currentUser != null) {
-    String userId = currentUser.getUid();
-    // Consultar datos adicionales desde Firestore si es necesario
-}
-```
-
-**Ejemplo práctico de consulta de datos de usuario (CrearQuizActivity.java):**
-```java
-FirebaseFirestore.getInstance().collection("usuarios").document(userId)
-    .get()
-    .addOnSuccessListener(documentSnapshot -> {
-        if (documentSnapshot.exists()) {
-            String userNombre = documentSnapshot.getString("nombre");
-            String userRol = documentSnapshot.getString("rol");
-
-            // Usar los datos obtenidos...
-        } else {
-            Toast.makeText(this, "Error: No se encontraron datos del usuario", Toast.LENGTH_SHORT).show();
-        }
-    })
-    .addOnFailureListener(e -> {
-        Toast.makeText(this, "Error al obtener datos del usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-    });
-```
-
-**Patrones observados en el código:**
-- **FirebaseUser para autenticación**: `FirebaseAuth.getInstance().getCurrentUser()` obtiene el usuario autenticado
-- **UID como ID del documento**: Usa `currentUser.getUid()` como ID del documento en Firestore
-- **Acceso directo a campos**: `documentSnapshot.getString("fieldName")` para obtener campos específicos
-- **Manejo de errores**: Verifica si el documento existe y maneja fallos
-- **Sin conversión a POJO**: Los datos se acceden directamente desde DocumentSnapshot, no se convierten a un objeto Usuario
-
-11. LISTADO DE ARCHIVOS Y CLASES ACTUALES (ORDENADO POR FLUJO DE ACCESO EN LA APP):
-A continuación se detalla cada archivo/clase Java en el proyecto ordenado por el flujo típico de acceso del usuario, desde el inicio de la aplicación hasta las funcionalidades completas:
-
-## CLASES DE CONFIGURACIÓN E INICIO:
-- **MyApplication.java**: Clase Application que inicializa Firebase Firestore y Cloudinary al inicio de la app.
-  - Métodos críticos: `onCreate()` (configura Firestore y Cloudinary).
-
-- **SplashScreen.java**: Actividad de pantalla de bienvenida con animaciones de logo y barra de progreso.
-  - Métodos críticos: `iniciarAnimaciones()` (coordina animaciones), `navegarALogin()` (transición a login).
-
-## CLASES DE AUTENTICACIÓN:
-- **LoginActivity.java**: Actividad de inicio de sesión con soporte para email/contraseña y Google Sign-In. Maneja verificación de email.
-  - Métodos críticos: `onCreate()` (configura autenticación), `onActivityResult()` (maneja resultado de Google Sign-In).
-
-- **RegistroActivity.java**: Actividad para registro de nuevos usuarios con selección de rol.
-  - Métodos críticos: Maneja registro con Firebase Auth y guardado en Firestore (detalles no leídos completamente).
-
-- **VerificacionEmailActivity.java**: Actividad para verificar email después del registro. Permite reenviar correo de verificación.
-  - Métodos críticos: `reenviarCorreoVerificacion()` (envía email de verificación), `setupBackPressedHandler()` (maneja botón atrás).
-
-- **RoleSelectionActivity.java**: Actividad para selección de rol (estudiante/profesor) después del registro con Google.
-  - Métodos críticos: Maneja selección y guardado de rol en Firestore.
-
-## CLASES DE NAVEGACIÓN PRINCIPAL:
-- **MainActivity.java**: Actividad principal con navegación por fragments usando ViewPager2 y BottomNavigationView.
-  - Métodos críticos: `configViewPager()` (configura fragments), `configBottomNavigation()` (maneja navegación inferior), `onStart()` (verifica autenticación).
-
-- **ViewPagerAdapter.java**: Adaptador ViewPager2 para navegación entre fragments principales (Home, Score, Teacher).
-  - Métodos críticos: `createFragment()` (crea fragment según posición), `addFragment()` (agrega fragment a lista).
-
-## CLASES DE GESTIÓN DE QUIZZES (HOME):
-- **HomeFragment.java**: Fragment principal que muestra la lista de quizzes del usuario. Maneja creación, edición y eliminación de quizzes.
-  - Métodos críticos: `obtenerQuizzes()` (carga quizzes desde Firestore), `eliminarQuiz()` (elimina quiz y preguntas asociadas), `mostrarDialogEliminar()` (diálogo de confirmación).
-
-- **QuizzesAdapter.java**: Adaptador RecyclerView para mostrar lista de quizzes en HomeFragment.
-  - Métodos críticos: `onBindViewHolder()` (enlaza datos con vista), interfaces `OnQuizClickListener` y `OnQuizMenuClickListener`.
-
-- **CrearQuizActivity.java**: Actividad para crear y editar quizzes, incluyendo subida de imágenes a Cloudinary. Gestiona permisos y validaciones.
-  - Métodos críticos: `guardarQuiz()` (guarda quiz en Firestore), `subirImagen()` (maneja subida a Cloudinary), `verificarPermisos()` (solicita permisos de almacenamiento).
-
-## CLASES DE GESTIÓN DE PREGUNTAS:
-- **PreguntasActivity.java**: Actividad que muestra la lista de preguntas de un quiz específico. Permite agregar, editar y eliminar preguntas.
-  - Métodos críticos: `cargarPreguntas()` (carga preguntas desde Firestore), `eliminarPregunta()` (elimina pregunta y reordena), `actualizarContadorPreguntasEnQuiz()` (mantiene contador sincronizado).
-
-- **PreguntasAdapter.java**: Adaptador RecyclerView para mostrar lista de preguntas en PreguntasActivity.
-  - Métodos críticos: `onBindViewHolder()` (enlaza datos con vista), interfaces `OnPreguntaClickListener` y `OnPreguntaDeleteListener`.
-
-- **CrearPreguntasActivity.java**: Actividad para crear y editar preguntas individuales de un quiz. Maneja la validación de campos y el guardado en Firestore.
-  - Métodos críticos: `guardarPregunta()` (valida y guarda pregunta), `actualizarPregunta()` (edita pregunta existente), `actualizarContadorPreguntas()` (actualiza contador en quiz padre).
-
-## CLASES DE RESOLUCIÓN DE QUIZZES:
-- **ResolverQuizActivity.java**: Actividad principal para resolver un quiz pregunta por pregunta usando ViewPager2.
-  - Métodos críticos: `cargarPreguntas()` (carga preguntas desde Firestore), `procesarRespuesta()` (maneja respuesta del usuario), `irAResultados()` (navega a resultados).
-
-- **QuizPagerAdapter.java**: Adaptador ViewPager2 para mostrar preguntas durante la resolución del quiz.
-  - Métodos críticos: `createFragment()` (crea fragment de pregunta), `actualizarPreguntas()` (actualiza lista de preguntas).
-
-- **PreguntaFragment.java**: Fragment que muestra una pregunta individual durante la resolución del quiz. Maneja selección de opciones y feedback visual.
-  - Métodos críticos: `onOpcionSeleccionada()` (procesa respuesta del usuario), `configurarUI()` (muestra pregunta y opciones), `aplicarEstiloCorrecto/Incorrecto()` (feedback visual).
-
-## CLASES DE RESULTADOS:
-- **ResultadosActivity.java**: Actividad que muestra los resultados finales del quiz con puntuación y detalle de respuestas.
-  - Métodos críticos: `configurarRecyclerView()` (muestra lista de resultados), `configurarUI()` (personaliza colores según desempeño).
-
-- **ResultadosAdapter.java**: Adaptador RecyclerView para mostrar lista de resultados en ResultadosActivity.
-  - Métodos críticos: `onBindViewHolder()` (enlaza datos con vista).
-
-## CLASES DE ESTADÍSTICAS (PENDIENTES DE IMPLEMENTACIÓN):
-- **ScoreFragment.java**: Fragment básico para mostrar puntuaciones/estadísticas (aún sin implementación funcional).
-  - Sin métodos críticos implementados aún.
-
-- **ScoreAdapter.java**: Adaptador RecyclerView para mostrar puntuaciones (parece preparado para futuras funcionalidades en ScoreFragment).
-  - Métodos críticos: `onBindViewHolder()` (enlaza datos con vista).
-
-- **TeacherFragment.java**: Fragment básico para funcionalidades de profesor (aún sin implementación funcional).
-  - Sin métodos críticos implementados aún.
-
-## MODELOS DE DATOS (POJOs):
-- **Quiz.java**: Clase modelo que representa un quiz con sus metadatos.
-  - No tiene métodos críticos específicos, es un POJO con getters/setters.
-
-- **Pregunta.java**: Clase modelo que representa una pregunta con sus opciones. Incluye lógica para mezclar opciones.
-  - Métodos críticos: `getOpcionesMezcladas()` (mezcla opciones aleatoriamente), `obtenerLetraCorrecta()` (determina letra de respuesta correcta).
-
-- **ResultadoPregunta.java**: Clase modelo que representa el resultado de una pregunta respondida.
-  - No tiene métodos críticos específicos, es un POJO con Parcelable para pasar datos entre activities.
-
-- **EstadisticasQuiz.java**: Clase modelo para estadísticas de quiz (parece ser un modelo de datos, posiblemente para futuras funcionalidades).
-
-La aplicación está completamente funcional para el flujo básico de creación y resolución de quizzes, con una interfaz intuitiva y manejo robusto de errores. Utiliza tecnologías modernas de Android y Firebase para proporcionar una experiencia fluida al usuario.
+La resolución de quizzes (ResolverQuizActivity) presenta preguntas en un ViewPager, permitiendo navegación entre ellas, selección de respuestas y cálculo de puntaje al finalizar.
 
 
+La app incluye modelos de datos como Quiz, Pregunta, Usuario, ResultadoPregunta, etc., con getters/setters apropiados. Utiliza adapters personalizados para RecyclerViews: QuizzesAdapter, PreguntasAdapter, ProfesoresAdapter, QuizzesProfesorAdapter, ResultadosAdapter.
+
+En MainActivity, para profesores, se genera automáticamente un código único de 6 caracteres alfanuméricos (excluyendo O/0 e I/1 para evitar confusiones), guardándolo en Firestore y mostrando un diálogo para copiarlo al portapapeles, facilitando que estudiantes los agreguen.
+
+La app maneja permisos para internet, acceso a red, lectura de imágenes (con distinción por versión de Android), y cámara (aunque no implementada aún). Usa Glide para cargar imágenes desde URLs.
+
+El diseño incluye layouts XML con temas, colores, íconos vectoriales y fondos gradientes. Incluye manejo de errores, toasts informativos y validaciones básicas en formularios.
+
+En resumen, la app funcional hasta el momento cubre autenticación completa, gestión de quizzes y preguntas, resolución interactiva, sistema de roles con vinculación profesor-estudiante, y almacenamiento en la nube con actualizaciones en tiempo real vía listeners de Firestore.
