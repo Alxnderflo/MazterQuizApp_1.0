@@ -37,3 +37,53 @@
 19. Como usuario, quiero navegación inferior basada en roles (Inicio para quizzes, Puntuación para resultados, lista de Estudiantes/Profesores) para que acceda a características relevantes eficientemente.
 
 20. Como usuario, quiero que la app verifique autenticación al inicio y reanudación de la app para que la seguridad se mantenga.
+
+=== LECTURAS EN FIREBASE ===
+
+1. MainActivity.java:
+   - db.collection("usuarios").document(userId).get() - Obtener rol del usuario al iniciar la app
+   - db.collection("usuarios").document(userId).get() - Verificar si profesor tiene código asignado
+
+2. CrearQuizActivity.java:
+   - FirebaseFirestore.getInstance().collection("usuarios").document(userId).get() - Obtener rol del usuario para configurar interfaz
+   - db.collection("quizzes").document(quizIdEdit).get() - Cargar estado de esPublico al editar quiz
+
+3. TeacherFragment.java:
+   - db.collection("usuarios").document(currentUser.getUid()).addSnapshotListener() - Escuchar cambios en profesores agregados del estudiante
+   - db.collection("usuarios").document(profesorId).get() - Obtener datos de cada profesor agregado
+   - db.collection("quizzes").whereIn("userId", profesoresIds).whereEqualTo("esPublico", true).orderBy("fechaCreacion", Query.Direction.DESCENDING).addSnapshotListener() - Escuchar quizzes públicos de profesores agregados
+
+4. StudentFragment.java:
+   - db.collection("usuarios").whereArrayContains("profesoresAgregados", currentUser.getUid()).whereEqualTo("rol", "estudiante").addSnapshotListener() - Escuchar estudiantes que agregaron al profesor
+   - db.collection("usuarios").document(estudianteId).addSnapshotListener() - Escuchar cambios individuales en cada estudiante (para detectar si removieron al profesor)
+   - db.collection("quizzes").whereEqualTo("userId", currentUser.getUid()).addSnapshotListener() - Escuchar quizzes del profesor para calcular métricas
+
+5. ScoreFragment.java:
+   - db.collection("resultados").whereEqualTo("userId", currentUser.getUid()).orderBy("fecha", Query.Direction.DESCENDING).addSnapshotListener() - Escuchar resultados de quizzes del usuario
+
+6. PreguntasActivity.java:
+   - db.collection("quizzes").document(quizId).addSnapshotListener() - Escuchar cambios en datos del quiz (título, descripción, etc.)
+   - db.collection("quizzes").document(quizId).collection("preguntas").orderBy("orden").addSnapshotListener() - Escuchar preguntas del quiz
+
+7. ResolverQuizActivity.java:
+   - db.collection("quizzes").document(quizId).collection("preguntas").orderBy("orden").get() - Obtener todas las preguntas del quiz para resolverlo
+
+8. HomeFragment.java (asumido por contexto, no leído directamente):
+   - Lecturas para mostrar lista de quizzes propios o disponibles
+
+=== ARCHIVOS CON LISTENERS EN TIEMPO REAL ===
+
+1. TeacherFragment.java:
+   - profesoresListener: Escucha cambios en profesores agregados del estudiante
+   - quizzesListener: Escucha quizzes públicos de profesores agregados
+
+2. StudentFragment.java:
+   - estudiantesListener: Escucha estudiantes que agregaron al profesor
+   - estudiantesListenersMap: Listeners individuales para cada estudiante (para detectar remociones)
+   - quizzesListener: Escucha quizzes del profesor para métricas
+
+3. ScoreFragment.java:
+   - resultadosListener: Escucha resultados de quizzes del usuario
+
+4. PreguntasActivity.java:
+   - Listener del quiz: Escucha cambios en datos del quiz (título, descripción, etc.)

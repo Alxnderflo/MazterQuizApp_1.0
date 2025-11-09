@@ -6,7 +6,6 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -30,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private FirebaseFirestore db;
     private String userRol;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +39,53 @@ public class MainActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+        sessionManager = new SessionManager(this);
 
-        Log.d("FASE2", "MainActivity iniciada");
+        Log.d("SESSION_MANAGER", "MainActivity iniciada");
 
         // Verificar autenticación
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null || !currentUser.isEmailVerified()) {
-            Log.d("FASE2", "Usuario no autenticado o email no verificado - redirigiendo a Login");
+            Log.d("SESSION_MANAGER", "Usuario no autenticado - redirigiendo a Login");
             startActivity(new Intent(this, LoginActivity.class));
             finish();
             return;
         }
 
-        Log.d("FASE2", "Usuario autenticado: " + currentUser.getUid() + ", email: " + currentUser.getEmail());
+        Log.d("SESSION_MANAGER", "Usuario autenticado: " + currentUser.getUid());
 
-        // Primero obtener el rol, luego configurar navegación
-        obtenerRolYConfigurarNavegacion(currentUser.getUid());
+        // ✅ NUEVO FLUJO: Primero intentar cargar desde SessionManager
+        verificarYCargarDatos(currentUser.getUid());
+    }
+
+    private void verificarYCargarDatos(String userId) {
+        // PRIMERO: Intentar cargar desde SessionManager
+        String rolGuardado = sessionManager.getUserRole();
+
+        if (rolGuardado != null) {
+            // ✅ DATOS LOCALES ENCONTRADOS - Cargar inmediatamente
+            Log.d("SESSION_MANAGER", "Rol cargado desde SessionManager: " + rolGuardado);
+            userRol = rolGuardado;
+
+            if ("profesor".equals(userRol)) {
+                configurarMenuProfesor();
+                String codigo = sessionManager.getProfessorCode();
+
+                // ✅ MEJORADO: Solo generar código si NO existe en SessionManager
+                if (codigo == null) {
+                    Log.d("SESSION_MANAGER", "Profesor sin código - verificando Firestore");
+                    verificarYGenerarCodigoProfesor(userId);
+                } else {
+                    Log.d("SESSION_MANAGER", "Profesor YA tiene código en SessionManager: " + codigo);
+                }
+            } else {
+                configurarMenuEstudiante();
+            }
+        } else {
+            // ❌ NO hay datos locales - Consultar Firestore (solo esta vez)
+            Log.d("SESSION_MANAGER", "No hay datos en SessionManager - consultando Firestore");
+            obtenerRolYConfigurarNavegacion(userId);
+        }
     }
 
     private void obtenerRolYConfigurarNavegacion(String userId) {
@@ -63,28 +94,36 @@ public class MainActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         userRol = documentSnapshot.getString("rol");
-                        Log.d("FASE2", "Rol obtenido: " + userRol);
+                        String codigoProfesor = documentSnapshot.getString("codigoProfesor");
+                        Log.d("SESSION_MANAGER", "Rol obtenido de Firestore: " + userRol);
+
+                        // ✅ GUARDAR SOLO ROL INICIALMENTE
+                        sessionManager.saveUserRole(userId, userRol);
 
                         if ("profesor".equals(userRol)) {
                             configurarMenuProfesor();
-                            // Verificar y generar código para profesores
-                            verificarYGenerarCodigoProfesor(userId);
+                            // Si ya tiene código en Firestore, guardarlo en SessionManager
+                            if (codigoProfesor != null && !codigoProfesor.isEmpty()) {
+                                sessionManager.saveProfessorCode(codigoProfesor);
+                                Log.d("SESSION_MANAGER", "Código existente guardado en SessionManager: " + codigoProfesor);
+                            } else {
+                                verificarYGenerarCodigoProfesor(userId);
+                            }
                         } else {
                             configurarMenuEstudiante();
                         }
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FASE2", "Error al obtener rol: " + e.getMessage());
+                    Log.e("SESSION_MANAGER", "Error al obtener rol: " + e.getMessage());
                     // Por defecto, configurar como estudiante
                     configurarMenuEstudiante();
                 });
     }
 
     private void configurarMenuProfesor() {
-        Log.d("FASE2", "Configurando menú para PROFESOR");
+        Log.d("SESSION_MANAGER", "Configurando menú para PROFESOR");
 
-        // Configurar ViewPager para profesor
         viewPager = findViewById(R.id.viewPager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
@@ -97,9 +136,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configurarMenuEstudiante() {
-        Log.d("FASE2", "Configurando menú para ESTUDIANTE");
+        Log.d("SESSION_MANAGER", "Configurando menú para ESTUDIANTE");
 
-        // Configurar ViewPager para estudiante
         viewPager = findViewById(R.id.viewPager);
         ViewPagerAdapter adapter = new ViewPagerAdapter(this);
 
@@ -112,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configurarBottomNavigationProfesor() {
-        Log.d("FASE2", "Configurando BottomNavigation para PROFESOR");
+        Log.d("SESSION_MANAGER", "Configurando BottomNavigation para PROFESOR");
 
         binding.btnNavView.getMenu().clear();
         binding.btnNavView.inflateMenu(R.menu.bottom_nav_menu_teacher);
@@ -120,13 +158,13 @@ public class MainActivity extends AppCompatActivity {
         binding.btnNavView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.Inicio) {
                 viewPager.setCurrentItem(0, true);
-                Log.d("FASE2", "Profesor - Navegación a Inicio");
+                Log.d("SESSION_MANAGER", "Profesor - Navegación a Inicio");
             } else if (item.getItemId() == R.id.Score) {
                 viewPager.setCurrentItem(1, true);
-                Log.d("FASE2", "Profesor - Navegación a Estadísticas");
-            } else if (item.getItemId() == R.id.Students) {  // 🔥 CAMBIO: R.id.Students
+                Log.d("SESSION_MANAGER", "Profesor - Navegación a Estadísticas");
+            } else if (item.getItemId() == R.id.Students) {
                 viewPager.setCurrentItem(2, true);
-                Log.d("FASE2", "Profesor - Navegación a Estudiantes");
+                Log.d("SESSION_MANAGER", "Profesor - Navegación a Estudiantes");
             }
             return true;
         });
@@ -143,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
                         binding.btnNavView.setSelectedItemId(R.id.Score);
                         break;
                     case 2:
-                        binding.btnNavView.setSelectedItemId(R.id.Students);  // 🔥 CAMBIO
+                        binding.btnNavView.setSelectedItemId(R.id.Students);
                         break;
                 }
             }
@@ -151,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void configurarBottomNavigationEstudiante() {
-        Log.d("FASE2", "Configurando BottomNavigation para ESTUDIANTE");
+        Log.d("SESSION_MANAGER", "Configurando BottomNavigation para ESTUDIANTE");
 
         binding.btnNavView.getMenu().clear();
         binding.btnNavView.inflateMenu(R.menu.bottom_nav_menu_student);
@@ -159,13 +197,13 @@ public class MainActivity extends AppCompatActivity {
         binding.btnNavView.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.Inicio) {
                 viewPager.setCurrentItem(0, true);
-                Log.d("FASE2", "Estudiante - Navegación a Inicio");
+                Log.d("SESSION_MANAGER", "Estudiante - Navegación a Inicio");
             } else if (item.getItemId() == R.id.Score) {
                 viewPager.setCurrentItem(1, true);
-                Log.d("FASE2", "Estudiante - Navegación a Estadísticas");
-            } else if (item.getItemId() == R.id.Teachers) {  // 🔥 CAMBIO: R.id.Teachers
+                Log.d("SESSION_MANAGER", "Estudiante - Navegación a Estadísticas");
+            } else if (item.getItemId() == R.id.Teachers) {
                 viewPager.setCurrentItem(2, true);
-                Log.d("FASE2", "Estudiante - Navegación a Profesores");
+                Log.d("SESSION_MANAGER", "Estudiante - Navegación a Profesores");
             }
             return true;
         });
@@ -182,72 +220,67 @@ public class MainActivity extends AppCompatActivity {
                         binding.btnNavView.setSelectedItemId(R.id.Score);
                         break;
                     case 2:
-                        binding.btnNavView.setSelectedItemId(R.id.Teachers);  // 🔥 CAMBIO
+                        binding.btnNavView.setSelectedItemId(R.id.Teachers);
                         break;
                 }
             }
         });
     }
 
-    // Verificar si es profesor y generar código si no tiene
     private void verificarYGenerarCodigoProfesor(String userId) {
-        Log.d("FASE2", "Iniciando verificación de código para profesor - UserId: " + userId);
+        Log.d("SESSION_MANAGER", "Verificando código para profesor - UserId: " + userId);
 
         db.collection("usuarios").document(userId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
-                    Log.d("FASE2", "Documento usuario obtenido - Existe: " + documentSnapshot.exists());
+                    Log.d("SESSION_MANAGER", "Documento usuario obtenido - Existe: " + documentSnapshot.exists());
 
                     if (documentSnapshot.exists()) {
                         String rol = documentSnapshot.getString("rol");
                         String codigoProfesor = documentSnapshot.getString("codigoProfesor");
 
-                        Log.d("FASE2", "Datos usuario - Rol: " + rol + ", Código: " + codigoProfesor);
+                        Log.d("SESSION_MANAGER", "Datos usuario - Rol: " + rol + ", Código: " + codigoProfesor);
 
-                        // Si es profesor y no tiene código, generarlo
                         if ("profesor".equals(rol)) {
-                            Log.d("FASE2", "Usuario es PROFESOR");
+                            Log.d("SESSION_MANAGER", "Usuario es PROFESOR");
                             if (codigoProfesor == null || codigoProfesor.isEmpty()) {
-                                Log.d("FASE2", "Profesor sin código - Generando código único");
-                                // CAMBIO: Generar directamente sin verificar unicidad
+                                Log.d("SESSION_MANAGER", "Profesor sin código - Generando código único");
                                 String nuevoCodigo = generarCodigo();
                                 guardarCodigoProfesor(userId, nuevoCodigo);
                             } else {
-                                Log.d("FASE2", "Profesor YA TIENE código: " + codigoProfesor);
+                                Log.d("SESSION_MANAGER", "Profesor YA TIENE código en Firestore: " + codigoProfesor);
+                                // ✅ Asegurar que el código existente se guarde en SessionManager
+                                sessionManager.saveProfessorCode(codigoProfesor);
                             }
                         } else {
-                            Log.d("FASE2", "Usuario NO es profesor - Rol: " + rol);
+                            Log.d("SESSION_MANAGER", "Usuario NO es profesor - Rol: " + rol);
                         }
                     } else {
-                        Log.e("FASE2", "ERROR: Documento de usuario no existe en Firestore");
+                        Log.e("SESSION_MANAGER", "ERROR: Documento de usuario no existe en Firestore");
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FASE2", "ERROR al verificar rol de usuario: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.e("SESSION_MANAGER", "ERROR al verificar rol de usuario: " + e.getMessage());
                 });
     }
 
-    // Generar código de 6 caracteres alfanuméricos
     private String generarCodigo() {
-        String caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Excluye O/0, I/1
+        String caracteres = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
         Random random = new Random();
         StringBuilder codigo = new StringBuilder(6);
 
         for (int i = 0; i < 6; i++) {
             int index = random.nextInt(caracteres.length());
             codigo.append(caracteres.charAt(index));
-            Log.v("FASE2", "Carácter " + (i + 1) + ": " + caracteres.charAt(index));
         }
 
         String codigoFinal = codigo.toString();
-        Log.d("FASE2", "Código final generado: " + codigoFinal);
+        Log.d("SESSION_MANAGER", "Código final generado: " + codigoFinal);
         return codigoFinal;
     }
 
-    // Guardar código en Firestore y mostrar diálogo
     private void guardarCodigoProfesor(String userId, String codigo) {
-        Log.d("FASE2", "Guardando código en Firestore - UserId: " + userId + ", Código: " + codigo);
+        Log.d("SESSION_MANAGER", "Guardando código en Firestore - UserId: " + userId + ", Código: " + codigo);
 
         Map<String, Object> updates = new HashMap<>();
         updates.put("codigoProfesor", codigo);
@@ -255,32 +288,32 @@ public class MainActivity extends AppCompatActivity {
         db.collection("usuarios").document(userId)
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
-                    Log.d("FASE2", "✅ Código guardado EXITOSAMENTE en Firestore");
+                    // ✅ GUARDAR CÓDIGO EN SESSION MANAGER SOLO CUANDO SE GENERA
+                    sessionManager.saveProfessorCode(codigo);
+                    Log.d("SESSION_MANAGER", "✅ Código guardado EXITOSAMENTE en Firestore y SessionManager");
                     mostrarDialogoCodigoAsignado(codigo);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e("FASE2", "❌ ERROR al guardar código de profesor: " + e.getMessage());
-                    e.printStackTrace();
+                    Log.e("SESSION_MANAGER", "❌ ERROR al guardar código de profesor: " + e.getMessage());
 
                     // Intentar con set() si update falla
-                    Log.d("FASE2", "Intentando guardar con set()...");
                     Map<String, Object> userData = new HashMap<>();
                     userData.put("codigoProfesor", codigo);
                     db.collection("usuarios").document(userId)
                             .set(userData, SetOptions.merge())
                             .addOnSuccessListener(aVoid2 -> {
-                                Log.d("FASE2", "✅ Código guardado con set() exitoso");
+                                sessionManager.saveProfessorCode(codigo);
+                                Log.d("SESSION_MANAGER", "✅ Código guardado con set() exitoso");
                                 mostrarDialogoCodigoAsignado(codigo);
                             })
                             .addOnFailureListener(e2 -> {
-                                Log.e("FASE2", "❌ ERROR también con set(): " + e2.getMessage());
+                                Log.e("SESSION_MANAGER", "❌ ERROR también con set(): " + e2.getMessage());
                             });
                 });
     }
 
-    // Mostrar diálogo con el código asignado
     private void mostrarDialogoCodigoAsignado(String codigo) {
-        Log.d("FASE2", "Mostrando diálogo con código asignado: " + codigo);
+        Log.d("SESSION_MANAGER", "Mostrando diálogo con código asignado: " + codigo);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Código de Profesor Asignado");
@@ -290,30 +323,29 @@ public class MainActivity extends AppCompatActivity {
             ClipData clip = ClipData.newPlainText("Código Profesor", codigo);
             clipboard.setPrimaryClip(clip);
             Toast.makeText(this, "Código copiado al portapapeles", Toast.LENGTH_SHORT).show();
-            Log.d("FASE2", "Código copiado al portapapeles: " + codigo);
+            Log.d("SESSION_MANAGER", "Código copiado al portapapeles: " + codigo);
         });
         builder.setNegativeButton("Entendido", (dialog, which) -> {
-            Log.d("FASE2", "Diálogo cerrado");
+            Log.d("SESSION_MANAGER", "Diálogo cerrado");
             dialog.dismiss();
         });
         builder.setCancelable(false);
 
         try {
             builder.show();
-            Log.d("FASE2", "Diálogo mostrado exitosamente");
+            Log.d("SESSION_MANAGER", "Diálogo mostrado exitosamente");
         } catch (Exception e) {
-            Log.e("FASE2", "Error al mostrar diálogo: " + e.getMessage());
-            e.printStackTrace();
+            Log.e("SESSION_MANAGER", "Error al mostrar diálogo: " + e.getMessage());
         }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.d("FASE2", "MainActivity onStart()");
+        Log.d("SESSION_MANAGER", "MainActivity onStart()");
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null || !currentUser.isEmailVerified()) {
-            Log.d("FASE2", "Usuario no autenticado en onStart() - redirigiendo");
+            Log.d("SESSION_MANAGER", "Usuario no autenticado en onStart() - redirigiendo");
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         }
