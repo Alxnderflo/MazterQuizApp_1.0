@@ -2,24 +2,24 @@ package sv.edu.itca.masterquizapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.Timestamp;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
-// CAMBIO-QUIZ: Actividad para mostrar los resultados del quiz
 public class ResultadosActivity extends AppCompatActivity {
     private RecyclerView rvResultados;
     private MaterialButton btnVolverInicio;
@@ -28,6 +28,7 @@ public class ResultadosActivity extends AppCompatActivity {
 
     private List<ResultadoPregunta> resultados;
     private String quizTitulo;
+    private String quizId;
     private int totalPreguntas;
     private int respuestasCorrectas;
 
@@ -36,31 +37,32 @@ public class ResultadosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_resultados);
 
-        // CAMBIO-QUIZ: Obtener datos del intent
         obtenerDatosIntent();
-
         inicializarViews();
         configurarUI();
         configurarRecyclerView();
-
-        // CAMBIO-QUIZ: Configurar el manejo del botón de retroceso
         configurarBackPressed();
+
+        // ✅ CORREGIDO: Guardar resultado después de inicializar todo
+        guardarResultadoEnFirestore();
     }
 
-    // CAMBIO-QUIZ: Obtener datos pasados desde ResolverQuizActivity
     private void obtenerDatosIntent() {
         Intent intent = getIntent();
         quizTitulo = intent.getStringExtra("quiz_titulo");
+        quizId = intent.getStringExtra("quiz_id");
         totalPreguntas = intent.getIntExtra("total_preguntas", 0);
         respuestasCorrectas = intent.getIntExtra("respuestas_correctas", 0);
         resultados = intent.getParcelableArrayListExtra("resultados");
 
-        // CAMBIO-QUIZ: Validar datos recibidos
-        if (resultados == null) {
+        if (resultados == null || quizId == null) {
             Toast.makeText(this, "Error al cargar resultados", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
+
+        Log.d("ResultadosActivity", "Datos recibidos - Quiz: " + quizTitulo +
+                ", Correctas: " + respuestasCorrectas + "/" + totalPreguntas);
     }
 
     private void inicializarViews() {
@@ -68,50 +70,38 @@ public class ResultadosActivity extends AppCompatActivity {
         btnVolverInicio = findViewById(R.id.btnVolverInicio);
         tvPuntuacion = findViewById(R.id.tvPuntuacion);
 
-        // CAMBIO-QUIZ: Configurar botón para volver al inicio
         btnVolverInicio.setOnClickListener(v -> volverAlInicio());
     }
 
-    // CAMBIO-QUIZ: Configurar la interfaz de usuario
     private void configurarUI() {
-        // Configurar la puntuación
         tvPuntuacion.setText(respuestasCorrectas + "/" + totalPreguntas);
 
-        // CAMBIO-QUIZ: Opcional - Personalizar color según el desempeño
         double porcentaje = (double) respuestasCorrectas / totalPreguntas * 100;
         if (porcentaje >= 80) {
-            // Excelente - Verde
             tvPuntuacion.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
         } else if (porcentaje >= 60) {
-            // Bueno - Naranja
             tvPuntuacion.setTextColor(getResources().getColor(android.R.color.holo_orange_dark));
         } else {
-            // Necesita mejorar - Rojo
             tvPuntuacion.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
         }
     }
 
-    // CAMBIO-QUIZ: Configurar el RecyclerView con los resultados
     private void configurarRecyclerView() {
         rvResultados.setLayoutManager(new LinearLayoutManager(this));
         adapter = new ResultadosAdapter(resultados);
         rvResultados.setAdapter(adapter);
 
-        // CAMBIO-QUIZ: Opcional - Agregar separación entre items
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(this, DividerItemDecoration.VERTICAL);
         rvResultados.addItemDecoration(dividerItemDecoration);
     }
 
-    // CAMBIO-QUIZ: Volver a la actividad principal
     private void volverAlInicio() {
-        // Intent para volver a MainActivity (actividad principal)
         Intent intent = new Intent(this, MainActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
         finish();
     }
 
-    // CAMBIO-QUIZ: Configurar el manejo del botón de retroceso
     private void configurarBackPressed() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -120,5 +110,44 @@ public class ResultadosActivity extends AppCompatActivity {
             }
         };
         getOnBackPressedDispatcher().addCallback(this, callback);
+    }
+
+    // ✅ CORREGIDO: Método para guardar resultado en Firestore
+    private void guardarResultadoEnFirestore() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            Log.e("ResultadosActivity", "Usuario no autenticado");
+            return;
+        }
+
+        // Calcular porcentaje
+        int porcentaje = (int) ((double) respuestasCorrectas / totalPreguntas * 100);
+
+        // Crear objeto Resultado SIN ID específico
+        Resultado resultado = new Resultado(
+                currentUser.getUid(),
+                quizId,
+                quizTitulo,
+                porcentaje,
+                Timestamp.now(),
+                totalPreguntas,
+                respuestasCorrectas
+        );
+
+        // ✅ CORRECCIÓN: Usar add() para crear NUEVOS documentos cada vez
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("resultados")
+                .add(resultado) // ✅ Esto crea un nuevo documento con ID automático
+                .addOnSuccessListener(documentReference -> {
+                    // Opcional: Actualizar el objeto con el ID generado
+                    resultado.setId(documentReference.getId());
+                    Log.d("ResultadosActivity", "✅ NUEVO resultado guardado con ID: " + documentReference.getId() +
+                            " - Quiz: " + quizTitulo + " - Puntuación: " + porcentaje + "%");
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("ResultadosActivity", "❌ Error al guardar resultado: " + e.getMessage());
+                    Toast.makeText(this, "Error al guardar resultado", Toast.LENGTH_SHORT).show();
+                });
     }
 }
