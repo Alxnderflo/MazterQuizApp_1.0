@@ -1,32 +1,39 @@
-La aplicación MasterQuizApp es una app móvil desarrollada en Android que permite a usuarios crear, gestionar y resolver quizzes de manera interactiva. Utiliza Firebase para autenticación y Firestore como base de datos, además de Cloudinary para el almacenamiento de imágenes. La app está estructurada con roles de usuario: estudiantes y profesores, lo que permite funcionalidades diferenciadas.
+1. Como un nuevo usuario, quiero ver una pantalla de inicio animada para que tenga una introducción atractiva a la app antes de iniciar sesión.
 
-La app inicia con una pantalla de splash animada (SplashScreen) que muestra el logo de Master Quiz con transiciones suaves, incluyendo fade in/out, zoom y rotaciones sutiles, durando aproximadamente 4 segundos antes de redirigir al login.
+2. Como un usuario, quiero registrarme con mi email, contraseña y nombre para que pueda crear una nueva cuenta.
 
-El sistema de autenticación (LoginActivity) soporta login con email/contraseña o Google Sign-In. Requiere verificación de email para cuentas creadas con email, redirigiendo a usuarios no verificados a una pantalla de verificación (VerificacionEmailActivity). Para usuarios nuevos con Google, se redirige a selección de rol (RoleSelectionActivity).
+3. Como un usuario, quiero verificar mi email después del registro para que mi cuenta esté segura y pueda continuar.
 
-El registro (RegistroActivity) permite crear cuentas con nombre, email, contraseña y selección de rol (estudiante o profesor). Envía un email de verificación y guarda datos en Firestore, incluyendo campos específicos por rol: profesores tienen un campo para código único (generado posteriormente), y estudiantes una lista de profesores agregados.
+4. Como un nuevo usuario de Google sign-in, quiero seleccionar mi rol (estudiante o profesor) para que la app configure la interfaz para mis necesidades.
 
-En la actividad principal (MainActivity), después de autenticación, se muestra un ViewPager con tres pestañas: Inicio (HomeFragment), Puntajes (ScoreFragment) y Profesores (TeacherFragment), con navegación por bottom navigation bar.
+5. Como un usuario, quiero iniciar sesión usando email/contraseña o Google Sign-In para que pueda acceder a mi panel personalizado.
 
-El HomeFragment permite a usuarios ver sus quizzes propios en una lista RecyclerView, con opciones para crear nuevos quizzes (botón flotante), editar existentes o eliminarlos. Los quizzes se almacenan en Firestore con campos como título, descripción, imagen URL, fecha de creación, número de preguntas, ID de usuario, nombre de usuario, rol y visibilidad (público/privado). Los profesores pueden marcar quizzes como públicos, mientras que estudiantes siempre los crean privados.
+6. Como profesor, quiero recibir automáticamente un código único al primer inicio de sesión para que pueda compartirlo con estudiantes para conectarme.
 
-La creación/edición de quizzes (CrearQuizActivity) incluye campos para título, descripción e imagen. Las imágenes se suben a Cloudinary, con manejo de permisos para acceso a galería (diferenciando versiones de Android). Incluye un switch para visibilidad que solo aparece para profesores. En modo edición, carga datos existentes y permite actualizarlos.
+7. Como estudiante, quiero agregar profesores usando su código único para que pueda acceder a sus quizzes públicos.
 
-El TeacherFragment está diseñado para estudiantes: muestra profesores agregados horizontalmente y sus quizzes públicos verticalmente. Incluye un FAB para agregar profesores mediante un código de 6 caracteres alfanumérico único generado para cada profesor. Los profesores agregados se almacenan en una lista en el documento del estudiante en Firestore. Para profesores, muestra un mensaje indicando que los estudiantes los verán ahí.
+8. Como profesor, quiero crear quizzes con título, descripción e imagen opcional para que pueda diseñar contenido educativo.
 
-El ScoreFragment está actualmente vacío, marcado como TODO para futuras implementaciones de puntajes o estadísticas.
+9. Como profesor, quiero configurar quizzes como públicos o privados para que controle la visibilidad a estudiantes.
 
-La gestión de preguntas (PreguntasActivity) permite agregar, editar y eliminar preguntas para un quiz específico. Cada pregunta tiene texto, opciones múltiples (A, B, C, D), respuesta correcta y opcionalmente imagen. Se almacenan en una subcolección "preguntas" del documento del quiz en Firestore.
+10. Como usuario, quiero editar quizzes existentes (título, descripción, imagen, visibilidad) para que pueda actualizar contenido según sea necesario.
 
-La resolución de quizzes (ResolverQuizActivity) presenta preguntas en un ViewPager, permitiendo navegación entre ellas, selección de respuestas y cálculo de puntaje al finalizar.
+11. Como usuario, quiero agregar preguntas a quizzes con un enunciado y cuatro opciones (una correcta) para que los quizzes sean interactivos y evalúen conocimientos.
 
+12. Como usuario, quiero editar o eliminar preguntas en mis quizzes para que pueda mantener contenido preciso.
 
-La app incluye modelos de datos como Quiz, Pregunta, Usuario, ResultadoPregunta, etc., con getters/setters apropiados. Utiliza adapters personalizados para RecyclerViews: QuizzesAdapter, PreguntasAdapter, ProfesoresAdapter, QuizzesProfesorAdapter, ResultadosAdapter.
+13. Como estudiante, quiero ver una lista de quizzes disponibles de mis profesores agregados para que pueda elegir qué estudiar.
 
-En MainActivity, para profesores, se genera automáticamente un código único de 6 caracteres alfanuméricos (excluyendo O/0 e I/1 para evitar confusiones), guardándolo en Firestore y mostrando un diálogo para copiarlo al portapapeles, facilitando que estudiantes los agreguen.
+14. Como usuario, quiero ver una lista de mis propios quizzes creados para que pueda gestionarlos.
 
-La app maneja permisos para internet, acceso a red, lectura de imágenes (con distinción por versión de Android), y cámara (aunque no implementada aún). Usa Glide para cargar imágenes desde URLs.
+15. Como estudiante, quiero realizar quizzes respondiendo preguntas secuencialmente para que pueda probar mi conocimiento.
 
-El diseño incluye layouts XML con temas, colores, íconos vectoriales y fondos gradientes. Incluye manejo de errores, toasts informativos y validaciones básicas en formularios.
+16. Como estudiante, quiero ver resultados detallados después de completar un quiz (puntuación, respuestas correctas/incorrectas) para que pueda aprender de la retroalimentación.
 
-En resumen, la app funcional hasta el momento cubre autenticación completa, gestión de quizzes y preguntas, resolución interactiva, sistema de roles con vinculación profesor-estudiante, y almacenamiento en la nube con actualizaciones en tiempo real vía listeners de Firestore.
+17. Como profesor, quiero ver una lista de estudiantes que me han agregado para que pueda rastrear mi clase.
+
+18. Como estudiante, quiero ver y gestionar mi lista de profesores agregados para que pueda organizar mis conexiones.
+
+19. Como usuario, quiero navegación inferior basada en roles (Inicio para quizzes, Puntuación para resultados, lista de Estudiantes/Profesores) para que acceda a características relevantes eficientemente.
+
+20. Como usuario, quiero que la app verifique autenticación al inicio y reanudación de la app para que la seguridad se mantenga.
