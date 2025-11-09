@@ -6,9 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -39,8 +37,6 @@ public class HomeFragment extends Fragment {
     private List<String> listaQuizzesIds;
     private FirebaseFirestore bd;
     private LinearLayout layoutVacio;
-    private EditText searchBar;
-
 
     public HomeFragment() {
     }
@@ -69,7 +65,6 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         rvQuizzes = view.findViewById(R.id.rvQuizzes);
         layoutVacio = view.findViewById(R.id.layoutVacio);
-        searchBar = view.findViewById(R.id.searchBar);
 
         rvQuizzes.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -115,8 +110,6 @@ public class HomeFragment extends Fragment {
             @Override
             public void onDeleteQuiz(Quiz quiz, String quizId) {
                 mostrarDialogEliminar(quiz, quizId);
-
-
             }
         });
         rvQuizzes.setAdapter(adapterQuizzes);
@@ -173,7 +166,6 @@ public class HomeFragment extends Fragment {
     // Interface para callback
     interface OnPreguntasEliminadasListener {
         void onExito();
-
         void onError(String error);
     }
 
@@ -209,7 +201,6 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
     }
 
     private void obtenerQuizzes() {

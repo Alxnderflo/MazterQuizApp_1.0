@@ -15,30 +15,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Contenedor superior con gradiente y esquinas inferiores redondeadas -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/gradient_header"
-                android:orientation="vertical"
-                android:paddingTop="16dp"
-                android:paddingBottom="32dp">
-
-                <!-- Título Estadísticas -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="20dp"
-                    android:letterSpacing="0.02"
-                    android:text="Estadísticas"
-                    android:textColor="@android:color/white"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
-
-            </LinearLayout>
-
             <!-- Cards de resumen -->
             <LinearLayout
                 android:layout_width="match_parent"

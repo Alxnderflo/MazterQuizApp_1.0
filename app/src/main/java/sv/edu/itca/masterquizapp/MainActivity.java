@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("SESSION_MANAGER", "MainActivity iniciada");
 
+        // ✅ NUEVO: Configurar Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         // Verificar autenticación
         FirebaseUser currentUser = auth.getCurrentUser();
         if (currentUser == null || !currentUser.isEmailVerified()) {
@@ -56,6 +63,89 @@ public class MainActivity extends AppCompatActivity {
 
         // ✅ NUEVO FLUJO: Primero intentar cargar desde SessionManager
         verificarYCargarDatos(currentUser.getUid());
+    }
+
+    // ✅ NUEVO: Crear menú de opciones
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    // ✅ NUEVO: Mostrar/ocultar opciones según el rol
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        MenuItem verCodigoItem = menu.findItem(R.id.menu_ver_codigo);
+
+        if (userRol != null) {
+            if (userRol.equals("estudiante")) {
+                verCodigoItem.setVisible(false);
+                Log.d("SESSION_MANAGER", "Ocultando 'Ver Código' para estudiante");
+            } else if (userRol.equals("profesor")) {
+                verCodigoItem.setVisible(true);
+                Log.d("SESSION_MANAGER", "Mostrando 'Ver Código' para profesor");
+            }
+        } else {
+            Log.d("SESSION_MANAGER", "userRol es null - ocultando 'Ver Código' por defecto");
+            verCodigoItem.setVisible(false);
+        }
+
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    // ✅ NUEVO: Manejar clics del menú
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if (id == R.id.menu_ver_codigo) {
+            mostrarDialogoCodigoDesdeSession();
+            return true;
+        } else if (id == R.id.menu_cerrar_sesion) {
+            cerrarSesion();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    // ✅ NUEVO: Mostrar código desde SessionManager
+    private void mostrarDialogoCodigoDesdeSession() {
+        String codigo = sessionManager.getProfessorCode();
+
+        if (codigo != null && !codigo.isEmpty()) {
+            mostrarDialogoCodigoAsignado(codigo);
+        } else {
+            Toast.makeText(this, "No se encontró el código de profesor", Toast.LENGTH_SHORT).show();
+            Log.d("SESSION_MANAGER", "No hay código en SessionManager");
+        }
+    }
+
+    // ✅ NUEVO: Cerrar sesión con limpieza completa
+    private void cerrarSesion() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Cerrar Sesión");
+        builder.setMessage("¿Estás seguro de que quieres cerrar sesión?");
+        builder.setPositiveButton("Sí", (dialog, which) -> {
+            // 1. Limpiar SessionManager
+            sessionManager.clearSession();
+
+            // 2. Cerrar sesión en Firebase
+            auth.signOut();
+
+            // 3. Redirigir al Login
+            Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+
+            Toast.makeText(MainActivity.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+            Log.d("SESSION_MANAGER", "Sesión cerrada - SessionManager limpiado");
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        builder.show();
     }
 
     private void verificarYCargarDatos(String userId) {
@@ -81,6 +171,9 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 configurarMenuEstudiante();
             }
+
+            // ✅ ACTUALIZAR MENÚ después de cargar el rol
+            invalidateOptionsMenu();
         } else {
             // ❌ NO hay datos locales - Consultar Firestore (solo esta vez)
             Log.d("SESSION_MANAGER", "No hay datos en SessionManager - consultando Firestore");
@@ -112,6 +205,9 @@ public class MainActivity extends AppCompatActivity {
                         } else {
                             configurarMenuEstudiante();
                         }
+
+                        // ✅ ACTUALIZAR MENÚ después de cargar el rol
+                        invalidateOptionsMenu();
                     }
                 })
                 .addOnFailureListener(e -> {
