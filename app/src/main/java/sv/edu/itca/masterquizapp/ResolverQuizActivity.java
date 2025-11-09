@@ -1,19 +1,14 @@
 package sv.edu.itca.masterquizapp;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.activity.OnBackPressedCallback;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
@@ -21,10 +16,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-// CAMBIO-QUIZ: Nueva actividad para resolver el quiz
 public class ResolverQuizActivity extends AppCompatActivity {
     private ViewPager2 vpPreguntas;
     private MaterialButton btnContinuar;
@@ -36,7 +29,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
     private List<Pregunta> listaPreguntas;
     private List<ResultadoPregunta> resultados;
 
-    // CAMBIO-QUIZ: Interfaz para comunicación con fragments
+    // Interfaz para comunicación con fragments
     public interface OnPreguntaRespondidaListener {
         void onPreguntaRespondida(int posicionPregunta, String respuestaUsuario, boolean esCorrecta);
     }
@@ -63,7 +56,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
         listaPreguntas = new ArrayList<>();
         resultados = new ArrayList<>();
 
-        // CAMBIO-QUIZ: Inicializar el listener de respuestas
+        // Inicializar el listener de respuestas
         respuestaListener = new OnPreguntaRespondidaListener() {
             @Override
             public void onPreguntaRespondida(int posicionPregunta, String respuestaUsuario, boolean esCorrecta) {
@@ -74,11 +67,10 @@ public class ResolverQuizActivity extends AppCompatActivity {
         inicializarViews();
         cargarPreguntas();
 
-        // CAMBIO-QUIZ: Configurar el manejo del botón de retroceso (nueva forma)
+        // Configurar el manejo del botón de retroceso
         configurarBackPressed();
     }
 
-    // CAMBIO-QUIZ: Nueva forma de manejar el back pressed
     private void configurarBackPressed() {
         OnBackPressedCallback callback = new OnBackPressedCallback(true) {
             @Override
@@ -89,7 +81,6 @@ public class ResolverQuizActivity extends AppCompatActivity {
         getOnBackPressedDispatcher().addCallback(this, callback);
     }
 
-    // CAMBIO-QUIZ: Diálogo para salir del quiz
     private void mostrarDialogoSalirQuiz() {
         new AlertDialog.Builder(this)
                 .setTitle("Salir del Quiz")
@@ -103,20 +94,19 @@ public class ResolverQuizActivity extends AppCompatActivity {
         vpPreguntas = findViewById(R.id.vpPreguntas);
         btnContinuar = findViewById(R.id.btnContinuarQuiz);
 
-        // CAMBIO-QUIZ: Configurar ViewPager2 para deshabilitar deslizamiento manual
+        // Configurar ViewPager2 para deshabilitar deslizamiento manual
         vpPreguntas.setUserInputEnabled(false);
 
-        // CAMBIO-QUIZ: Inicializar adapter con lista vacía temporalmente
+        // Inicializar adapter con lista vacía temporalmente
         adapter = new QuizPagerAdapter(this, listaPreguntas, quizTitulo, respuestaListener);
         vpPreguntas.setAdapter(adapter);
 
-        // CAMBIO-QUIZ: Configurar botón Continuar
+        // Configurar botón Continuar
         btnContinuar.setOnClickListener(v -> {
             avanzarSiguientePregunta();
         });
     }
 
-    // CAMBIO-QUIZ: Método para cargar preguntas desde Firestore
     private void cargarPreguntas() {
         db.collection("quizzes").document(quizId)
                 .collection("preguntas")
@@ -131,18 +121,18 @@ public class ResolverQuizActivity extends AppCompatActivity {
                         }
                     }
 
-                    // CAMBIO-QUIZ: Verificar que tenemos entre 5 y 20 preguntas
+                    // Verificar que tenemos entre 5 y 20 preguntas
                     if (listaPreguntas.size() < 5 || listaPreguntas.size() > 20) {
                         Toast.makeText(this, "El quiz debe tener entre 5 y 20 preguntas", Toast.LENGTH_LONG).show();
                         finish();
                         return;
                     }
 
-                    // CAMBIO-QUIZ: Actualizar adapter con las preguntas reales
+                    // Actualizar adapter con las preguntas reales
                     adapter.actualizarPreguntas(listaPreguntas);
                     adapter.notifyDataSetChanged();
 
-                    // CAMBIO-QUIZ: Inicializar lista de resultados
+                    // Inicializar lista de resultados
                     inicializarResultados();
                 })
                 .addOnFailureListener(e -> {
@@ -151,7 +141,6 @@ public class ResolverQuizActivity extends AppCompatActivity {
                 });
     }
 
-    // CAMBIO-QUIZ: Inicializar la lista de resultados
     private void inicializarResultados() {
         resultados.clear();
         for (int i = 0; i < listaPreguntas.size(); i++) {
@@ -165,7 +154,6 @@ public class ResolverQuizActivity extends AppCompatActivity {
         }
     }
 
-    // CAMBIO-QUIZ: Procesar respuesta de una pregunta
     private void procesarRespuesta(int posicionPregunta, String respuestaUsuario, boolean esCorrecta) {
         if (posicionPregunta < resultados.size()) {
             ResultadoPregunta resultado = resultados.get(posicionPregunta);
@@ -173,12 +161,11 @@ public class ResolverQuizActivity extends AppCompatActivity {
             resultado.setEsCorrecta(esCorrecta);
             resultado.setRespuestaCorrecta(listaPreguntas.get(posicionPregunta).getCorrecta());
 
-            // CAMBIO-QUIZ: Mostrar botón Continuar
+            // Mostrar botón Continuar
             btnContinuar.setVisibility(View.VISIBLE);
         }
     }
 
-    // CAMBIO-QUIZ: Avanzar a la siguiente pregunta o terminar quiz
     private void avanzarSiguientePregunta() {
         int currentItem = vpPreguntas.getCurrentItem();
         if (currentItem < listaPreguntas.size() - 1) {
@@ -191,7 +178,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
         }
     }
 
-    // CAMBIO-QUIZ: Navegar a la actividad de resultados
+    // ✅ CORREGIDO: Método para navegar a resultados
     private void irAResultados() {
         // Calcular puntuación
         int respuestasCorrectas = 0;
@@ -202,15 +189,12 @@ public class ResolverQuizActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, ResultadosActivity.class);
+        intent.putExtra("quiz_id", quizId);
         intent.putExtra("quiz_titulo", quizTitulo);
-        intent.putExtra("total_preguntas", totalPreguntas);
+        intent.putExtra("total_preguntas", listaPreguntas.size()); // Usar el tamaño real de preguntas cargadas
         intent.putExtra("respuestas_correctas", respuestasCorrectas);
-
-        // CAMBIO-QUIZ: Corrección - pasar ArrayList de Parcelable correctamente
         intent.putParcelableArrayListExtra("resultados", new ArrayList<>(resultados));
         startActivity(intent);
         finish();
     }
-
-
 }
