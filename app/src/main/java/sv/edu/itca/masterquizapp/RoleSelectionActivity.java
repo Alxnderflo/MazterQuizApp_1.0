@@ -22,6 +22,7 @@ public class RoleSelectionActivity extends AppCompatActivity {
     private Button btnEstudiante, btnProfesor;
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,7 @@ public class RoleSelectionActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        sessionManager = new SessionManager(this);
 
         btnEstudiante = findViewById(R.id.btnEstudiante);
         btnProfesor = findViewById(R.id.btnProfesor);
@@ -37,11 +39,9 @@ public class RoleSelectionActivity extends AppCompatActivity {
         btnEstudiante.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Cambiar estado de los botones
                 btnEstudiante.setEnabled(false);
                 btnEstudiante.setText("Guardando...");
                 btnProfesor.setEnabled(false);
-
                 guardarUsuarioYRedirigir("estudiante");
             }
         });
@@ -49,11 +49,9 @@ public class RoleSelectionActivity extends AppCompatActivity {
         btnProfesor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Cambiar estado de los botones
                 btnProfesor.setEnabled(false);
                 btnProfesor.setText("Guardando...");
                 btnEstudiante.setEnabled(false);
-
                 guardarUsuarioYRedirigir("profesor");
             }
         });
@@ -72,11 +70,10 @@ public class RoleSelectionActivity extends AppCompatActivity {
         usuario.put("fechaRegistro", new Date());
         usuario.put("proveedor", "google");
 
-        // NUEVOS CAMPOS PARA SISTEMA PROFESOR-ALUMNO
         if (rol.equals("profesor")) {
-            usuario.put("codigoProfesor", ""); // Se generará en FASE 2
+            usuario.put("codigoProfesor", "");
         } else if (rol.equals("estudiante")) {
-            usuario.put("profesoresAgregados", new ArrayList<String>()); // Lista vacía inicial
+            usuario.put("profesoresAgregados", new ArrayList<String>());
         }
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -84,6 +81,9 @@ public class RoleSelectionActivity extends AppCompatActivity {
                 .document(user.getUid())
                 .set(usuario)
                 .addOnSuccessListener(aVoid -> {
+                    // ✅ CORREGIDO: Solo guardar rol, NO el código vacío
+                    sessionManager.saveUserRole(user.getUid(), rol);
+
                     Toast.makeText(RoleSelectionActivity.this, "¡Bienvenido!", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
