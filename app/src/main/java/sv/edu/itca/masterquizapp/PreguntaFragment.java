@@ -177,18 +177,18 @@ public class PreguntaFragment extends Fragment {
         }
     }
 
-    // CAMBIO-QUIZ: Aplicar estilo para respuesta correcta
+    // CAMBIO-QUIZ: Aplicar estilo para respuesta correcta (verde)
     private void aplicarEstiloCorrecto(MaterialButton boton) {
         boton.setStrokeColor(ColorStateList.valueOf(getResources().getColor(android.R.color.holo_green_dark)));
         boton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_correcta)));
-        boton.setTextColor(getResources().getColor(android.R.color.white));
+        boton.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
     }
 
-    // CAMBIO-QUIZ: Aplicar estilo para respuesta incorrecta
+    // CAMBIO-QUIZ: Aplicar estilo para respuesta incorrecta (rojo)
     private void aplicarEstiloIncorrecto(MaterialButton boton) {
         boton.setStrokeColor(ColorStateList.valueOf(getResources().getColor(android.R.color.holo_red_dark)));
         boton.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.color_incorrecta)));
-        boton.setTextColor(getResources().getColor(android.R.color.white));
+        boton.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
     }
 
     // CAMBIO-QUIZ: Reiniciar estilo del botón a estado inicial
