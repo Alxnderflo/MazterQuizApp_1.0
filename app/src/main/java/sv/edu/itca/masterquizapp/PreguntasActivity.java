@@ -58,7 +58,7 @@ public class PreguntasActivity extends AppCompatActivity {
 
         quizId = getIntent().getStringExtra("quiz_id");
         if (quizId == null || quizId.isEmpty()) {
-            Toast.makeText(this, "Error: No se pudo identificar el quiz", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_quiz_no_identificado, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -122,7 +122,7 @@ public class PreguntasActivity extends AppCompatActivity {
             if (listaPreguntas.size() >= 5) {
                 iniciarResolverQuiz();
             } else {
-                Toast.makeText(this, "Se necesitan al menos 5 preguntas para iniciar el quiz", Toast.LENGTH_LONG).show();
+                Toast.makeText(this, R.string.toast_minimo_5_preguntas, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -139,12 +139,12 @@ public class PreguntasActivity extends AppCompatActivity {
     // CAMBIO-CRUD: Metodo para mostrar diálogo de confirmación de eliminación
     private void mostrarDialogoConfirmacionEliminacion(Pregunta pregunta, String preguntaId, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Eliminar Pregunta");
-        builder.setMessage("¿Estás seguro de que quieres eliminar esta pregunta?");
-        builder.setPositiveButton("Eliminar", (dialog, which) -> {
+        builder.setTitle(R.string.dialog_eliminar_pregunta_titulo);
+        builder.setMessage(R.string.dialog_eliminar_pregunta_mensaje);
+        builder.setPositiveButton(R.string.dialog_btn_eliminar, (dialog, which) -> {
             eliminarPregunta(preguntaId, position);
         });
-        builder.setNegativeButton("Cancelar", null);
+        builder.setNegativeButton(R.string.dialog_btn_cancelar, null);
         AlertDialog dialog = builder.create();
         dialog.show();
 
@@ -160,10 +160,11 @@ public class PreguntasActivity extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     // CAMBIO: Eliminado de Firestore, ahora actualizar el contador y reordenar
                     actualizarContadorYReordenar();
-                    Toast.makeText(PreguntasActivity.this, "Pregunta eliminada", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PreguntasActivity.this, R.string.toast_pregunta_eliminada, Toast.LENGTH_SHORT).show();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(PreguntasActivity.this, "Error al eliminar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    String mensajeError = getString(R.string.toast_error_eliminar_pregunta, e.getMessage());
+                    Toast.makeText(PreguntasActivity.this, mensajeError, Toast.LENGTH_SHORT).show();
                 });
     }
 
@@ -187,7 +188,10 @@ public class PreguntasActivity extends AppCompatActivity {
                             if (quiz != null) {
                                 tvHeaderT.setText(quiz.getTitulo());
                                 tvHeaderD.setText(quiz.getDescripcion() != null ? quiz.getDescripcion() : "");
-                                tvHeaderNumQ.setText(quiz.getNumPreguntas() + " preguntas");
+
+                                // Usar recurso para el contador de preguntas
+                                String preguntasCount = getString(R.string.tv_header_preguntas_count, quiz.getNumPreguntas());
+                                tvHeaderNumQ.setText(preguntasCount);
 
                                 if (quiz.getFechaCreacion() != null) {
                                     SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());

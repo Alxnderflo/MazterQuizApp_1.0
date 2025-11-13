@@ -24,7 +24,7 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:layout_margin="20dp"
-            android:text="Continuar"
+            android:text="@string/btn_quiz_continuar"
             android:textColor="@android:color/white"
             android:textSize="16sp"
             android:textStyle="bold"

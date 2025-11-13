@@ -47,7 +47,7 @@
                     android:id="@+id/imgQuiz"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="Quiz Image"
+                    android:contentDescription="@string/descripcion_quiz_profe_image"
                     android:scaleType="centerCrop" />
             </androidx.cardview.widget.CardView>
 
@@ -65,7 +65,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Título del quiz"
+                    android:text="@string/tv_titulo_quiz_profe"
                     android:textColor="#1F1F1F"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -80,16 +80,17 @@
                     <ImageView
                         android:layout_width="14dp"
                         android:layout_height="14dp"
+                        android:importantForAccessibility="no"
                         android:src="@drawable/ico_list"
                         app:tint="#9E9E9E"
-                        android:contentDescription="Preguntas icon" />
+                        />
 
                     <TextView
                         android:id="@+id/txtContarP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="num de preguntas"
+                        android:text="@string/tv_num_preguntas_profe"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 
@@ -105,14 +106,14 @@
                         android:layout_height="14dp"
                         android:src="@drawable/ico_date"
                         app:tint="#9E9E9E"
-                        android:contentDescription="Fecha icon" />
+               />
 
                     <TextView
                         android:id="@+id/txtFechaQ"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="fecha de creación"
+                        android:text="@string/tv_fecha_de_creacion_profe"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 

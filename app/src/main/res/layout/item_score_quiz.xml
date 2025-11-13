@@ -36,7 +36,8 @@
                     android:id="@+id/imgQuiz"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="Quiz Image"
+
+                    android:importantForAccessibility="no"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ico_play"
                     app:tint="#A855F7" />
@@ -58,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Título del quiz"
+                    android:text="@string/tv_score_titulo_quiz"
                     android:textColor="#1F1F1F"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -75,7 +76,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Intentos: "
+                        android:text="@string/tv_score_titulo_intentos"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 
@@ -83,7 +84,7 @@
                         android:id="@+id/txtIntentos"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0"
+                        android:text="@string/tv_score_num_intentos"
                         android:textColor="#1F1F1F"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -100,7 +101,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Mejor: "
+                        android:text="@string/tv_score_titulo_mejor"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 
@@ -108,7 +109,7 @@
                         android:id="@+id/txtMejor"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0%"
+                        android:text="@string/tv_score_promedio_mejor"
                         android:textColor="#1F1F1F"
                         android:textSize="13sp"
                         android:textStyle="bold" />
@@ -125,7 +126,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Último: "
+                        android:text="@string/tv_score_titulo_ultimo"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 
@@ -133,7 +134,7 @@
                         android:id="@+id/txtUltimo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="0%"
+                        android:text="@string/tv_score_promedio_ultimo"
                         android:textColor="#1F1F1F"
                         android:textSize="13sp"
                         android:textStyle="bold" />

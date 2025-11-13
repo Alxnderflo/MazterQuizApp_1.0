@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:overScrollMode="always"
     android:fillViewport="true"
-    android:id="@+id/main">
+    android:overScrollMode="always">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,12 +18,12 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Crear Nuevo Quiz"
+            android:layout_marginBottom="24dp"
+            android:gravity="center"
+            android:text="@string/tv_titulo_crear_quiz"
             android:textColor="#000000"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center"
-            android:layout_marginBottom="24dp"/>
+            android:textStyle="bold" />
 
         <!-- Título: Título del Quiz con asterisco -->
         <LinearLayout
@@ -29,18 +31,20 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Título del Quiz"
+                android:text="@string/tv_add_titulo_quiz"
                 android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:text="*"
+                android:text="@string/asterisco"
                 android:textColor="#FF0000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -53,12 +57,13 @@
             android:layout_height="56dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Escribe el título"
+            android:hint="@string/hint_add_titulo"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="#333333"
             android:textColorHint="#AAAAAA"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="TextContrastCheck" />
 
         <!-- Línea divisoria -->
         <View
@@ -72,7 +77,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Descripción (Opcional)"
+            android:importantForAutofill="no"
+            android:text="@string/tv_add_descripcion"
             android:textColor="#000000"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -85,7 +91,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/edit_text_background"
             android:gravity="top|start"
-            android:hint="Describe el tema del quiz"
+            android:hint="@string/hint_add_descripcion"
             android:inputType="textMultiLine"
             android:padding="16dp"
             android:textColor="#333333"
@@ -105,14 +111,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="20dp"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Hacer público"
+                android:text="@string/tv_publico_privado"
                 android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -148,7 +154,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Generar preguntas con IA"
+                    android:text="@string/tv_generar_con_ia"
                     android:textColor="#000000"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -164,14 +170,15 @@
                 android:id="@+id/iaFieldsContainer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:orientation="vertical"
-                android:visibility="gone"
-                android:layout_marginTop="12dp">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Número de preguntas (5-20)"
+                    android:importantForAutofill="no"
+                    android:text="@string/tv_add_num_preguntas"
                     android:textColor="#666666"
                     android:textSize="12sp" />
 
@@ -180,10 +187,11 @@
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:inputType="number"
-                    android:text="10"
                     android:background="@drawable/edit_text_background"
-                    android:padding="12dp" />
+                    android:hint="@string/hint_num_preguntas"
+                    android:inputType="number"
+                    android:padding="12dp"
+                    tools:ignore="Autofill" />
             </LinearLayout>
         </LinearLayout>
 
@@ -199,7 +207,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="Portada o imagen"
+            android:text="@string/tv_add_img"
             android:textColor="#000000"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -213,6 +221,7 @@
             app:cardBackgroundColor="#FAFAFA"
             app:cardCornerRadius="12dp"
             app:cardElevation="2dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -223,7 +232,7 @@
                     android:id="@+id/imgPreview"
                     android:layout_width="64dp"
                     android:layout_height="64dp"
-                    android:contentDescription="Subir imagen"
+                    android:contentDescription="@string/descripcion_subir_img"
                     android:src="@drawable/ico_add_img"
                     app:tint="#6B7EF7" />
                 <!-- Texto opcional -->
@@ -232,10 +241,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Toca para agregar imagen"
+                    android:text="@string/hint_add_img"
                     android:textColor="#999999"
-                    android:textSize="14sp"
-                    />
+                    android:textSize="14sp" />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
@@ -246,7 +254,7 @@
             android:layout_height="56dp"
             android:backgroundTint="#6B7EF7"
             android:elevation="4dp"
-            android:text="Guardar Quizz"
+            android:text="@string/tv_guardar_quizz"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />

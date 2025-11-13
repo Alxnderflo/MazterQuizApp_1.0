@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
@@ -8,13 +9,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:importantForAutofill="no"
         android:orientation="vertical"
         android:padding="24dp">
         <!-- Título principal centrado -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agregar Preguntas"
+            android:text="@string/tv_titulo_add_preguntas"
             android:textColor="#000000"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -30,7 +32,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Enunciado de la pregunta"
+                android:text="@string/tv_add_enunciado_pregunta"
                 android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -39,7 +41,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:text="*"
+                android:importantForAutofill="no"
+                android:text="@string/asterisco"
                 android:textColor="#FF0000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -53,12 +56,13 @@
             android:layout_height="56dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Escribe una pregunta"
+            android:hint="@string/hint_enunciado_pregunta"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="#333333"
             android:textColorHint="#CCCCCC"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="Autofill" />
 
         <!-- Línea divisoria -->
         <View
@@ -77,7 +81,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Respuesta correcta"
+                android:text="@string/tv_add_respuesta_correcta"
                 android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -86,7 +90,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:text="*"
+                android:text="@string/asterisco"
                 android:textColor="#FF0000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -100,12 +104,14 @@
             android:layout_height="56dp"
             android:layout_marginBottom="20dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Escribe la respuesta correcta"
+            android:hint="@string/hint_respuesta_correcta"
+            android:importantForAutofill="no"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="#333333"
             android:textColorHint="#CCCCCC"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="TextContrastCheck" />
 
         <!-- Línea divisoria -->
         <View
@@ -124,7 +130,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Respuestas incorrectas"
+                android:text="@string/tv_titulo_respuestas_incorrectas"
                 android:textColor="#000000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -133,7 +139,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="2dp"
-                android:text="*"
+                android:text="@string/asterisco"
                 android:textColor="#FF0000"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -147,12 +153,13 @@
             android:layout_height="56dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Respuesta incorrecta."
+            android:hint="@string/hint_respuesta_incorrecta1"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="#333333"
             android:textColorHint="#CCCCCC"
-            android:textSize="16sp" />
+            android:textSize="16sp"
+            tools:ignore="Autofill" />
 
         <!-- Campo de texto: Respuesta incorrecta 2 -->
         <EditText
@@ -161,7 +168,7 @@
             android:layout_height="56dp"
             android:layout_marginBottom="12dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Respuesta incorrecta."
+            android:hint="@string/hint_respuesta_incorrecta2"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="#333333"
@@ -175,7 +182,7 @@
             android:layout_height="56dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Respuesta incorrecta."
+            android:hint="@string/hint_respuesta_incorrecta3"
             android:inputType="text"
             android:padding="16dp"
             android:textColor="#333333"
@@ -194,7 +201,7 @@
             android:layout_height="56dp"
             android:backgroundTint="#6B7EF7"
             android:elevation="4dp"
-            android:text="Guardar Pregunta"
+            android:text="@string/btn_guardar_pregunta"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold" />

@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         if (codigo != null && !codigo.isEmpty()) {
             mostrarDialogoCodigoAsignado(codigo);
         } else {
-            Toast.makeText(this, "No se encontró el código de profesor", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_codigo_no_encontrado, Toast.LENGTH_SHORT).show();
             Log.d("SESSION_MANAGER", "No hay código en SessionManager");
         }
     }
@@ -124,9 +124,9 @@ public class MainActivity extends AppCompatActivity {
     // ✅ NUEVO: Cerrar sesión con limpieza completa
     private void cerrarSesion() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Cerrar Sesión");
-        builder.setMessage("¿Estás seguro de que quieres cerrar sesión?");
-        builder.setPositiveButton("Sí", (dialog, which) -> {
+        builder.setTitle(R.string.dialog_cerrar_sesion_titulo);
+        builder.setMessage(R.string.dialog_cerrar_sesion_mensaje);
+        builder.setPositiveButton(R.string.dialog_btn_si, (dialog, which) -> {
             // 1. Limpiar SessionManager
             sessionManager.clearSession();
 
@@ -139,10 +139,10 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
 
-            Toast.makeText(MainActivity.this, "Sesión cerrada", Toast.LENGTH_SHORT).show();
+            Toast.makeText(MainActivity.this, R.string.toast_sesion_cerrada, Toast.LENGTH_SHORT).show();
             Log.d("SESSION_MANAGER", "Sesión cerrada - SessionManager limpiado");
         });
-        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+        builder.setNegativeButton(R.string.dialog_btn_cancelar, (dialog, which) -> {
             dialog.dismiss();
         });
         builder.show();
@@ -412,16 +412,23 @@ public class MainActivity extends AppCompatActivity {
         Log.d("SESSION_MANAGER", "Mostrando diálogo con código asignado: " + codigo);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Código de Profesor Asignado");
-        builder.setMessage("Tu código único es: " + codigo + "\n\nComparte este código con tus estudiantes para que puedan agregarte.");
-        builder.setPositiveButton("Copiar Código", (dialog, which) -> {
+        builder.setTitle(R.string.dialog_codigo_profesor_titulo);
+
+        // Usar el recurso con placeholder para el código
+        String mensaje = getString(R.string.dialog_codigo_profesor_mensaje, codigo);
+        builder.setMessage(mensaje);
+
+        builder.setPositiveButton(R.string.dialog_btn_copiar_codigo, (dialog, which) -> {
             ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Código Profesor", codigo);
+            ClipData clip = ClipData.newPlainText(
+                    getString(R.string.clipboard_codigo_label),
+                    codigo
+            );
             clipboard.setPrimaryClip(clip);
-            Toast.makeText(this, "Código copiado al portapapeles", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.toast_codigo_copiado, Toast.LENGTH_SHORT).show();
             Log.d("SESSION_MANAGER", "Código copiado al portapapeles: " + codigo);
         });
-        builder.setNegativeButton("Entendido", (dialog, which) -> {
+        builder.setNegativeButton(R.string.dialog_btn_entendido, (dialog, which) -> {
             Log.d("SESSION_MANAGER", "Diálogo cerrado");
             dialog.dismiss();
         });

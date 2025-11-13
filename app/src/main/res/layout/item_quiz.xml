@@ -36,7 +36,7 @@
                     android:id="@+id/imgQuiz"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:contentDescription="Quiz Image"
+                    android:contentDescription="@string/descripcion_quiz_imagen"
                     android:scaleType="centerCrop" />
 
             </androidx.cardview.widget.CardView>
@@ -62,7 +62,7 @@
                         android:layout_weight="1"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Título del quiz"
+                        android:text="@string/tv_listar_titulo_del_quiz"
                         android:textColor="#1F1F1F"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -74,7 +74,7 @@
                         android:layout_height="32dp"
                         android:layout_marginStart="8dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
-                        android:contentDescription="Más opciones"
+                        android:contentDescription="@string/descripcion_btn_mas_opciones"
                         android:padding="4dp"
                         android:src="@drawable/ico_more_vert"
                         app:tint="#7A7A7A"
@@ -96,14 +96,14 @@
                         android:layout_height="14dp"
                         android:src="@drawable/ico_list"
                         app:tint="#9E9E9E"
-                        android:contentDescription="Preguntas icon" />
+                        android:contentDescription="@string/descripcion_preguntas_ico" />
 
                     <TextView
                         android:id="@+id/txtContarP"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="num de preguntas"
+                        android:text="@string/listar_num_preguntas"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 
@@ -121,14 +121,14 @@
                         android:layout_height="14dp"
                         android:src="@drawable/ico_date"
                         app:tint="#9E9E9E"
-                        android:contentDescription="Fecha icon" />
+                        android:contentDescription="@string/descripcion_fecha_ico" />
 
                     <TextView
                         android:id="@+id/txtFechaQ"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="4dp"
-                        android:text="fecha de creación"
+                        android:text="@string/listar_fecha"
                         android:textColor="#7A7A7A"
                         android:textSize="13sp" />
 

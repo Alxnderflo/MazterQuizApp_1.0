@@ -36,7 +36,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/ico_student"
-                    android:contentDescription="Ícono de estudiante"
+                    android:contentDescription="@string/descripcion_ico_student"
                     app:tint="#6B7EF7"
                     android:padding="12dp" />
 
@@ -56,7 +56,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="Nombre del Estudiante"
+                    android:text="@string/tv_nombre_estudiante"
                     android:textColor="#1F1F1F"
                     android:textSize="16sp"
                     android:textStyle="bold"
@@ -69,7 +69,7 @@
                     android:layout_marginTop="2dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="email@ejemplo.com"
+                    android:text="@string/tv_email"
                     android:textColor="#7A7A7A"
                     android:textSize="14sp"
                     tools:text="juan.perez@email.com" />
@@ -85,7 +85,7 @@
                 android:minHeight="0dp"
                 android:insetTop="0dp"
                 android:insetBottom="0dp"
-                android:text="Expulsar"
+                android:text="@string/tv_expulsar"
                 android:textSize="12sp"
                 app:backgroundTint="#EF0909"
                 app:cornerRadius="20dp"

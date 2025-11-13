@@ -48,7 +48,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    android:text="1/20"
+                    android:text="@string/tv_resolver_quiz_contador"
                     android:textColor="@android:color/white"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -61,7 +61,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:gravity="center"
-                android:text="Título del quiz"
+
+                android:text="@string/tv_resolver_titulo_del_quiz"
                 android:textColor="@android:color/white"
                 android:textSize="25sp"
                 android:textStyle="bold" />
@@ -72,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                android:text="Pregunta: 1"
+                android:text="@string/tv_resolver_info_pregunta"
                 android:textColor="@android:color/white"
                 android:textSize="14sp" />
 
@@ -98,7 +99,7 @@
                         android:gravity="center"
                         android:lineSpacingExtra="2dp"
                         android:padding="24dp"
-                        android:text="¿Cuál es la capital de francia?"
+                        android:text="@string/tv_resolver_enunciado_pregunta"
                         android:textColor="#2D2D2D"
                         android:textSize="25sp" />
 
@@ -128,7 +129,7 @@
                 android:layout_marginBottom="12dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="A. Respuesta A"
+                android:text="@string/tv_resolver_respuesta_a"
                 android:textAlignment="textStart"
                 android:textColor="#2D2D2D"
                 android:textSize="14sp"
@@ -148,7 +149,7 @@
                 android:layout_marginBottom="12dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="B. Respuesta B"
+                android:text="@string/tv_resolver_respuesta_b"
                 android:textAlignment="textStart"
                 android:textColor="#2D2D2D"
                 android:textSize="14sp"
@@ -168,7 +169,7 @@
                 android:layout_marginBottom="12dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="C. Respuesta C"
+                android:text="@string/tv_resolver_respuesta_c"
                 android:textAlignment="textStart"
                 android:textColor="#2D2D2D"
                 android:textSize="14sp"
@@ -187,7 +188,7 @@
                 android:minHeight="56dp"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="D. Respuesta D"
+                android:text="@string/tv_resolver_respuesta_d"
                 android:textAlignment="textStart"
                 android:textColor="#2D2D2D"
                 android:textSize="14sp"

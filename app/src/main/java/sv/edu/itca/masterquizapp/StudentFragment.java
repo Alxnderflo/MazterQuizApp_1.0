@@ -31,7 +31,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 public class StudentFragment extends Fragment {
 
     private RecyclerView rvEstudiantes;
@@ -106,14 +105,17 @@ public class StudentFragment extends Fragment {
 
     private void mostrarDialogoConfirmacionExpulsion(Usuario estudiante, String estudianteId, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Expulsar Estudiante");
-        builder.setMessage("¿Estás seguro de que quieres expulsar a " + estudiante.getNombre() + " de tu lista de estudiantes?");
+        builder.setTitle(R.string.dialog_expulsar_estudiante_titulo);
 
-        builder.setPositiveButton("Expulsar", (dialog, which) -> {
+        // Usar recurso con placeholder para el nombre del estudiante
+        String mensaje = getString(R.string.dialog_expulsar_estudiante_mensaje, estudiante.getNombre());
+        builder.setMessage(mensaje);
+
+        builder.setPositiveButton(R.string.dialog_btn_expulsar, (dialog, which) -> {
             expulsarEstudiante(estudianteId, estudiante.getNombre(), position);
         });
 
-        builder.setNegativeButton("Cancelar", null);
+        builder.setNegativeButton(R.string.dialog_btn_cancelar, null);
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
@@ -136,7 +138,9 @@ public class StudentFragment extends Fragment {
         db.collection("usuarios").document(estudianteId)
                 .update("profesoresAgregados", FieldValue.arrayRemove(currentUser.getUid()))
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Estudiante " + nombreEstudiante + " expulsado exitosamente", Toast.LENGTH_SHORT).show();
+                    // Usar recurso con placeholder para el nombre del estudiante
+                    String mensajeExito = getString(R.string.toast_estudiante_expulsado_exito, nombreEstudiante);
+                    Toast.makeText(getContext(), mensajeExito, Toast.LENGTH_SHORT).show();
                     Log.d("StudentFragment", "Estudiante expulsado: " + estudianteId);
 
                     // 🔥 NUEVO: Remover listener específico de este estudiante
@@ -146,7 +150,9 @@ public class StudentFragment extends Fragment {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(getContext(), "Error al expulsar estudiante: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Usar recurso con placeholder para el mensaje de error
+                    String mensajeError = getString(R.string.toast_error_expulsar_estudiante, e.getMessage());
+                    Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
                     Log.e("StudentFragment", "Error al expulsar estudiante: " + e.getMessage());
 
                     // 🔥 NUEVO: Si falla, revertir la eliminación local

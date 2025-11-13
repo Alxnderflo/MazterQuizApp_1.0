@@ -22,7 +22,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="16dp"
-                android:text="Resumen"
+                android:text="@string/tv_resumen"
                 android:textColor="#1F1F1F"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -59,7 +59,7 @@
                             android:id="@+id/tvNumEstudiantes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/tv_num_students"
                             android:textColor="#1F1F1F"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -68,7 +68,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Estudiantes"
+                            android:text="@string/tv_titulo_num_students"
                             android:textColor="#7A7A7A"
                             android:textSize="14sp" />
                     </LinearLayout>
@@ -97,7 +97,7 @@
                             android:id="@+id/tvQuizzesCompartidos"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/tv_num_quizzes_shared"
                             android:textColor="#1F1F1F"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -106,7 +106,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="Quizzes Compartidos"
+                            android:text="@string/tv_titulo_quizzes_shared"
                             android:textColor="#7A7A7A"
                             android:textSize="14sp"
                             android:gravity="center" />
@@ -121,7 +121,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
-                android:text="Estudiantes Agregados"
+                android:text="@string/tv_titulo_students_agregados"
                 android:textColor="#1F1F1F"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -153,10 +153,11 @@
                     android:layout_height="120dp"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ico_empty_quiz"
                     app:tint="#A855F7"
                     android:alpha="0.8"
-                    android:contentDescription="Sin estudiantes" />
+                    />
 
                 <TextView
                     android:id="@+id/textViewTitulo"
@@ -164,7 +165,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="No hay estudiantes agregados"
+                    android:text="@string/tv_no_hay_estudiantes"
                     android:textColor="#5A5A5A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -174,7 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Los estudiantes que agreguen tu código aparecerán aquí"
+                    android:text="@string/tv_estudiantes_aparecen_aquí"
                     android:textColor="#9E9E9E"
                     android:textSize="15sp" />
             </LinearLayout>

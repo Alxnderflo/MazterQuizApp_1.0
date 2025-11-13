@@ -28,7 +28,7 @@
                 android:id="@+id/tvResultEnunciado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="1. ¿Enunciado pregunta 1?"
+                android:text="@string/tv_resuelta_enunciado_pregunta"
                 android:textColor="#2D2D2D"
                 android:textSize="14sp"
                 android:textStyle="bold"
@@ -52,7 +52,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="Correcta: &quot;Respuesta correcta&quot;"
+                    android:text="@string/result_respuesta_correcta_estatica"
                     android:textColor="#2E7D32"
                     android:textSize="13sp" />
 
@@ -75,7 +75,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="12dp"
-                    android:text="Incorrecta: &quot;Respuesta incorrecta&quot;"
+                    android:text="@string/result_respuesta_incorrecta_estatica"
                     android:textColor="#C62828"
                     android:textSize="13sp" />
 
