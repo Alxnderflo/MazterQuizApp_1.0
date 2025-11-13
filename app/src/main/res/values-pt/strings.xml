@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Senha</string>
+    <string name="action_sign_in">Entrar ou registrar</string>
+    <string name="action_sign_in_short">Entrar</string>
+    <string name="welcome">Bem-vindo!</string>
+    <string name="invalid_username">Nome de usuário inválido</string>
+    <string name="invalid_password">A senha deve ter mais de 5 caracteres</string>
+    <string name="login_failed">Falha no login</string>
+    <string name="hello_blank_fragment">Olá, fragmento vazio</string>
+
+    <string name="tv_mis_quizzes">Meus Quizzes</string>
+    <string name="tv_no_quiz_creado">Nenhum quiz criado</string>
+    <string name="tv_crea_uno">Crie um para começar</string>
+    <string name="tv_crear_nuevo_quiz">Criar novo quiz</string>
+    <string name="tv_titulo_crear_quiz">Criar Novo Quiz</string>
+    <string name="tv_add_titulo_quiz">Título do Quiz</string>
+    <string name="tv_add_descripcion">Descrição (Opcional)</string>
+    <string name="hint_add_titulo">Digite o título</string>
+    <string name="hint_add_descripcion">Descreva o tema do quiz</string>
+    <string name="tv_publico_privado">Tornar público</string>
+    <string name="tv_add_img">Capa ou imagem</string>
+    <string name="hint_add_img">Toque para adicionar uma imagem</string>
+    <string name="tv_guardar_quizz">Salvar Quiz</string>
+    <string name="asterisco">*</string>
+    <string name="tv_generar_con_ia">Gerar perguntas com IA</string>
+    <string name="tv_add_num_preguntas">Número de perguntas (5–20)</string>
+    <string name="hint_num_preguntas">10</string>
+    <string name="descripcion_subir_img">Enviar imagem</string>
+    <string name="descripcion_preguntas_icon">Ícone de perguntas</string>
+    <string name="descripcion_fecha_icon">Ícone de data</string>
+    <string name="tv_no_hay_preguntas">Sem perguntas</string>
+    <string name="tv_para_el_quiz">para o quiz.</string>
+    <string name="btn_add_pregunta">Adicionar</string>
+    <string name="quiz_descripcion">Descrição</string>
+    <string name="descripcion_quiz_image">Imagem do Quiz</string>
+    <string name="btn_crear_pregunta">Criar pergunta</string>
+    <string name="btn_iniciar_quiz">Iniciar Quiz</string>
+    <string name="tv_quizz_titulo">Título do Quiz</string>
+    <string name="tv_num_preguntas">número de perguntas</string>
+    <string name="tv_fecha_creacion_quiz_propio">Data</string>
+    <string name="tv_lista_de_preguntas">Lista de Perguntas</string>
+    <string name="tv_titulo_add_preguntas">Adicionar Perguntas</string>
+    <string name="tv_add_enunciado_pregunta">Enunciado da pergunta</string>
+    <string name="tv_add_respuesta_correcta">Resposta correta</string>
+    <string name="tv_titulo_respuestas_incorrectas">Respostas incorretas</string>
+    <string name="btn_guardar_pregunta">Salvar Pergunta</string>
+    <string name="hint_enunciado_pregunta">Escreva uma pergunta</string>
+    <string name="hint_respuesta_correcta">Escreva a resposta correta</string>
+    <string name="hint_respuesta_incorrecta1">Resposta incorreta.</string>
+    <string name="hint_respuesta_incorrecta2">Resposta incorreta.</string>
+    <string name="hint_respuesta_incorrecta3">Resposta incorreta.</string>
+    <string name="btn_quiz_continuar">Continuar</string>
+    <string name="tv_resolver_quiz_contador">1/20</string>
+    <string name="tv_resolver_titulo_del_quiz">Título do quiz</string>
+    <string name="tv_resolver_info_pregunta">Pergunta: 1</string>
+    <string name="tv_resolver_enunciado_pregunta">Qual é a capital da França?</string>
+    <string name="tv_resolver_respuesta_a">A. Resposta A</string>
+    <string name="tv_resolver_respuesta_b">B. Resposta B</string>
+    <string name="tv_resolver_respuesta_c">C. Resposta C</string>
+    <string name="tv_resolver_respuesta_d">D. Resposta D</string>
+    <string name="tv_titulo_resultados_del_quiz">RESULTADOS DO QUIZ</string>
+    <string name="tv_msg_quiz_completado">Quiz Concluído!</string>
+    <string name="tv_puntuacion_dinamica">0/20</string>
+    <string name="tv_respuestas_correctas">Respostas corretas</string>
+    <string name="btn_volver_al_inicio">Voltar ao início</string>
+
+    <string name="tv_num_quizes_resueltos">0</string>
+    <string name="tv_titulo_num_quizes_resueltos">Quizzes</string>
+    <string name="tv_promedio_quizes_resueltos">0%</string>
+    <string name="tv_titulo_promedio_quizes_resueltos">Média</string>
+    <string name="tv_mayor_puntaje_quizes_resueltos">0%</string>
+    <string name="tv_titulo_mayor_puntaje_quizes_resueltos">Melhor</string>
+    <string name="tv_tus_quizzes_resueltos">Seus Quizzes</string>
+    <string name="tv_no_hay_stats">Sem estatísticas disponíveis</string>
+    <string name="tv_resuelve_quizzes">Resolva alguns quizzes para ver seus resultados</string>
+    <string name="tv_resumen">Resumo</string>
+
+    <string name="tv_num_students">0</string>
+    <string name="tv_titulo_num_students">Alunos</string>
+    <string name="tv_num_quizzes_shared">0</string>
+    <string name="tv_titulo_quizzes_shared">Quizzes Compartilhados</string>
+    <string name="tv_titulo_students_agregados">Alunos Adicionados</string>
+    <string name="tv_no_hay_estudiantes">Nenhum aluno adicionado</string>
+    <string name="tv_estudiantes_aparecen_aquí">Os alunos que adicionarem seu código aparecerão aqui</string>
+    <string name="tv_profesores_agregados">Professores Adicionados</string>
+    <string name="tv_quizzes_de_profesores">Quizzes dos Professores</string>
+    <string name="tv_no_hay_profesores">Nenhum professor adicionado</string>
+    <string name="tv_agrega_profe_ver_quizzes">Adicione um professor para ver seus quizzes</string>
+    <string name="descripcion_btn_agregar_profesor">Adicionar professor</string>
+    <string name="descripcion_ico_student">Ícone de aluno</string>
+    <string name="tv_nombre_estudiante">Nome do Aluno</string>
+    <string name="tv_email">email@exemplo.com</string>
+    <string name="tv_expulsar">Remover</string>
+    <string name="tv_num_listar_pregunta">1.</string>
+    <string name="tv_listar_enunciado_pregunta">Enunciado da pergunta</string>
+    <string name="descripcion_btn_eliminar_pregunta">Excluir pergunta</string>
+    <string name="tv_listar_respuesta_correcta">R/ Resposta correta</string>
+    <string name="descripcion_ico_profesor">Ícone de professor</string>
+    <string name="tv_listar_nombre_profesor">Nome do Professor</string>
+    <string name="descripcion_btn_eliminar_profesor">Excluir professor</string>
+    <string name="descripcion_quiz_imagen">Imagem do Quiz</string>
+    <string name="tv_listar_titulo_del_quiz">Título do quiz</string>
+    <string name="descripcion_btn_mas_opciones">Mais opções</string>
+    <string name="descripcion_preguntas_ico">Ícone de perguntas</string>
+    <string name="listar_num_preguntas">número de perguntas</string>
+    <string name="descripcion_fecha_ico">Ícone de data</string>
+    <string name="listar_fecha">data de criação</string>
+    <string name="descripcion_quiz_profe_image">Imagem do Quiz</string>
+    <string name="tv_titulo_quiz_profe">Título do quiz</string>
+    <string name="tv_num_preguntas_profe">número de perguntas</string>
+    <string name="tv_fecha_de_creacion_profe">data de criação</string>
+    <string name="tv_resuelta_enunciado_pregunta">1. Enunciado da pergunta 1?</string>
+
+    <string name="result_respuesta_correcta_estatica">Correto: &quot;Resposta correta&quot;</string>
+    <string name="result_respuesta_incorrecta_estatica">Incorreta: &quot;Resposta incorreta&quot;</string>
+    <string name="formato_pregunta">%1$d. %2$s</string>
+    <string name="respuesta_correcta">Correto: &quot;%1$s&quot;</string>
+    <string name="respuesta_incorrecta_usuario">Sua resposta: &quot;%1$s&quot;</string>
+
+    <string name="tv_score_titulo_quiz">Título do quiz</string>
+    <string name="tv_score_titulo_intentos">Tentativas:</string>
+    <string name="tv_score_num_intentos">0</string>
+    <string name="tv_score_titulo_mejor">Melhor:</string>
+    <string name="tv_score_promedio_mejor">0%</string>
+    <string name="tv_score_titulo_ultimo">Último:</string>
+    <string name="tv_score_promedio_ultimo">0%</string>
+
+    <!-- Logout Dialog -->
+    <string name="dialog_cerrar_sesion_titulo">Sair</string>
+    <string name="dialog_cerrar_sesion_mensaje">Tem certeza de que deseja sair?</string>
+    <string name="dialog_btn_si">Sim</string>
+    <string name="dialog_btn_cancelar">Cancelar</string>
+    <string name="toast_sesion_cerrada">Sessão encerrada</string>
+
+    <!-- Teacher Code Dialog -->
+    <string name="dialog_codigo_profesor_titulo">Código do Professor Atribuído</string>
+    <string name="dialog_codigo_profesor_mensaje">Seu código único é: %1$s\n\nCompartilhe este código com seus alunos para que possam adicioná-lo.</string>
+    <string name="dialog_btn_copiar_codigo">Copiar Código</string>
+    <string name="dialog_btn_entendido">Entendi</string>
+    <string name="toast_codigo_copiado">Código copiado para a área de transferência</string>
+
+    <!-- Error and Status Messages -->
+    <string name="error_codigo_no_encontrado">Código de professor não encontrado</string>
+    <string name="clipboard_codigo_label">Código do Professor</string>
+
+    <!-- TeacherFragment Strings -->
+    <string name="dialog_eliminar_profesor_titulo">Remover Professor</string>
+    <string name="dialog_eliminar_profesor_mensaje">Tem certeza de que deseja remover %1$s da sua lista?</string>
+    <string name="dialog_btn_eliminar">Remover</string>
+    <string name="toast_profesor_eliminado_exito">Professor removido com sucesso</string>
+    <string name="toast_error_eliminar_profesor">Erro ao remover professor: %1$s</string>
+    <string name="dialog_agregar_profesor_titulo">Adicionar Professor</string>
+    <string name="dialog_agregar_profesor_mensaje">Digite o código de 6 caracteres do professor:</string>
+    <string name="hint_codigo_profesor">ABCD12</string>
+    <string name="dialog_btn_agregar">Adicionar</string>
+    <string name="toast_codigo_longitud_invalida">O código deve ter exatamente 6 caracteres</string>
+    <string name="toast_codigo_no_valido">Código inválido ou não pertence a um professor</string>
+    <string name="toast_error_buscar_profesor">Erro ao buscar professor: %1$s</string>
+    <string name="toast_profesor_ya_agregado">Você já adicionou este professor</string>
+    <string name="toast_profesor_agregado_exito">Professor %1$s adicionado com sucesso</string>
+    <string name="toast_error_agregar_profesor">Erro ao adicionar professor: %1$s</string>
+    <string name="error_usuario_no_autenticado">Usuário não autenticado</string>
+
+    <!-- PreguntasActivity Strings -->
+    <string name="error_quiz_no_identificado">Erro: Não foi possível identificar o quiz</string>
+    <string name="toast_minimo_5_preguntas">São necessárias pelo menos 5 perguntas para iniciar o quiz</string>
+    <string name="dialog_eliminar_pregunta_titulo">Excluir Pergunta</string>
+    <string name="dialog_eliminar_pregunta_mensaje">Tem certeza de que deseja excluir esta pergunta?</string>
+    <string name="toast_pregunta_eliminada">Pergunta excluída</string>
+    <string name="toast_error_eliminar_pregunta">Erro ao excluir: %1$s</string>
+    <string name="tv_header_preguntas_count">%1$d perguntas</string>
+
+    <!-- ResolverQuizActivity Strings -->
+    <string name="error_cargar_quiz">Erro: Não foi possível carregar o quiz</string>
+    <string name="dialog_salir_quiz_titulo">Sair do Quiz</string>
+    <string name="dialog_salir_quiz_mensaje">Tem certeza de que deseja sair? Seu progresso será perdido.</string>
+    <string name="dialog_btn_salir">Sair</string>
+    <string name="toast_rango_preguntas_invalido">O quiz deve ter entre 5 e 20 perguntas</string>
+    <string name="toast_error_cargar_preguntas">Erro ao carregar perguntas: %1$s</string>
+
+    <!-- StudentFragment Strings -->
+    <string name="dialog_expulsar_estudiante_titulo">Remover Aluno</string>
+    <string name="dialog_expulsar_estudiante_mensaje">Tem certeza de que deseja remover %1$s da sua lista de alunos?</string>
+    <string name="dialog_btn_expulsar">Remover</string>
+    <string name="toast_estudiante_expulsado_exito">Aluno %1$s removido com sucesso</string>
+    <string name="toast_error_expulsar_estudiante">Erro ao remover aluno: %1$s</string>
+
+    <!-- HomeFragment Strings -->
+    <string name="dialog_eliminar_quiz_titulo">Excluir Quiz</string>
+    <string name="dialog_eliminar_quiz_mensaje">Tem certeza de que deseja excluir o quiz &quot;%1$s&quot;? Esta ação não pode ser desfeita.</string>
+    <string name="toast_error_id_quiz_invalido">Erro: ID de quiz inválido</string>
+    <string name="toast_eliminando_quiz">Excluindo quiz…</string>
+    <string name="toast_quiz_eliminado_exito">Quiz excluído com sucesso</string>
+    <string name="toast_error_eliminar_quiz">Erro ao excluir quiz: %1$s</string>
+    <string name="toast_error_eliminar_preguntas">Erro ao excluir perguntas: %1$s</string>
+    <!--MENUS-->
+    <string name="menu_inicio">Início</string>
+    <string name="menu_estadisticas">Estatísticas</string>
+    <string name="menu_students">Estudantes</string>
+    <string name="menu_profesores">Professores</string>
+    <!--MENU da toolbar-->
+    <string name="menu_ver_codigo">Ver Código</string>
+    <string name="menu_cerrar_sesion">Encerrar Sessão</string>
+
+    <!--MENU de opções-->
+    <string name="menu_editar">Editar</string>
+    <string name="menu_eliminar">Excluir</string>
+
+</resources>

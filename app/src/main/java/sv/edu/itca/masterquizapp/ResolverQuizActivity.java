@@ -47,7 +47,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
         totalPreguntas = getIntent().getIntExtra("total_preguntas", 0);
 
         if (quizId == null) {
-            Toast.makeText(this, "Error: No se pudo cargar el quiz", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_cargar_quiz, Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -83,10 +83,10 @@ public class ResolverQuizActivity extends AppCompatActivity {
 
     private void mostrarDialogoSalirQuiz() {
         new AlertDialog.Builder(this)
-                .setTitle("Salir del Quiz")
-                .setMessage("¿Estás seguro de que quieres salir? Se perderá tu progreso.")
-                .setPositiveButton("Salir", (dialog, which) -> finish())
-                .setNegativeButton("Continuar", null)
+                .setTitle(R.string.dialog_salir_quiz_titulo)
+                .setMessage(R.string.dialog_salir_quiz_mensaje)
+                .setPositiveButton(R.string.dialog_btn_salir, (dialog, which) -> finish())
+                .setNegativeButton(R.string.btn_quiz_continuar, null)
                 .show();
     }
 
@@ -123,7 +123,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
 
                     // Verificar que tenemos entre 5 y 20 preguntas
                     if (listaPreguntas.size() < 5 || listaPreguntas.size() > 20) {
-                        Toast.makeText(this, "El quiz debe tener entre 5 y 20 preguntas", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, R.string.toast_rango_preguntas_invalido, Toast.LENGTH_LONG).show();
                         finish();
                         return;
                     }
@@ -136,7 +136,8 @@ public class ResolverQuizActivity extends AppCompatActivity {
                     inicializarResultados();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Error al cargar preguntas: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    String mensajeError = getString(R.string.toast_error_cargar_preguntas, e.getMessage());
+                    Toast.makeText(this, mensajeError, Toast.LENGTH_SHORT).show();
                     Log.e("ResolverQuiz", "Error cargando preguntas: " + e.getMessage());
                 });
     }

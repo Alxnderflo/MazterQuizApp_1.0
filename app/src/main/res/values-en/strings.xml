@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_login">LoginActivity</string>
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="welcome">Welcome!</string>
+    <string name="invalid_username">Not a valid username</string>
+    <string name="invalid_password">Password must be more than 5 characters</string>
+    <string name="login_failed">Login failed</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="tv_mis_quizzes">My Quizzes</string>
+    <string name="tv_no_quiz_creado">No quizzes created</string>
+    <string name="tv_crea_uno">Create one to get started</string>
+    <string name="tv_crear_nuevo_quiz">Create new quiz</string>
+    <string name="tv_titulo_crear_quiz">Create New Quiz</string>
+    <string name="tv_add_titulo_quiz">Quiz Title</string>
+    <string name="tv_add_descripcion">Description (Optional)</string>
+    <string name="hint_add_titulo">Enter the title</string>
+    <string name="hint_add_descripcion">Describe the quiz topic</string>
+    <string name="tv_publico_privado">Make public</string>
+    <string name="tv_add_img">Cover or image</string>
+    <string name="hint_add_img">Tap to add an image</string>
+    <string name="tv_guardar_quizz">Save Quiz</string>
+    <string name="asterisco">*</string>
+    <string name="tv_generar_con_ia">Generate questions with AI</string>
+    <string name="tv_add_num_preguntas">Number of questions (5–20)</string>
+    <string name="hint_num_preguntas">10</string>
+    <string name="descripcion_subir_img">Upload image</string>
+    <string name="descripcion_preguntas_icon">Questions icon</string>
+    <string name="descripcion_fecha_icon">Date icon</string>
+    <string name="tv_no_hay_preguntas">No questions</string>
+    <string name="tv_para_el_quiz">for the quiz.</string>
+    <string name="btn_add_pregunta">Add</string>
+    <string name="quiz_descripcion">Description</string>
+    <string name="descripcion_quiz_image">Quiz Image</string>
+    <string name="btn_crear_pregunta">Create question</string>
+    <string name="btn_iniciar_quiz">Start Quiz</string>
+    <string name="tv_quizz_titulo">Quiz Title</string>
+    <string name="tv_num_preguntas">number of questions</string>
+    <string name="tv_fecha_creacion_quiz_propio">Date</string>
+    <string name="tv_lista_de_preguntas">Question List</string>
+    <string name="tv_titulo_add_preguntas">Add Questions</string>
+    <string name="tv_add_enunciado_pregunta">Question statement</string>
+    <string name="tv_add_respuesta_correcta">Correct answer</string>
+    <string name="tv_titulo_respuestas_incorrectas">Incorrect answers</string>
+    <string name="btn_guardar_pregunta">Save Question</string>
+    <string name="hint_enunciado_pregunta">Write a question</string>
+    <string name="hint_respuesta_correcta">Write the correct answer</string>
+    <string name="hint_respuesta_incorrecta1">Incorrect answer.</string>
+    <string name="hint_respuesta_incorrecta2">Incorrect answer.</string>
+    <string name="hint_respuesta_incorrecta3">Incorrect answer.</string>
+    <string name="btn_quiz_continuar">Continue</string>
+    <string name="tv_resolver_quiz_contador">1/20</string>
+    <string name="tv_resolver_titulo_del_quiz">Quiz title</string>
+    <string name="tv_resolver_info_pregunta">Question: 1</string>
+    <string name="tv_resolver_enunciado_pregunta">What is the capital of France?</string>
+    <string name="tv_resolver_respuesta_a">A. Answer A</string>
+    <string name="tv_resolver_respuesta_b">B. Answer B</string>
+    <string name="tv_resolver_respuesta_c">C. Answer C</string>
+    <string name="tv_resolver_respuesta_d">D. Answer D</string>
+    <string name="tv_titulo_resultados_del_quiz">QUIZ RESULTS</string>
+    <string name="tv_msg_quiz_completado">Quiz Completed!</string>
+    <string name="tv_puntuacion_dinamica">0/20</string>
+    <string name="tv_respuestas_correctas">Correct answers</string>
+    <string name="btn_volver_al_inicio">Return to home</string>
+
+    <string name="tv_num_quizes_resueltos">0</string>
+    <string name="tv_titulo_num_quizes_resueltos">Quizzes</string>
+    <string name="tv_promedio_quizes_resueltos">0%</string>
+    <string name="tv_titulo_promedio_quizes_resueltos">Average</string>
+    <string name="tv_mayor_puntaje_quizes_resueltos">0%</string>
+    <string name="tv_titulo_mayor_puntaje_quizes_resueltos">Best</string>
+    <string name="tv_tus_quizzes_resueltos">Your Quizzes</string>
+    <string name="tv_no_hay_stats">No statistics available</string>
+    <string name="tv_resuelve_quizzes">Take some quizzes to see your results</string>
+    <string name="tv_resumen">Summary</string>
+
+    <string name="tv_num_students">0</string>
+    <string name="tv_titulo_num_students">Students</string>
+    <string name="tv_num_quizzes_shared">0</string>
+    <string name="tv_titulo_quizzes_shared">Shared Quizzes</string>
+    <string name="tv_titulo_students_agregados">Added Students</string>
+    <string name="tv_no_hay_estudiantes">No students added</string>
+    <string name="tv_estudiantes_aparecen_aquí">Students who add your code will appear here</string>
+    <string name="tv_profesores_agregados">Added Teachers</string>
+    <string name="tv_quizzes_de_profesores">Teachers\' Quizzes</string>
+    <string name="tv_no_hay_profesores">No teachers added</string>
+    <string name="tv_agrega_profe_ver_quizzes">Add a teacher to view their quizzes</string>
+    <string name="descripcion_btn_agregar_profesor">Add teacher</string>
+    <string name="descripcion_ico_student">Student icon</string>
+    <string name="tv_nombre_estudiante">Student Name</string>
+    <string name="tv_email">email@example.com</string>
+    <string name="tv_expulsar">Remove</string>
+    <string name="tv_num_listar_pregunta">1.</string>
+    <string name="tv_listar_enunciado_pregunta">Question statement</string>
+    <string name="descripcion_btn_eliminar_pregunta">Delete question</string>
+    <string name="tv_listar_respuesta_correcta">R/ Correct answer</string>
+    <string name="descripcion_ico_profesor">Teacher icon</string>
+    <string name="tv_listar_nombre_profesor">Teacher Name</string>
+    <string name="descripcion_btn_eliminar_profesor">Delete teacher</string>
+    <string name="descripcion_quiz_imagen">Quiz Image</string>
+    <string name="tv_listar_titulo_del_quiz">Quiz title</string>
+    <string name="descripcion_btn_mas_opciones">More options</string>
+    <string name="descripcion_preguntas_ico">Questions icon</string>
+    <string name="listar_num_preguntas">number of questions</string>
+    <string name="descripcion_fecha_ico">Date icon</string>
+    <string name="listar_fecha">creation date</string>
+    <string name="descripcion_quiz_profe_image">Quiz Image</string>
+    <string name="tv_titulo_quiz_profe">Quiz title</string>
+    <string name="tv_num_preguntas_profe">number of questions</string>
+    <string name="tv_fecha_de_creacion_profe">creation date</string>
+    <string name="tv_resuelta_enunciado_pregunta">1. Question statement 1?</string>
+
+    <string name="result_respuesta_correcta_estatica">Correct: &quot;Correct answer&quot;</string>
+    <string name="result_respuesta_incorrecta_estatica">Incorrect: &quot;Incorrect answer&quot;</string>
+    <string name="formato_pregunta">%1$d. %2$s</string>
+    <string name="respuesta_correcta">Correct: &quot;%1$s&quot;</string>
+    <string name="respuesta_incorrecta_usuario">Your answer: &quot;%1$s&quot;</string>
+
+    <string name="tv_score_titulo_quiz">Quiz title</string>
+    <string name="tv_score_titulo_intentos">Attempts:</string>
+    <string name="tv_score_num_intentos">0</string>
+    <string name="tv_score_titulo_mejor">Best:</string>
+    <string name="tv_score_promedio_mejor">0%</string>
+    <string name="tv_score_titulo_ultimo">Last:</string>
+    <string name="tv_score_promedio_ultimo">0%</string>
+
+    <!-- Logout Dialog -->
+    <string name="dialog_cerrar_sesion_titulo">Log Out</string>
+    <string name="dialog_cerrar_sesion_mensaje">Are you sure you want to log out?</string>
+    <string name="dialog_btn_si">Yes</string>
+    <string name="dialog_btn_cancelar">Cancel</string>
+    <string name="toast_sesion_cerrada">Session closed</string>
+
+    <!-- Teacher Code Dialog -->
+    <string name="dialog_codigo_profesor_titulo">Assigned Teacher Code</string>
+    <string name="dialog_codigo_profesor_mensaje">Your unique code is: %1$s\n\nShare this code with your students so they can add you.</string>
+    <string name="dialog_btn_copiar_codigo">Copy Code</string>
+    <string name="dialog_btn_entendido">Got it</string>
+    <string name="toast_codigo_copiado">Code copied to clipboard</string>
+
+    <!-- Error and Status Messages -->
+    <string name="error_codigo_no_encontrado">Teacher code not found</string>
+    <string name="clipboard_codigo_label">Teacher Code</string>
+
+    <!-- TeacherFragment Strings -->
+    <string name="dialog_eliminar_profesor_titulo">Remove Teacher</string>
+    <string name="dialog_eliminar_profesor_mensaje">Are you sure you want to remove %1$s from your list?</string>
+    <string name="dialog_btn_eliminar">Remove</string>
+    <string name="toast_profesor_eliminado_exito">Teacher removed successfully</string>
+    <string name="toast_error_eliminar_profesor">Error removing teacher: %1$s</string>
+    <string name="dialog_agregar_profesor_titulo">Add Teacher</string>
+    <string name="dialog_agregar_profesor_mensaje">Enter the teacher\'s 6-character code:</string>
+    <string name="hint_codigo_profesor">ABCD12</string>
+    <string name="dialog_btn_agregar">Add</string>
+    <string name="toast_codigo_longitud_invalida">The code must be exactly 6 characters long</string>
+    <string name="toast_codigo_no_valido">Invalid code or does not belong to a teacher</string>
+    <string name="toast_error_buscar_profesor">Error searching for teacher: %1$s</string>
+    <string name="toast_profesor_ya_agregado">You have already added this teacher</string>
+    <string name="toast_profesor_agregado_exito">Teacher %1$s added successfully</string>
+    <string name="toast_error_agregar_profesor">Error adding teacher: %1$s</string>
+    <string name="error_usuario_no_autenticado">User not authenticated</string>
+
+    <!-- PreguntasActivity Strings -->
+    <string name="error_quiz_no_identificado">Error: Could not identify the quiz</string>
+    <string name="toast_minimo_5_preguntas">At least 5 questions are required to start the quiz</string>
+    <string name="dialog_eliminar_pregunta_titulo">Delete Question</string>
+    <string name="dialog_eliminar_pregunta_mensaje">Are you sure you want to delete this question?</string>
+    <string name="toast_pregunta_eliminada">Question deleted</string>
+    <string name="toast_error_eliminar_pregunta">Error deleting: %1$s</string>
+    <string name="tv_header_preguntas_count">%1$d questions</string>
+
+    <!-- ResolverQuizActivity Strings -->
+    <string name="error_cargar_quiz">Error: Could not load the quiz</string>
+    <string name="dialog_salir_quiz_titulo">Leave Quiz</string>
+    <string name="dialog_salir_quiz_mensaje">Are you sure you want to exit? Your progress will be lost.</string>
+    <string name="dialog_btn_salir">Exit</string>
+    <string name="toast_rango_preguntas_invalido">The quiz must have between 5 and 20 questions</string>
+    <string name="toast_error_cargar_preguntas">Error loading questions: %1$s</string>
+
+    <!-- StudentFragment Strings -->
+    <string name="dialog_expulsar_estudiante_titulo">Remove Student</string>
+    <string name="dialog_expulsar_estudiante_mensaje">Are you sure you want to remove %1$s from your student list?</string>
+    <string name="dialog_btn_expulsar">Remove</string>
+    <string name="toast_estudiante_expulsado_exito">Student %1$s removed successfully</string>
+    <string name="toast_error_expulsar_estudiante">Error removing student: %1$s</string>
+
+    <!-- HomeFragment Strings -->
+    <string name="dialog_eliminar_quiz_titulo">Delete Quiz</string>
+    <string name="dialog_eliminar_quiz_mensaje">Are you sure you want to delete the quiz &quot;%1$s&quot;? This action cannot be undone.</string>
+    <string name="toast_error_id_quiz_invalido">Error: Invalid quiz ID</string>
+    <string name="toast_eliminando_quiz">Deleting quiz…</string>
+    <string name="toast_quiz_eliminado_exito">Quiz deleted successfully</string>
+    <string name="toast_error_eliminar_quiz">Error deleting quiz: %1$s</string>
+    <string name="toast_error_eliminar_preguntas">Error deleting questions: %1$s</string>
+
+    <!--MENUS-->
+    <string name="menu_inicio">Home</string>
+    <string name="menu_estadisticas">Statistics</string>
+    <string name="menu_students">Students</string>
+    <string name="menu_profesores">Teachers</string>
+    <!--Toolbar MENU-->
+    <string name="menu_ver_codigo">View Code</string>
+    <string name="menu_cerrar_sesion">Log Out</string>
+
+    <!--Options MENU-->
+    <string name="menu_editar">Edit</string>
+    <string name="menu_eliminar">Delete</string>
+
+
+</resources>

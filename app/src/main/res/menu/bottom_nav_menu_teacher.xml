@@ -5,13 +5,13 @@
     <item
         android:id="@+id/Inicio"
         android:icon="@drawable/ico_home"
-        android:title="Inicio" />
+        android:title="@string/menu_inicio" />
     <item
         android:id="@+id/Score"
         android:icon="@drawable/ico_score"
-        android:title="Estadisticas" />
+        android:title="@string/menu_estadisticas" />
     <item
         android:id="@+id/Students"
         android:icon="@drawable/ico_student"
-        android:title="Estudiantes" />
+        android:title="@string/menu_students" />
 </menu>

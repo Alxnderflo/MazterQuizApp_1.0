@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MasterQuizApp</string>
+    <string name="app_name" translatable="false">MasterQuizApp</string>
     <string name="title_activity_login">LoginActivity</string>
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
@@ -9,9 +9,9 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="default_web_client_id">632367206627-fb9nuieq3edo7it7tdv9l8dpas39if20.apps.googleusercontent.com</string>
+    <string name="default_web_client_id" translatable="false">632367206627-fb9nuieq3edo7it7tdv9l8dpas39if20.apps.googleusercontent.com</string>
+    <string name="gemini_api_key" translatable="false">AIzaSyCau8-uKh_L9sqpGN7qjx-lgKY5Hmc0XnY</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="gemini_api_key">AIzaSyCau8-uKh_L9sqpGN7qjx-lgKY5Hmc0XnY</string>
     <string name="tv_mis_quizzes">Mis Quizzes</string>
     <string name="tv_no_quiz_creado">No hay ningún quiz creado</string>
     <string name="tv_crea_uno">Crea uno para comenzar</string>
@@ -130,7 +130,7 @@
     <string name="dialog_cerrar_sesion_mensaje">¿Estás seguro de que quieres cerrar sesión?</string>
     <string name="dialog_btn_si">Sí</string>
     <string name="dialog_btn_cancelar">Cancelar</string>
-    <string name="toast_sesion_cerrada">Sesión cerrada</string>
+    <string name="toast_sesion_cerrada">Sesión, cerrada</string>
 
     <!-- Diálogo de Código de Profesor -->
     <string name="dialog_codigo_profesor_titulo">Código de Profesor Asignado</string>
@@ -161,4 +161,48 @@
     <string name="toast_profesor_agregado_exito">Profesor %1$s agregado exitosamente</string>
     <string name="toast_error_agregar_profesor">Error al agregar profesor: %1$s</string>
     <string name="error_usuario_no_autenticado">Usuario no autenticado</string>
+    <!-- PreguntasActivity Strings -->
+    <string name="error_quiz_no_identificado">Error: No se pudo identificar el quiz</string>
+    <string name="toast_minimo_5_preguntas">Se necesitan al menos 5 preguntas para iniciar el quiz</string>
+    <string name="dialog_eliminar_pregunta_titulo">Eliminar Pregunta</string>
+    <string name="dialog_eliminar_pregunta_mensaje">¿Estás seguro de que quieres eliminar esta pregunta?</string>
+    <string name="toast_pregunta_eliminada">Pregunta eliminada</string>
+    <string name="toast_error_eliminar_pregunta">Error al eliminar: %1$s</string>
+    <string name="tv_header_preguntas_count">%1$d preguntas</string>
+
+    <!-- ResolverQuizActivity Strings -->
+    <string name="error_cargar_quiz">Error: No se pudo cargar el quiz</string>
+    <string name="dialog_salir_quiz_titulo">Salir del Quiz</string>
+    <string name="dialog_salir_quiz_mensaje">¿Estás seguro de que quieres salir? Se perderá tu progreso.</string>
+    <string name="dialog_btn_salir">Salir</string>
+    <string name="toast_rango_preguntas_invalido">El quiz debe tener entre 5 y 20 preguntas</string>
+    <string name="toast_error_cargar_preguntas">Error al cargar preguntas: %1$s</string>
+    <!-- StudentFragment Strings -->
+    <string name="dialog_expulsar_estudiante_titulo">Expulsar Estudiante</string>
+    <string name="dialog_expulsar_estudiante_mensaje">¿Estás seguro de que quieres expulsar a %1$s de tu lista de estudiantes?</string>
+    <string name="dialog_btn_expulsar">Expulsar</string>
+    <string name="toast_estudiante_expulsado_exito">Estudiante %1$s expulsado exitosamente</string>
+    <string name="toast_error_expulsar_estudiante">Error al expulsar estudiante: %1$s</string>
+    <!-- HomeFragment Strings -->
+    <string name="dialog_eliminar_quiz_titulo">Eliminar Quiz</string>
+    <string name="dialog_eliminar_quiz_mensaje">¿Estás seguro de que quieres eliminar el quiz \"%1$s\"? Esta acción no se puede deshacer.</string>
+    <string name="toast_error_id_quiz_invalido">Error: ID del quiz no válido</string>
+    <string name="toast_eliminando_quiz">Eliminando quiz...</string>
+    <string name="toast_quiz_eliminado_exito">Quiz eliminado exitosamente</string>
+    <string name="toast_error_eliminar_quiz">Error al eliminar quiz: %1$s</string>
+    <string name="toast_error_eliminar_preguntas">Error al eliminar preguntas: %1$s</string>
+
+    <!--MENUS-->
+
+    <string name="menu_inicio">Inicio</string>
+    <string name="menu_estadisticas">Estadisticas</string>
+    <string name="menu_students">Estudiantes</string>
+    <string name="menu_profesores">Profesores</string>
+    <!--MENU de toolbar-->
+    <string name="menu_ver_codigo">Ver Código</string>
+    <string name="menu_cerrar_sesion">Cerrar Sesión</string>
+
+    <!--MENU de opciones-->
+    <string name="menu_editar">Editar</string>
+    <string name="menu_eliminar">Eliminar</string>
 </resources>

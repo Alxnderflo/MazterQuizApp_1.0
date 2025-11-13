@@ -4,13 +4,13 @@
 
     <item
         android:id="@+id/menu_ver_codigo"
-        android:title="Ver Código"
+        android:title="@string/menu_ver_codigo"
         android:icon="@drawable/ic_code"
         app:showAsAction="never" />
 
     <item
         android:id="@+id/menu_cerrar_sesion"
-        android:title="Cerrar Sesión"
+        android:title="@string/menu_cerrar_sesion"
         android:icon="@drawable/ic_logout"
         app:showAsAction="never" />
 

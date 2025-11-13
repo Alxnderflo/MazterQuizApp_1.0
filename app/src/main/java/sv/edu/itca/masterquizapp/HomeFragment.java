@@ -119,12 +119,16 @@ public class HomeFragment extends Fragment {
 
     private void mostrarDialogEliminar(Quiz quiz, String quizId) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Eliminar Quiz");
-        builder.setMessage("¿Estás seguro de que quieres eliminar el quiz \"" + quiz.getTitulo() + "\"? Esta acción no se puede deshacer.");
-        builder.setPositiveButton("Eliminar", (dialog, which) -> {
+        builder.setTitle(R.string.dialog_eliminar_quiz_titulo);
+
+        // Usar recurso con placeholder para el título del quiz
+        String mensaje = getString(R.string.dialog_eliminar_quiz_mensaje, quiz.getTitulo());
+        builder.setMessage(mensaje);
+
+        builder.setPositiveButton(R.string.dialog_btn_eliminar, (dialog, which) -> {
             eliminarQuiz(quizId);
         });
-        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+        builder.setNegativeButton(R.string.dialog_btn_cancelar, (dialog, which) -> {
             dialog.dismiss();
         });
         AlertDialog dialog = builder.create();
@@ -134,12 +138,12 @@ public class HomeFragment extends Fragment {
 
     private void eliminarQuiz(String quizId) {
         if (quizId == null || quizId.isEmpty()) {
-            Toast.makeText(getContext(), "Error: ID del quiz no válido", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), R.string.toast_error_id_quiz_invalido, Toast.LENGTH_SHORT).show();
             return;
         }
 
         // Mostrar progreso
-        Toast.makeText(getContext(), "Eliminando quiz...", Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), R.string.toast_eliminando_quiz, Toast.LENGTH_SHORT).show();
 
         // PRIMERO eliminar las preguntas, LUEGO el quiz
         eliminarPreguntasDeQuiz(quizId, new OnPreguntasEliminadasListener() {
@@ -149,16 +153,18 @@ public class HomeFragment extends Fragment {
                 bd.collection("quizzes").document(quizId)
                         .delete()
                         .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), "Quiz eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), R.string.toast_quiz_eliminado_exito, Toast.LENGTH_SHORT).show();
                         })
                         .addOnFailureListener(e -> {
-                            Toast.makeText(getContext(), "Error al eliminar quiz: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            String mensajeError = getString(R.string.toast_error_eliminar_quiz, e.getMessage());
+                            Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
                         });
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(getContext(), "Error al eliminar preguntas: " + error, Toast.LENGTH_SHORT).show();
+                String mensajeError = getString(R.string.toast_error_eliminar_preguntas, error);
+                Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
             }
         });
     }
