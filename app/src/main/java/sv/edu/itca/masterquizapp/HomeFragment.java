@@ -1,64 +1,246 @@
 package sv.edu.itca.masterquizapp;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private RecyclerView rvQuizzes;
+    private QuizzesAdapter adapterQuizzes;
+    private List<Quiz> listaQuizzes;
+    private List<String> listaQuizzesIds;
+    private FirebaseFirestore bd;
+    private LinearLayout layoutVacio;
 
     public HomeFragment() {
-        // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
+    public static HomeFragment newInstance() {
+        return new HomeFragment();
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        bd = FirebaseFirestore.getInstance();
+        listaQuizzes = new ArrayList<>();
+        listaQuizzesIds = new ArrayList<>();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_home, container, false);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Log.d("TestLog", "HomeFragment cargado correctamente");
+
+        super.onViewCreated(view, savedInstanceState);
+        rvQuizzes = view.findViewById(R.id.rvQuizzes);
+        layoutVacio = view.findViewById(R.id.layoutVacio);
+
+        rvQuizzes.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        // Verificar autenticación
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
+            return;
+        }
+
+        // Configurar FAB
+        FloatingActionButton fab = view.findViewById(R.id.fabCrearQuiz);
+        fab.setOnClickListener(v -> {
+            startActivity(new Intent(getActivity(), CrearQuizActivity.class));
+        });
+
+        // Configurar adapter
+        adapterQuizzes = new QuizzesAdapter(listaQuizzes, getContext(), new QuizzesAdapter.OnQuizClickListener() {
+            @Override
+            public void onQuizClick(Quiz quiz, String quizId) {
+                if (quizId != null && !quizId.isEmpty()) {
+                    Intent intent = new Intent(getActivity(), PreguntasActivity.class);
+                    intent.putExtra("quiz_id", quizId);
+                    startActivity(intent);
+                } else {
+                    Log.e("HomeFragment", "quizId es null o vacío");
+                }
+            }
+        }, new QuizzesAdapter.OnQuizMenuClickListener() {
+            @Override
+            public void onEditQuiz(Quiz quiz, String quizId) {
+                //iniciar el activity en modo edición
+                Intent ventana = new Intent(getActivity(), CrearQuizActivity.class);
+                ventana.putExtra("MODO_EDICION", true);
+                ventana.putExtra("quiz_id", quizId);
+                ventana.putExtra("quiz_titulo", quiz.getTitulo());
+                ventana.putExtra("quiz_descripcion", quiz.getDescripcion());
+                ventana.putExtra("quiz_imagenUrl", quiz.getImagenUrl());
+                startActivity(ventana);
+            }
+
+            @Override
+            public void onDeleteQuiz(Quiz quiz, String quizId) {
+                mostrarDialogEliminar(quiz, quizId);
+            }
+        });
+        rvQuizzes.setAdapter(adapterQuizzes);
+
+        obtenerQuizzes();
+    }
+
+    private void mostrarDialogEliminar(Quiz quiz, String quizId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setTitle("Eliminar Quiz");
+        builder.setMessage("¿Estás seguro de que quieres eliminar el quiz \"" + quiz.getTitulo() + "\"? Esta acción no se puede deshacer.");
+        builder.setPositiveButton("Eliminar", (dialog, which) -> {
+            eliminarQuiz(quizId);
+        });
+        builder.setNegativeButton("Cancelar", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+    }
+
+    private void eliminarQuiz(String quizId) {
+        if (quizId == null || quizId.isEmpty()) {
+            Toast.makeText(getContext(), "Error: ID del quiz no válido", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Mostrar progreso
+        Toast.makeText(getContext(), "Eliminando quiz...", Toast.LENGTH_SHORT).show();
+
+        // PRIMERO eliminar las preguntas, LUEGO el quiz
+        eliminarPreguntasDeQuiz(quizId, new OnPreguntasEliminadasListener() {
+            @Override
+            public void onExito() {
+                // Ahora eliminar el quiz
+                bd.collection("quizzes").document(quizId)
+                        .delete()
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(getContext(), "Quiz eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(getContext(), "Error al eliminar quiz: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        });
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(getContext(), "Error al eliminar preguntas: " + error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    // Interface para callback
+    interface OnPreguntasEliminadasListener {
+        void onExito();
+        void onError(String error);
+    }
+
+    private void eliminarPreguntasDeQuiz(String quizId, OnPreguntasEliminadasListener listener) {
+        bd.collection("quizzes").document(quizId).collection("preguntas")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        WriteBatch batch = bd.batch();
+                        for (DocumentSnapshot documento : queryDocumentSnapshots) {
+                            batch.delete(documento.getReference());
+                        }
+                        batch.commit()
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("HomeFragment", "Preguntas eliminadas para el quiz: " + quizId);
+                                    listener.onExito();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("HomeFragment", "Error al eliminar preguntas: " + e.getMessage());
+                                    listener.onError(e.getMessage());
+                                });
+                    } else {
+                        // No hay preguntas, continuar con eliminación del quiz
+                        listener.onExito();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("HomeFragment", "Error al obtener preguntas para eliminar: " + e.getMessage());
+                    listener.onError(e.getMessage());
+                });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    private void obtenerQuizzes() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
+            return;
+        }
+        String userId = currentUser.getUid();
+
+        bd.collection("quizzes").whereEqualTo("userId", userId).orderBy("fechaCreacion", Query.Direction.DESCENDING).addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+                if (error != null) {
+                    Log.e("HomeFragment", "Error cargando quizzes: " + error.getMessage());
+                    return;
+                }
+                if (value != null) {
+                    listaQuizzes.clear();
+                    listaQuizzesIds.clear();
+                    for (DocumentSnapshot snapshot : value.getDocuments()) {
+                        Quiz quiz = snapshot.toObject(Quiz.class);
+                        if (quiz != null) {
+                            listaQuizzes.add(quiz);
+                            listaQuizzesIds.add(snapshot.getId());
+                        }
+                    }
+                    adapterQuizzes.actualizarIds(listaQuizzesIds);
+                    adapterQuizzes.notifyDataSetChanged();
+
+                    if (listaQuizzes.isEmpty()) {
+                        layoutVacio.setVisibility(View.VISIBLE);
+                        rvQuizzes.setVisibility(View.GONE);
+                    } else {
+                        layoutVacio.setVisibility(View.GONE);
+                        rvQuizzes.setVisibility(View.VISIBLE);
+                    }
+                }
+            }
+        });
     }
 }

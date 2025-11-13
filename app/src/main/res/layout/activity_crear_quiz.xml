@@ -22,6 +22,7 @@
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginBottom="24dp"/>
+
         <!-- Título: Título del Quiz con asterisco -->
         <LinearLayout
             android:layout_width="wrap_content"
@@ -44,6 +45,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
         </LinearLayout>
+
         <!-- Campo de texto: Título -->
         <EditText
             android:id="@+id/etTituloQuiz"
@@ -57,12 +59,14 @@
             android:textColor="#333333"
             android:textColorHint="#AAAAAA"
             android:textSize="16sp" />
+
         <!-- Línea divisoria -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="20dp"
             android:background="#E0E0E0" />
+
         <!-- Título: Descripción (Opcional) -->
         <TextView
             android:layout_width="wrap_content"
@@ -72,6 +76,7 @@
             android:textColor="#000000"
             android:textSize="14sp"
             android:textStyle="bold" />
+
         <!-- Campo de texto: Descripción -->
         <EditText
             android:id="@+id/etDescripcionQuiz"
@@ -86,12 +91,109 @@
             android:textColor="#333333"
             android:textColorHint="#AAAAAA"
             android:textSize="16sp" />
+
         <!-- Línea divisoria -->
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_marginBottom="20dp"
             android:background="#E0E0E0" />
+
+        <!-- NUEVO: Switch para controlar visibilidad -->
+        <LinearLayout
+            android:id="@+id/switchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Hacer público"
+                android:textColor="#000000"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/switchEsPublico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true" />
+        </LinearLayout>
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+
+        <!-- NUEVO: Switch para generar con IA -->
+        <LinearLayout
+            android:id="@+id/iaSwitchContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Generar preguntas con IA"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchGenerarIA"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <!-- Campos que aparecen cuando el switch está activo -->
+            <LinearLayout
+                android:id="@+id/iaFieldsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Número de preguntas (5-20)"
+                    android:textColor="#666666"
+                    android:textSize="12sp" />
+
+                <EditText
+                    android:id="@+id/etNumPreguntasIA"
+                    android:layout_width="120dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:inputType="number"
+                    android:text="10"
+                    android:background="@drawable/edit_text_background"
+                    android:padding="12dp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Línea divisoria -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="20dp"
+            android:background="#E0E0E0" />
+
         <!-- Título: Portada o imagen -->
         <TextView
             android:layout_width="wrap_content"
@@ -101,9 +203,10 @@
             android:textColor="#000000"
             android:textSize="14sp"
             android:textStyle="bold" />
+
         <!-- Contenedor para subir imagen -->
         <androidx.cardview.widget.CardView
-            android:id="@+id/cvImageContainer"
+            android:id="@+id/cvImgContenedor"
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_marginBottom="32dp"
@@ -135,6 +238,7 @@
                     />
             </LinearLayout>
         </androidx.cardview.widget.CardView>
+
         <!-- Botón Guardar Quiz -->
         <Button
             android:id="@+id/btnGuardarQuiz"

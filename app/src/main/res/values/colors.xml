@@ -2,4 +2,24 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="colorDefaultImg">#6B7EF7</color>
+
+    <!-- CAMBIO-QUIZ: Colores para el sistema de quizzes -->
+    <color name="color_correcta">#E8F5E9</color>
+    <color name="color_incorrecta">#FFEBEE</color>
+    <color name="color_borde_inicial">#E0E0E0</color>
+    <color name="color_texto_inicial">#2D2D2D</color>
+
+<!--PROFESORES-->
+    <color name="color_profesor_1">#7C3AED</color> <!-- Violeta -->
+    <color name="color_profesor_2">#2563EB</color> <!-- Azul -->
+    <color name="color_profesor_3">#03A120</color> <!-- Cian/azul profundo -->
+    <color name="color_profesor_4">#059669</color> <!-- Verde -->
+    <color name="color_profesor_5">#B45309</color> <!-- Naranja oscuro -->
+    <color name="color_profesor_6">#DC2626</color> <!-- Rojo intenso -->
+
+
 </resources>
+
+
+

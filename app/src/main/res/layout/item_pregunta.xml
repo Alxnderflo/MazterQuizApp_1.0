@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
@@ -10,12 +11,14 @@
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:elevation="2dp"
-        app:cardBackgroundColor="#B5B8E8"
+        android:background="@drawable/top_line"
+        app:cardBackgroundColor="@android:color/transparent"
         app:cardCornerRadius="16dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/top_line"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -45,6 +48,19 @@
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
+                <!-- Botón para eliminar -->
+                <ImageButton
+                    android:id="@+id/btnElimP"
+                    android:layout_width="45dp"
+                    android:layout_height="35dp"
+                    android:layout_marginStart="8dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="Eliminar preguntas"
+                    android:padding="4dp"
+                    android:src="@drawable/ico_del_question"
+                    app:tint="#EF0909"
+                    tools:ignore="TouchTargetSizeCheck" />
+
             </LinearLayout>
 
             <!-- Respuesta correcta -->
@@ -54,7 +70,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="R/ Respuesta correcta"
-                android:textColor="#FFFFFF"
+                android:textColor="#999797"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -63,12 +79,5 @@
     </androidx.cardview.widget.CardView>
 
     <!-- Línea divisoria debajo del CardView -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
-        android:background="#E0E0E0" />
 
 </LinearLayout>

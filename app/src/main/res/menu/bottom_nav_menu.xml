@@ -12,6 +12,6 @@
         android:title="Estadisticas" />
     <item
         android:id="@+id/Teacher"
-        android:icon="@drawable/ico_teacher"
+        android:icon="@drawable/ico_profe"
         android:title="Profesor" />
 </menu>

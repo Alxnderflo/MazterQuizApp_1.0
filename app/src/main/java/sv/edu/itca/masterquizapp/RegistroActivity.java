@@ -5,16 +5,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,16 +25,14 @@ import java.util.Map;
 public class RegistroActivity extends AppCompatActivity {
     private EditText editNombre, editEmail, editPassword, editConfirmPassword;
     private RadioGroup radioGroupRol;
-
     private Button btnRegister;
-
     private FirebaseAuth auth;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
-
 
         // Enlazar los elementos de la vista
         editNombre = findViewById(R.id.editNombre);
@@ -41,8 +42,9 @@ public class RegistroActivity extends AppCompatActivity {
         radioGroupRol = findViewById(R.id.radioGroupRol);
         btnRegister = findViewById(R.id.btnRegister);
 
-        // Inicializar Firebase Auth
+        // Inicializar Firebase Auth y SessionManager
         auth = FirebaseAuth.getInstance();
+        sessionManager = new SessionManager(this);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,7 +54,6 @@ public class RegistroActivity extends AppCompatActivity {
                 String password = editPassword.getText().toString().trim();
                 String confirmPassword = editConfirmPassword.getText().toString().trim();
 
-                // Obtener el rol seleccionado usando RadioGroup
                 int selectedId = radioGroupRol.getCheckedRadioButtonId();
                 String rol;
 
@@ -65,7 +66,6 @@ public class RegistroActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Validaciones básicas
                 if (nombre.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
                     Toast.makeText(RegistroActivity.this, "Completa todos los campos", Toast.LENGTH_SHORT).show();
                     return;
@@ -79,52 +79,48 @@ public class RegistroActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Deshabilitar botón durante el registro
                 btnRegister.setEnabled(false);
                 btnRegister.setText("Creando cuenta...");
 
-                // Crear un nuevo usuario con Firebase Auth
-                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // Usuario creado, ahora enviar correo de verificación
-                        FirebaseUser user = auth.getCurrentUser();
-                        if (user != null) {
-                            user.sendEmailVerification().addOnCompleteListener(emailTask -> {
-                                if (emailTask.isSuccessful()) {
-                                    // Correo de verificación enviado, guardar datos en Firestore
-                                    guardarUsuarioEnFirestore(nombre, email, rol);
-                                } else {
-                                    // Error al enviar correo, habilitar botón y mostrar error
-                                    btnRegister.setEnabled(true);
-                                    btnRegister.setText("Registrar");
-                                    Toast.makeText(RegistroActivity.this, "Error al enviar correo de verificación: " + emailTask.getException().getMessage(), Toast.LENGTH_LONG).show();
-                                    // Opcional: eliminar el usuario si no se pudo enviar el correo
-                                    user.delete();
-                                }
-                            });
+                auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = auth.getCurrentUser();
+                            if (user != null) {
+                                user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(Task<Void> emailTask) {
+                                        if (emailTask.isSuccessful()) {
+                                            guardarUsuarioEnFirestore(nombre, email, rol);
+                                        } else {
+                                            btnRegister.setEnabled(true);
+                                            btnRegister.setText("Registrar");
+                                            Toast.makeText(RegistroActivity.this, "Error al enviar correo de verificación: " + emailTask.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                            user.delete();
+                                        }
+                                    }
+                                });
+                            } else {
+                                btnRegister.setEnabled(true);
+                                btnRegister.setText("Registrar");
+                                Toast.makeText(RegistroActivity.this, "Error: No se pudo obtener el usuario autenticado", Toast.LENGTH_SHORT).show();
+                            }
                         } else {
-                            // No se pudo obtener el usuario, habilitar botón y mostrar error
                             btnRegister.setEnabled(true);
                             btnRegister.setText("Registrar");
-                            Toast.makeText(RegistroActivity.this, "Error: No se pudo obtener el usuario autenticado", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(RegistroActivity.this, "Error al crear usuario: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                         }
-                    } else {
-                        // Re-habilitar el botón en caso de error
-                        btnRegister.setEnabled(true);
-                        btnRegister.setText("Registrar");
-                        Toast.makeText(RegistroActivity.this, "Error al crear usuario: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }
         });
     }
 
-    // Metodo para guardar el usuario en Firestore
     private void guardarUsuarioEnFirestore(String nombre, String email, String rol) {
         FirebaseUser user = auth.getCurrentUser();
 
         if (user == null) {
-            // Si el usuario es nulo, habilitar botón y mostrar error
             btnRegister.setEnabled(true);
             btnRegister.setText("Registrar");
             Toast.makeText(this, "Error: No se pudo obtener el usuario autenticado", Toast.LENGTH_SHORT).show();
@@ -137,13 +133,20 @@ public class RegistroActivity extends AppCompatActivity {
         usuario.put("rol", rol);
         usuario.put("fechaRegistro", new Date());
 
+        if (rol.equals("profesor")) {
+            usuario.put("codigoProfesor", "");
+        } else if (rol.equals("estudiante")) {
+            usuario.put("profesoresAgregados", new ArrayList<String>());
+        }
+
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("usuarios")
                 .document(user.getUid())
                 .set(usuario)
                 .addOnSuccessListener(aVoid -> {
-                    // Éxito al guardar en Firestore
-                    // Redirigir a VerificacionEmailActivity
+                    // ✅ CORREGIDO: Solo guardar rol, NO el código vacío
+                    sessionManager.saveUserRole(user.getUid(), rol);
+
                     Intent intent = new Intent(RegistroActivity.this, VerificacionEmailActivity.class);
                     intent.putExtra("email", email);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -151,12 +154,9 @@ public class RegistroActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    // Error al guardar en Firestore - IMPORTANTE: Re-habilitar el botón
                     btnRegister.setEnabled(true);
                     btnRegister.setText("Registrar");
                     Toast.makeText(RegistroActivity.this, "Error al guardar datos del usuario: " + e.getMessage(), Toast.LENGTH_LONG).show();
-
-                    // Opcional: eliminar el usuario de Auth si falla Firestore
                     user.delete().addOnCompleteListener(deleteTask -> {
                         if (deleteTask.isSuccessful()) {
                             Toast.makeText(RegistroActivity.this, "Se eliminó el usuario por error en los datos", Toast.LENGTH_SHORT).show();
