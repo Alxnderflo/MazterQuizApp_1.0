@@ -22,7 +22,7 @@
             android:minHeight="120dp"
             android:paddingStart="20dp"
             android:paddingEnd="20dp"
-            android:paddingBottom="10dp">
+            android:paddingBottom="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -37,15 +37,13 @@
                     android:layout_height="wrap_content"
                     android:text="Crear cuenta"
                     android:textColor="#6266F1"
-                    android:textSize="24sp"
+                    android:textSize="20sp"
                     android:textStyle="bold" />
 
                 <ImageView
                     android:id="@+id/ivMq"
                     android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_height="150dp"
                     app:srcCompat="@drawable/nombre_master_quiz" />
 
             </LinearLayout>
@@ -59,15 +57,17 @@
             android:background="@drawable/gradient_background_rounded"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="40dp"
-            android:paddingBottom="60dp">
+            android:paddingStart="40dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="20dp"
+            android:paddingRight="40dp">
 
             <!-- Nombre -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Nombre"
+                android:text="Nombre:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Correo electrónico"
+                android:text="Correo electrónico:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -117,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Contraseña"
+                android:text="Contraseña:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -142,7 +142,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Confirmar contraseña"
+                android:text="Confirmar contraseña:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -162,40 +162,47 @@
                 android:textSize="16sp" />
 
             <!-- Selección de rol -->
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
-                android:text="Rol"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold" />
 
-            <RadioGroup
-                android:id="@+id/radioGroupRol"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="60dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
-                <RadioButton
-                    android:id="@+id/radioEstudiante"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:checked="true"
-                    android:text="Estudiante"
+
+                    android:text="Rol:"
                     android:textColor="#FFFFFF"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
 
-                <RadioButton
-                    android:id="@+id/radioProfesor"
+                <RadioGroup
+                    android:id="@+id/radioGroupRol"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="24dp"
-                    android:text="Profesor"
-                    android:textColor="#FFFFFF"
-                    android:textStyle="bold" />
-            </RadioGroup>
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radioEstudiante"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="true"
+                        android:text="Estudiante"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/radioProfesor"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="24dp"
+                        android:text="Profesor"
+                        android:textColor="#FFFFFF"
+                        android:textStyle="bold" />
+                </RadioGroup>
+            </LinearLayout>
 
             <!-- Botón registrar -->
             <Button
@@ -204,7 +211,7 @@
                 android:layout_height="48dp"
                 android:layout_marginTop="24dp"
                 android:layout_marginBottom="40dp"
-                android:backgroundTint="#00D4BA"
+                android:backgroundTint="#fab441"
                 android:elevation="4dp"
                 android:text="Registrarme"
                 android:textAllCaps="false"

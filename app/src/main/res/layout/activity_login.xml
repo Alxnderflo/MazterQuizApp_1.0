@@ -36,25 +36,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Bienvenidos"
+                    android:text="Bienvenidos a"
                     android:textColor="#6266F1"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvWelcome2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="a"
-                    android:textColor="#6266F1"
-                    android:textSize="30sp"
-                    android:textStyle="bold" />
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:gravity="center" />
 
                 <ImageView
                     android:id="@+id/ivMq"
                     android:layout_width="match_parent"
-                    android:layout_height="110dp"
-                    android:layout_marginBottom="10dp"
+                    android:layout_height="150dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="0dp"
                     app:srcCompat="@drawable/nombre_master_quiz" />
 
             </LinearLayout>
@@ -63,20 +56,23 @@
 
         <!-- Contenedor con gradiente -->
         <LinearLayout
+            android:id="@+id/containerGradient"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/gradient_background_rounded"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="40dp"
-            android:paddingBottom="60dp">
+            android:paddingStart="40dp"
+            android:paddingLeft="40dp"
+            android:paddingTop="40dp"
+            android:paddingRight="40dp">
 
             <!-- Correo -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Correo"
+                android:text="Correo:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -101,7 +97,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="8dp"
-                android:text="Contraseña"
+                android:text="Contraseña:"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -126,7 +122,7 @@
                 android:layout_width="200dp"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
-                android:backgroundTint="#00D4BA"
+                android:backgroundTint="#fab441"
                 android:elevation="4dp"
                 android:text="Ingresar"
                 android:textAllCaps="false"
