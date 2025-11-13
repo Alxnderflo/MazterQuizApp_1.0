@@ -12,4 +12,5 @@
     <string name="default_web_client_id">632367206627-fb9nuieq3edo7it7tdv9l8dpas39if20.apps.googleusercontent.com</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="gemini_api_key">AIzaSyCau8-uKh_L9sqpGN7qjx-lgKY5Hmc0XnY</string>
 </resources>

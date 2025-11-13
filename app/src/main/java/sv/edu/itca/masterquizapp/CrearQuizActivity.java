@@ -1,6 +1,7 @@
 package sv.edu.itca.masterquizapp;
 
 import android.Manifest;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -36,6 +37,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class CrearQuizActivity extends AppCompatActivity {
@@ -58,6 +60,12 @@ public class CrearQuizActivity extends AppCompatActivity {
     private SwitchCompat switchEsPublico;
     private String userRol = null;
 
+    // NUEVAS VARIABLES PARA IA
+    private LinearLayout iaSwitchContainer;
+    private SwitchCompat switchGenerarIA;
+    private LinearLayout iaFieldsContainer;
+    private EditText etNumPreguntasIA;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,9 +80,24 @@ public class CrearQuizActivity extends AppCompatActivity {
         imgPreview = findViewById(R.id.imgPreview);
         tvImgHint = findViewById(R.id.tvImgHint);
 
-        // NUEVO: Inicializar vistas del switch
+        // Inicializar vistas del switch
         switchContainer = findViewById(R.id.switchContainer);
         switchEsPublico = findViewById(R.id.switchEsPublico);
+
+        // NUEVO: Inicializar vistas de IA
+        iaSwitchContainer = findViewById(R.id.iaSwitchContainer);
+        switchGenerarIA = findViewById(R.id.switchGenerarIA);
+        iaFieldsContainer = findViewById(R.id.iaFieldsContainer);
+        etNumPreguntasIA = findViewById(R.id.etNumPreguntasIA);
+
+        // Configurar listeners para IA
+        switchGenerarIA.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                iaFieldsContainer.setVisibility(View.VISIBLE);
+            } else {
+                iaFieldsContainer.setVisibility(View.GONE);
+            }
+        });
 
         // CAMBIO: Verificar si estamos en modo edición
         esEdicion = getIntent().getBooleanExtra("MODO_EDICION", false);
@@ -111,8 +134,14 @@ public class CrearQuizActivity extends AppCompatActivity {
                 imgPreview.setImageTintList(ColorStateList.valueOf(getColor(R.color.colorDefaultImg)));
                 tvImgHint.setVisibility(View.VISIBLE);
             }
+
+            // En modo edición, ocultar la funcionalidad de IA
+            iaSwitchContainer.setVisibility(View.GONE);
         } else {
             setTitle("Crear Quiz");
+
+            // NUEVO: Mostrar funcionalidad de IA para todos en modo creación
+            iaSwitchContainer.setVisibility(View.VISIBLE);
         }
 
         // Obtener el usuario actual y configurar el rol
@@ -126,7 +155,7 @@ public class CrearQuizActivity extends AppCompatActivity {
         btnGuardarQuiz.setOnClickListener(v -> guardarQuiz());
     }
 
-    // NUEVO MÉTODO: Obtener rol del usuario y configurar interfaz
+    // MÉTODO: Obtener rol del usuario y configurar interfaz
     private void obtenerRolYConfigurarInterfaz(String userId, Runnable onComplete) {
         FirebaseFirestore.getInstance().collection("usuarios").document(userId)
                 .get()
@@ -147,10 +176,13 @@ public class CrearQuizActivity extends AppCompatActivity {
                                 cargarEstadoEsPublico();
                             }
                         } else {
-                            // Para estudiantes, ocultar el switch
+                            // Para estudiantes, ocultar el switch de visibilidad
                             switchContainer.setVisibility(View.GONE);
-                            Log.d("CrearQuiz", "Switch oculto (estudiante)");
+                            Log.d("CrearQuiz", "Switch de visibilidad oculto (estudiante)");
                         }
+
+                        // NUEVO: La funcionalidad de IA ya se muestra para todos en onCreate
+                        // No necesitamos cambiar la visibilidad de iaSwitchContainer aquí
 
                         if (onComplete != null) {
                             onComplete.run();
@@ -163,7 +195,8 @@ public class CrearQuizActivity extends AppCompatActivity {
                     Toast.makeText(this, "Error al obtener datos del usuario: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
-    // NUEVO MÉTODO: Cargar estado de esPublico al editar
+
+    // MÉTODO: Cargar estado de esPublico al editar
     private void cargarEstadoEsPublico() {
         if (quizIdEdit != null) {
             db.collection("quizzes").document(quizIdEdit)
@@ -364,6 +397,20 @@ public class CrearQuizActivity extends AppCompatActivity {
             Log.d("CrearQuiz", "Estudiante - esPublico: " + esPublico);
         }
 
+        // NUEVO: Verificar si se debe generar con IA (disponible para todos)
+        boolean generarConIA = switchGenerarIA.isChecked();
+        int numPreguntasIA = 10; // valor por defecto
+
+        if (generarConIA) {
+            try {
+                numPreguntasIA = Integer.parseInt(etNumPreguntasIA.getText().toString().trim());
+                // Ajustar al rango 5-20
+                numPreguntasIA = Math.max(5, Math.min(20, numPreguntasIA));
+            } catch (NumberFormatException e) {
+                numPreguntasIA = 10;
+            }
+        }
+
         //codigo para edicion
         if (esEdicion) {
             DocumentReference documentoQuiz = db.collection("quizzes").document(quizIdEdit);
@@ -387,7 +434,7 @@ public class CrearQuizActivity extends AppCompatActivity {
         } else {
             // Modo creación: crear un nuevo quiz
 
-            // NUEVO: Obtener el nombre del usuario
+            // Obtener el nombre del usuario
             String userNombre = currentUser.getDisplayName();
             if (userNombre == null || userNombre.isEmpty()) {
                 // Si no tiene display name, usar el email sin dominio
@@ -402,23 +449,119 @@ public class CrearQuizActivity extends AppCompatActivity {
             DocumentReference nuevoDocumento = db.collection("quizzes").document();
             String nuevoId = nuevoDocumento.getId();
 
-            // NUEVO: Usar el constructor corregido
+            // Usar el constructor corregido
             Quiz quiz = new Quiz(titulo, descripcion, imagenUrl, userId, userNombre, userRol, esPublico);
 
+            int finalNumPreguntasIA = numPreguntasIA;
             nuevoDocumento.set(quiz)
                     .addOnSuccessListener(aVoid -> {
                         Log.d("CrearQuiz", "Quiz guardado en Firestore - esPublico: " + esPublico);
-                        Toast.makeText(this, "Quiz guardado exitosamente", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
-                        intent.putExtra("quiz_id", nuevoId);
-                        startActivity(intent);
-                        finish();
+
+                        if (generarConIA) {
+                            // NUEVO: Generar preguntas con IA (disponible para todos)
+                            generarPreguntasConIA(nuevoId, titulo, descripcion, finalNumPreguntasIA);
+                        } else {
+                            Toast.makeText(this, "Quiz guardado exitosamente", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
+                            intent.putExtra("quiz_id", nuevoId);
+                            startActivity(intent);
+                            finish();
+                        }
                     })
                     .addOnFailureListener(e -> {
                         Log.e("CrearQuiz", "Error al sincronizar: " + e.getMessage());
                         Toast.makeText(this, "Error al guardar: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     });
         }
+    }
+
+    // NUEVO MÉTODO: Generar preguntas con IA (disponible para todos)
+    private void generarPreguntasConIA(String quizId, String titulo, String descripcion, int numPreguntas) {
+        ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Generando preguntas con IA...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+
+        GeminiAIService geminiService = new GeminiAIService(this);
+        geminiService.generarPreguntas(titulo, descripcion, numPreguntas, new GeminiAIService.PreguntasGeneratedCallback() {
+            @Override
+            public void onSuccess(List<Pregunta> preguntas) {
+                // CORRECCIÓN: Usar runOnUiThread para evitar el error del Toast
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        if (preguntas != null && !preguntas.isEmpty()) {
+                            guardarPreguntasEnFirestore(quizId, preguntas);
+                        } else {
+                            Toast.makeText(CrearQuizActivity.this, "No se generaron preguntas", Toast.LENGTH_SHORT).show();
+                            navegarAPreguntasActivity(quizId);
+                        }
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                // CORRECCIÓN: Usar runOnUiThread para evitar el error del Toast
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressDialog.dismiss();
+                        Log.e("CrearQuiz", "Error IA: " + error);
+                        Toast.makeText(CrearQuizActivity.this, "Error: " + error, Toast.LENGTH_LONG).show();
+                        navegarAPreguntasActivity(quizId);
+                    }
+                });
+            }
+        });
+    }
+
+    // Método auxiliar para navegación
+    private void navegarAPreguntasActivity(String quizId) {
+        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
+        intent.putExtra("quiz_id", quizId);
+        startActivity(intent);
+        finish();
+    }
+
+    // NUEVO MÉTODO: Guardar preguntas generadas por IA en Firestore
+    private void guardarPreguntasEnFirestore(String quizId, List<Pregunta> preguntas) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Guardar cada pregunta en la subcolección
+        for (int i = 0; i < preguntas.size(); i++) {
+            Pregunta pregunta = preguntas.get(i);
+            pregunta.setOrden(i + 1); // Asegurar el orden
+
+            db.collection("quizzes").document(quizId)
+                    .collection("preguntas")
+                    .add(pregunta)
+                    .addOnSuccessListener(documentReference -> {
+                        Log.d("CrearQuiz", "Pregunta guardada: " + documentReference.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("CrearQuiz", "Error guardando pregunta: " + e.getMessage());
+                    });
+        }
+
+        // Actualizar el contador de preguntas en el quiz
+        db.collection("quizzes").document(quizId)
+                .update("numPreguntas", preguntas.size())
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("CrearQuiz", "Contador de preguntas actualizado a " + preguntas.size());
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("CrearQuiz", "Error actualizando contador de preguntas", e);
+                });
+
+        Toast.makeText(this, "Quiz guardado con " + preguntas.size() + " preguntas generadas por IA", Toast.LENGTH_SHORT).show();
+
+        // Navegar a PreguntasActivity
+        Intent intent = new Intent(CrearQuizActivity.this, PreguntasActivity.class);
+        intent.putExtra("quiz_id", quizId);
+        startActivity(intent);
+        finish();
     }
 
     @Override
