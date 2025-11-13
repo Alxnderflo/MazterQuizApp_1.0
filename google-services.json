@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "342182240513",
+    "project_id": "masterquizapp-8e4e0",
+    "storage_bucket": "masterquizapp-8e4e0.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:342182240513:android:720efa83996cb51819fb00",
+        "android_client_info": {
+          "package_name": "sv.edu.itca.masterquizapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "342182240513-r1r3eog1f9ranaom9mvvuthuek62ti4g.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sv.edu.itca.masterquizapp",
+            "certificate_hash": "f8a2ee4bdc51e266b66b5514ec3facd11fd4bfe2"
+          }
+        },
+        {
+          "client_id": "342182240513-8qr7e7egb820o7aek3v60jlrjolurvqr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvP2ISk_YgZq1w70nbMWxqXde3Ia5nrV8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "342182240513-8qr7e7egb820o7aek3v60jlrjolurvqr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
