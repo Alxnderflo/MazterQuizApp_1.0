@@ -3,8 +3,11 @@ package sv.edu.itca.masterquizapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,11 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient client;
     private static final int RC_SIGN_IN = 1234;
 
+    private TextView tvWelcome;
+    private ImageView ivMq;
+    private ScrollView scrollView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,6 +50,17 @@ public class LoginActivity extends AppCompatActivity {
         editPassword = findViewById(R.id.editPassword);
         btnLogin = findViewById(R.id.btnLogin);
         btnGoogle = findViewById(R.id.btnGoogle);
+
+
+        //Necesarios para la animacion
+        scrollView = findViewById(R.id.scrollView);
+        tvWelcome = findViewById(R.id.tvWelcome);
+        //tvWelcome2 = findViewById(R.id.tvWelcome2);
+        ivMq = findViewById(R.id.ivMq);
+
+        // Aplicar animación en cascada
+        applyStaggeredAnimation();
+
 
         // Inicializar Firebase Auth
         auth = FirebaseAuth.getInstance();
@@ -132,6 +151,39 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void applyStaggeredAnimation() {
+        // Distancia desde donde se deslizarán los elementos
+        float slideDistance = 80f;
+
+        // Array con todas las vistas a animar
+        View[] views = {tvWelcome, ivMq, editEmail, editPassword, btnLogin, btnGoogle, tvRegister};
+
+        // Delay entre cada animación (en milisegundos)
+        int delayBetweenItems = 100; // 0.1 segundos entre cada elemento
+
+        // Aplicar animación a cada vista con delay progresivo
+        for (int i = 0; i < views.length; i++) {
+            View view = views[i];
+
+            // Configurar estado inicial
+            view.setAlpha(0f);
+            view.setTranslationY(slideDistance);
+
+            // Calcular el delay para este elemento
+            long delay = i * delayBetweenItems;
+
+            // Animar
+            view.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(600)
+                    .setStartDelay(delay)
+                    .setInterpolator(new DecelerateInterpolator(1.2f))
+                    .start();
+        }
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

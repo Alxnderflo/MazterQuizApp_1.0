@@ -35,13 +35,13 @@
                 android:layout_height="wrap_content"
                 android:text="Verifica tu email"
                 android:textColor="#6266F1"
-                android:textSize="24sp"
+                android:textSize="30sp"
                 android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/ivMq"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="150dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:srcCompat="@drawable/nombre_master_quiz" />
@@ -89,7 +89,7 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:src="@drawable/ico_warning"
-                    app:tint="#FFD700"
+                    app:tint="#FFC107"
                     android:layout_marginEnd="8dp" />
 
                 <TextView
@@ -117,7 +117,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginBottom="16dp"
-            android:backgroundTint="#00D4BA"
+            android:backgroundTint="#fab441"
             android:elevation="4dp"
             android:text="Reenviar correo de verificación"
             android:textAllCaps="false"
@@ -131,7 +131,7 @@
             android:id="@+id/btnIrALogin"
             android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:backgroundTint="#ED3F3F"
+            android:backgroundTint="#66bb6a"
             android:elevation="4dp"
             android:text="Ir a Iniciar Sesión"
             android:textAllCaps="false"

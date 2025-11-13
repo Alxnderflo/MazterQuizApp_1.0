@@ -3,9 +3,13 @@ package sv.edu.itca.masterquizapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -29,6 +33,11 @@ public class RegistroActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private SessionManager sessionManager;
 
+    private TextView tvWelcome;
+    private ImageView ivMq;
+
+    private ScrollView scrollView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +50,17 @@ public class RegistroActivity extends AppCompatActivity {
         editConfirmPassword = findViewById(R.id.editConfirmPassword);
         radioGroupRol = findViewById(R.id.radioGroupRol);
         btnRegister = findViewById(R.id.btnRegister);
+
+
+        //Necesarios para la animacion
+        scrollView = findViewById(R.id.scrollView);
+        tvWelcome = findViewById(R.id.tvWelcome);
+        ivMq = findViewById(R.id.ivMq);
+
+        // Aplicar animación en cascada
+        applyStaggeredAnimation();
+
+
 
         // Inicializar Firebase Auth y SessionManager
         auth = FirebaseAuth.getInstance();
@@ -116,6 +136,40 @@ public class RegistroActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void applyStaggeredAnimation() {
+        // Distancia desde donde se deslizarán los elementos
+        float slideDistance = 80f;
+
+        // Array con todas las vistas a animar
+        View[] views = {tvWelcome, ivMq,editNombre, editEmail, editPassword, editConfirmPassword, radioGroupRol, btnRegister};
+
+        // Delay entre cada animación (en milisegundos)
+        int delayBetweenItems = 80; // 0.1 segundos entre cada elemento
+
+        // Aplicar animación a cada vista con delay progresivo
+        for (int i = 0; i < views.length; i++) {
+            View view = views[i];
+
+            // Configurar estado inicial
+            view.setAlpha(0f);
+            view.setTranslationY(slideDistance);
+
+            // Calcular el delay para este elemento
+            long delay = i * delayBetweenItems;
+
+            // Animar
+            view.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(600)
+                    .setStartDelay(delay)
+                    .setInterpolator(new DecelerateInterpolator(1.2f))
+                    .start();
+        }
+    }
+
+
 
     private void guardarUsuarioEnFirestore(String nombre, String email, String rol) {
         FirebaseUser user = auth.getCurrentUser();
