@@ -136,24 +136,28 @@ public class TeacherFragment extends Fragment {
     // MÉTODO: Mostrar diálogo de confirmación para eliminar profesor
     private void mostrarDialogoConfirmacionEliminacion(Usuario profesor, String profesorId, int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Eliminar Profesor");
-        builder.setMessage("¿Estás seguro de que quieres eliminar a " + profesor.getNombre() + " de tu lista?");
+        builder.setTitle(R.string.dialog_eliminar_profesor_titulo);
 
-        builder.setPositiveButton("Eliminar", (dialog, which) -> {
+        // Usar recurso con placeholder para el nombre del profesor
+        String mensaje = getString(R.string.dialog_eliminar_profesor_mensaje, profesor.getNombre());
+        builder.setMessage(mensaje);
+
+        builder.setPositiveButton(R.string.dialog_btn_eliminar, (dialog, which) -> {
             eliminarProfesor(profesorId, new OnProfesorEliminadoListener() {
                 @Override
                 public void onExito() {
-                    Toast.makeText(getContext(), "Profesor eliminado exitosamente", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.toast_profesor_eliminado_exito, Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
                 public void onError(String error) {
-                    Toast.makeText(getContext(), "Error al eliminar profesor: " + error, Toast.LENGTH_SHORT).show();
+                    String mensajeError = getString(R.string.toast_error_eliminar_profesor, error);
+                    Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
                 }
             });
         });
 
-        builder.setNegativeButton("Cancelar", null);
+        builder.setNegativeButton(R.string.dialog_btn_cancelar, null);
         AlertDialog dialog = builder.create();
         dialog.show();
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(getResources().getColor(android.R.color.holo_red_dark));
@@ -163,7 +167,7 @@ public class TeacherFragment extends Fragment {
     private void eliminarProfesor(String profesorId, OnProfesorEliminadoListener listener) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
-            listener.onError("Usuario no autenticado");
+            listener.onError(getString(R.string.error_usuario_no_autenticado));
             return;
         }
 
@@ -178,24 +182,24 @@ public class TeacherFragment extends Fragment {
 
     private void mostrarDialogoAgregarProfesor() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Agregar Profesor");
-        builder.setMessage("Ingresa el código de 6 caracteres del profesor:");
+        builder.setTitle(R.string.dialog_agregar_profesor_titulo);
+        builder.setMessage(R.string.dialog_agregar_profesor_mensaje);
 
         final EditText input = new EditText(getContext());
         input.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
         input.setFilters(new InputFilter[]{new InputFilter.AllCaps(), new InputFilter.LengthFilter(6)});
-        input.setHint("ABCD12");
+        input.setHint(R.string.hint_codigo_profesor);
         builder.setView(input);
 
-        builder.setPositiveButton("Agregar", (dialog, which) -> {
+        builder.setPositiveButton(R.string.dialog_btn_agregar, (dialog, which) -> {
             String codigo = input.getText().toString().trim();
             if (codigo.length() == 6) {
                 buscarProfesorPorCodigo(codigo);
             } else {
-                Toast.makeText(getContext(), "El código debe tener exactamente 6 caracteres", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.toast_codigo_longitud_invalida, Toast.LENGTH_SHORT).show();
             }
         });
-        builder.setNegativeButton("Cancelar", (dialog, which) -> dialog.cancel());
+        builder.setNegativeButton(R.string.dialog_btn_cancelar, (dialog, which) -> dialog.cancel());
         builder.show();
     }
 
@@ -209,13 +213,14 @@ public class TeacherFragment extends Fragment {
                 if (!estaProfesorAgregado(profesorId)) {
                     vincularProfesor(profesorId, nombreProfesor);
                 } else {
-                    Toast.makeText(getContext(), "Ya tienes agregado a este profesor", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), R.string.toast_profesor_ya_agregado, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(getContext(), "Código no válido o no pertenece a un profesor", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), R.string.toast_codigo_no_valido, Toast.LENGTH_SHORT).show();
             }
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Error al buscar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            String mensajeError = getString(R.string.toast_error_buscar_profesor, e.getMessage());
+            Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
         });
     }
 
@@ -233,9 +238,11 @@ public class TeacherFragment extends Fragment {
         if (currentUser == null) return;
 
         db.collection("usuarios").document(currentUser.getUid()).update("profesoresAgregados", FieldValue.arrayUnion(profesorId)).addOnSuccessListener(aVoid -> {
-            Toast.makeText(getContext(), "Profesor " + nombreProfesor + " agregado exitosamente", Toast.LENGTH_SHORT).show();
+            String mensajeExito = getString(R.string.toast_profesor_agregado_exito, nombreProfesor);
+            Toast.makeText(getContext(), mensajeExito, Toast.LENGTH_SHORT).show();
         }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Error al agregar profesor: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            String mensajeError = getString(R.string.toast_error_agregar_profesor, e.getMessage());
+            Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
         });
     }
 

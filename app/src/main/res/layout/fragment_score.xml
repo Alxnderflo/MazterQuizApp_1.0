@@ -46,7 +46,7 @@
                             android:id="@+id/tvTotalQuizzes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0"
+                            android:text="@string/tv_num_quizes_resueltos"
                             android:textColor="#1F1F1F"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -54,7 +54,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Quizzes"
+                            android:text="@string/tv_titulo_num_quizes_resueltos"
                             android:textColor="#7A7A7A"
                             android:textSize="14sp" />
 
@@ -84,7 +84,7 @@
                             android:id="@+id/tvPromedio"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0%"
+                            android:text="@string/tv_promedio_quizes_resueltos"
                             android:textColor="#1F1F1F"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -92,7 +92,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Promedio"
+                            android:text="@string/tv_titulo_promedio_quizes_resueltos"
                             android:textColor="#7A7A7A"
                             android:textSize="14sp" />
 
@@ -121,7 +121,7 @@
                             android:id="@+id/tvMejorPuntaje"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="0%"
+                            android:text="@string/tv_mayor_puntaje_quizes_resueltos"
                             android:textColor="#1F1F1F"
                             android:textSize="24sp"
                             android:textStyle="bold" />
@@ -129,7 +129,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Mejor"
+                            android:text="@string/tv_titulo_mayor_puntaje_quizes_resueltos"
                             android:textColor="#7A7A7A"
                             android:textSize="14sp" />
 
@@ -146,7 +146,7 @@
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="16dp"
-                android:text="Tus Quizzes"
+                android:text="@string/tv_tus_quizzes_resueltos"
                 android:textColor="#1F1F1F"
                 android:textSize="22sp"
                 android:textStyle="bold" />
@@ -181,6 +181,7 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginBottom="24dp"
                     android:alpha="0.8"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ico_empty_quiz"
                     app:tint="#A855F7" />
 
@@ -190,7 +191,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="No hay estadísticas disponibles"
+                    android:text="@string/tv_no_hay_stats"
                     android:textColor="#5A5A5A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -200,7 +201,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="Resuelve algunos quizzes para ver tus resultados"
+                    android:text="@string/tv_resuelve_quizzes"
                     android:textColor="#9E9E9E"
                     android:textSize="15sp" />
 

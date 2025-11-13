@@ -36,8 +36,9 @@
                         android:id="@+id/imgQuizHeader"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:contentDescription="Quiz Image"
-                        android:scaleType="centerCrop" />
+                        android:contentDescription="@string/descripcion_quiz_image"
+                        android:scaleType="centerCrop"
+                        tools:ignore="ImageContrastCheck" />
                 </androidx.cardview.widget.CardView> <!-- Contenedor de información del Quiz -->
                 <LinearLayout
                     android:layout_width="0dp"
@@ -51,7 +52,7 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:text="Título Del Quiz"
+                        android:text="@string/tv_quizz_titulo"
                         android:textColor="#1F1F1F"
                         android:textSize="17sp"
                         android:textStyle="bold" /> <!-- Descripción del Quiz -->
@@ -62,7 +63,7 @@
                         android:layout_marginTop="6dp"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="Descripción"
+                        android:text="@string/quiz_descripcion"
                         android:textColor="#7A7A7A"
                         android:textSize="14sp" /> <!-- Información adicional: preguntas y fecha -->
                     <LinearLayout
@@ -75,15 +76,16 @@
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:layout_marginEnd="3dp"
-                            android:contentDescription="Preguntas icon"
+                            android:contentDescription="@string/descripcion_preguntas_icon"
                             android:src="@drawable/ico_list"
-                            app:tint="#9E9E9E" />
+                            app:tint="#9E9E9E"
+                            tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:id="@+id/tvHeaderNumQ"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="num preguntas"
+                            android:text="@string/tv_num_preguntas"
                             android:textColor="#9E9E9E"
                             android:textSize="12sp" /> <!-- Separador -->
                         <View
@@ -95,15 +97,16 @@
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:layout_marginEnd="3dp"
-                            android:contentDescription="Fecha icon"
+                            android:contentDescription="@string/descripcion_fecha_icon"
                             android:src="@drawable/ico_date"
-                            app:tint="#9E9E9E" />
+                            app:tint="#9E9E9E"
+                            tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:id="@+id/tvHeaderFecha"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Fecha"
+                            android:text="@string/tv_fecha_creacion_quiz_propio"
                             android:textColor="#9E9E9E"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -129,7 +132,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Lista de preguntas"
+                    android:text="@string/tv_lista_de_preguntas"
                     android:textColor="#1F1F1F"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -141,18 +144,18 @@
                     android:backgroundTint="#6B7EF7"
                     android:paddingStart="24dp"
                     android:paddingEnd="24dp"
-                    android:text="Agregar"
+                    android:text="@string/btn_add_pregunta"
                     android:textColor="@color/white"
                     android:textSize="15sp"
                     app:cornerRadius="12dp"
-                    tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck" />
+                    tools:ignore="TouchTargetSizeCheck,TouchTargetSizeCheck,TextContrastCheck" />
             </LinearLayout> <!-- Botón Iniciar Quiz (solo visible cuando hay preguntas) -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnIniciarQuiz"
                 android:layout_width="match_parent"
                 android:layout_height="54dp"
                 android:layout_marginBottom="16dp"
-                android:text="Iniciar Quiz"
+                android:text="@string/btn_iniciar_quiz"
                 android:textColor="@android:color/white"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -175,6 +178,7 @@
                 android:layout_marginTop="48dp"
                 android:layout_marginBottom="48dp"
                 android:gravity="center"
+                android:importantForAccessibility="no"
                 android:orientation="vertical"
                 android:padding="24dp"
                 android:visibility="visible"> <!-- Ícono -->
@@ -185,12 +189,13 @@
                     android:layout_marginBottom="24dp"
                     android:alpha="0.8"
                     android:src="@drawable/ico_empty_question"
-                    app:tint="#A855F7" /> <!-- Texto vacío --> <TextView
+                    app:tint="#A855F7"
+                    tools:ignore="ContentDescription,ImageContrastCheck" /> <!-- Texto vacío --> <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="8dp"
                     android:gravity="center"
-                    android:text="No hay preguntas"
+                    android:text="@string/tv_no_hay_preguntas"
                     android:textColor="#5A5A5A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -200,7 +205,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="32dp"
                     android:gravity="center"
-                    android:text="para el quiz."
+                    android:text="@string/tv_para_el_quiz"
                     android:textColor="#9E9E9E"
                     android:textSize="16sp"
                     tools:ignore="TextContrastCheck" /> <!-- Botón Crear pregunta en la vista vacía -->
@@ -210,7 +215,7 @@
                     android:layout_height="54dp"
                     android:backgroundTint="#6B7EF7"
                     android:elevation="4dp"
-                    android:text="Crear pregunta"
+                    android:text="@string/btn_crear_pregunta"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold"

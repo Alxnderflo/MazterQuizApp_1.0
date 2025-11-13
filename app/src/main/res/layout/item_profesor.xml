@@ -31,7 +31,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:src="@drawable/ico_profe"
-                    android:contentDescription="Ícono de profesor"
+                    android:contentDescription="@string/descripcion_ico_profesor"
                     app:tint="@color/color_profesor_1" />
 
                 <TextView
@@ -42,7 +42,7 @@
                     android:gravity="center"
                     android:ellipsize="end"
                     android:maxLines="2"
-                    android:text="Nombre Profesor"
+                    android:text="@string/tv_listar_nombre_profesor"
                     android:textColor="#1F1F1F"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -55,7 +55,7 @@
                 android:layout_gravity="top|end"
                 android:layout_margin="8dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Eliminar profesor"
+                android:contentDescription="@string/descripcion_btn_eliminar_profesor"
                 android:padding="4dp"
                 android:src="@drawable/ico_del_question"
                 app:tint="#EF0909"

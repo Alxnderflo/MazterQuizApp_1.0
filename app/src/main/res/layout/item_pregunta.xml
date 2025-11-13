@@ -33,7 +33,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
-                    android:text="1."
+                    android:text="@string/tv_num_listar_pregunta"
                     android:textColor="#2C2C4A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -43,7 +43,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Enunciado de la pregunta"
+                    android:text="@string/tv_listar_enunciado_pregunta"
                     android:textColor="#2C2C4A"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -55,7 +55,7 @@
                     android:layout_height="35dp"
                     android:layout_marginStart="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Eliminar preguntas"
+                    android:contentDescription="@string/descripcion_btn_eliminar_pregunta"
                     android:padding="4dp"
                     android:src="@drawable/ico_del_question"
                     app:tint="#EF0909"
@@ -69,7 +69,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="R/ Respuesta correcta"
+                android:text="@string/tv_listar_respuesta_correcta"
                 android:textColor="#999797"
                 android:textSize="14sp"
                 android:textStyle="bold" />

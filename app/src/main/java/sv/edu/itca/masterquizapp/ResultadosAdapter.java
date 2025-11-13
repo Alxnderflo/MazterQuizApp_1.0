@@ -54,11 +54,18 @@ public class ResultadosAdapter extends RecyclerView.Adapter<ResultadosAdapter.Vi
 
         // CAMBIO-QUIZ: Metodo para enlazar datos con las views
         public void bind(ResultadoPregunta resultado) {
-            // Configurar el enunciado de la pregunta
-            tvEnunciado.setText(resultado.getNumeroPregunta() + ". " + resultado.getEnunciado());
+            // Configurar el enunciado de la pregunta usando recurso de string
+            tvEnunciado.setText(itemView.getContext().getString(
+                    R.string.formato_pregunta,
+                    resultado.getNumeroPregunta(),
+                    resultado.getEnunciado()
+            ));
 
-            // Configurar la respuesta correcta (siempre visible)
-            String textoCorrecta = "Correcta: \"" + resultado.getRespuestaCorrecta() + "\"";
+            // Configurar la respuesta correcta usando recurso de string
+            String textoCorrecta = itemView.getContext().getString(
+                    R.string.respuesta_correcta,
+                    resultado.getRespuestaCorrecta()
+            );
             tvRespuestaCorrecta.setText(textoCorrecta);
 
             // CAMBIO-QUIZ: Configurar la respuesta incorrecta del usuario (solo si falló)
@@ -70,9 +77,12 @@ public class ResultadosAdapter extends RecyclerView.Adapter<ResultadosAdapter.Vi
                 tvEnunciado.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ico_check, 0);
                 tvEnunciado.setCompoundDrawablePadding(16);
             } else {
-                // Si es incorrecta, mostrar la respuesta incorrecta del usuario
+                // Si es incorrecta, mostrar la respuesta incorrecta del usuario usando recurso de string
                 cardRespuestaIncorrecta.setVisibility(View.VISIBLE);
-                String textoIncorrecta = "Tu respuesta: \"" + resultado.getRespuestaUsuario() + "\"";
+                String textoIncorrecta = itemView.getContext().getString(
+                        R.string.respuesta_incorrecta_usuario,
+                        resultado.getRespuestaUsuario()
+                );
                 tvRespuestaIncorrecta.setText(textoIncorrecta);
 
                 // CAMBIO-QUIZ: Opcional - agregar ícono de cruz si es incorrecta
