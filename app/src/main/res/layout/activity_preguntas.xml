@@ -14,22 +14,27 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="16dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="12dp"
+            android:layout_marginBottom="8dp"
             app:cardBackgroundColor="@android:color/white"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="16dp"> <!-- Imagen del Quiz -->
+                android:padding="18dp">
+
+                <!-- Imagen del Quiz -->
                 <androidx.cardview.widget.CardView
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    app:cardBackgroundColor="#E8E8F4"
-                    app:cardCornerRadius="12dp"
+                    app:cardBackgroundColor="#6366F1"
+                    app:cardCornerRadius="16dp"
                     app:cardElevation="0dp">
 
                     <ImageView
@@ -38,24 +43,32 @@
                         android:layout_height="match_parent"
                         android:contentDescription="@string/descripcion_quiz_image"
                         android:scaleType="centerCrop"
+                        android:padding="0dp"
                         tools:ignore="ImageContrastCheck" />
-                </androidx.cardview.widget.CardView> <!-- Contenedor de información del Quiz -->
+                </androidx.cardview.widget.CardView>
+
+                <!-- Contenedor de información del Quiz -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="14dp"
+                    android:layout_marginStart="16dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"> <!-- Título del Quiz -->
+                    android:orientation="vertical">
+
+                    <!-- Título del Quiz -->
                     <TextView
                         android:id="@+id/tvHeaderT"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
-                        android:maxLines="1"
+                        android:maxLines="2"
                         android:text="@string/tv_quizz_titulo"
-                        android:textColor="#1F1F1F"
+                        android:textColor="#1A1A1A"
                         android:textSize="17sp"
-                        android:textStyle="bold" /> <!-- Descripción del Quiz -->
+                        android:textStyle="bold"
+                        android:lineSpacingExtra="2dp" />
+
+                    <!-- Descripción del Quiz -->
                     <TextView
                         android:id="@+id/tvHeaderD"
                         android:layout_width="wrap_content"
@@ -64,55 +77,66 @@
                         android:ellipsize="end"
                         android:maxLines="2"
                         android:text="@string/quiz_descripcion"
-                        android:textColor="#7A7A7A"
-                        android:textSize="14sp" /> <!-- Información adicional: preguntas y fecha -->
+                        android:textColor="#6B7280"
+                        android:textSize="14sp" />
+
+                    <!-- Información adicional: preguntas y fecha -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="10dp"
                         android:gravity="center_vertical"
-                        android:orientation="horizontal"> <!-- Icono de lista para preguntas -->
+                        android:orientation="horizontal">
+
+                        <!-- Icono de lista para preguntas -->
                         <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_marginEnd="3dp"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:contentDescription="@string/descripcion_preguntas_icon"
                             android:src="@drawable/ico_list"
-                            app:tint="#9E9E9E"
+                            app:tint="#6366F1"
                             tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:id="@+id/tvHeaderNumQ"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
                             android:text="@string/tv_num_preguntas"
-                            android:textColor="#9E9E9E"
-                            android:textSize="12sp" /> <!-- Separador -->
+                            android:textColor="#4B5563"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <!-- Separador -->
                         <View
-                            android:layout_width="1dp"
-                            android:layout_height="12dp"
+                            android:layout_width="4dp"
+                            android:layout_height="4dp"
                             android:layout_marginStart="10dp"
                             android:layout_marginEnd="10dp"
-                            android:background="#E0E0E0" /> <!-- Icono de calendario --> <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:layout_marginEnd="3dp"
+                            android:background="#D1D5DB"
+                            android:rotation="45" />
+
+                        <!-- Icono de calendario -->
+                        <ImageView
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:contentDescription="@string/descripcion_fecha_icon"
                             android:src="@drawable/ico_date"
-                            app:tint="#9E9E9E"
+                            app:tint="#10B981"
                             tools:ignore="ImageContrastCheck" />
 
                         <TextView
                             android:id="@+id/tvHeaderFecha"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="5dp"
                             android:text="@string/tv_fecha_creacion_quiz_propio"
-                            android:textColor="#9E9E9E"
-                            android:textSize="12sp" />
+                            android:textColor="#4B5563"
+                            android:textSize="13sp" />
                     </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </androidx.cardview.widget.CardView> <!-- Contenedor principal con padding -->
+        </androidx.cardview.widget.CardView><!-- Contenedor principal con padding -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"

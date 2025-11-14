@@ -1,5 +1,8 @@
 package sv.edu.itca.masterquizapp;
 
+import static sv.edu.itca.masterquizapp.R.drawable.ico_empty_quiz;
+import static sv.edu.itca.masterquizapp.R.drawable.master_quiz_difuminado;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -73,10 +76,10 @@ public class QuizzesProfesorAdapter extends RecyclerView.Adapter<QuizzesProfesor
         if (quiz.getImagenUrl() != null && !quiz.getImagenUrl().isEmpty()) {
             Glide.with(contexto)
                     .load(quiz.getImagenUrl())
-                    .placeholder(R.drawable.ico_empty_quiz)
+                    .placeholder(ico_empty_quiz)
                     .into(holder.imgQuiz);
         } else {
-            holder.imgQuiz.setImageResource(R.drawable.ico_empty_quiz);
+            holder.imgQuiz.setImageResource(master_quiz_difuminado);
         }
 
         // Configurar color de la barra lateral según el profesor

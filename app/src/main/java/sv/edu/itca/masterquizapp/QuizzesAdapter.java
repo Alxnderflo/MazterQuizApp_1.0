@@ -80,10 +80,10 @@ public class QuizzesAdapter extends RecyclerView.Adapter<QuizzesAdapter.ViewHold
         if (quiz.getImagenUrl() != null && !quiz.getImagenUrl().isEmpty()) {
             Glide.with(contexto)
                     .load(quiz.getImagenUrl())
-                    .placeholder(R.drawable.ico_empty_quiz)
+                    .placeholder(R.drawable.master_quiz_difuminado)
                     .into(holder.imgQuiz);
         } else {
-            holder.imgQuiz.setImageResource(R.drawable.ico_empty_quiz);
+            holder.imgQuiz.setImageResource(R.drawable.master_quiz_difuminado);
         }
 
         holder.itemView.setOnClickListener(v -> {

@@ -201,10 +201,10 @@ public class PreguntasActivity extends AppCompatActivity {
                                 if (quiz.getImagenUrl() != null && !quiz.getImagenUrl().isEmpty()) {
                                     Glide.with(PreguntasActivity.this)
                                             .load(quiz.getImagenUrl())
-                                            .placeholder(R.drawable.ico_empty_quiz)
+                                            .placeholder(R.drawable.master_quiz_difuminado)
                                             .into(imgQuizHeader);
                                 } else {
-                                    imgQuizHeader.setImageResource(R.drawable.ico_empty_quiz);
+                                    imgQuizHeader.setImageResource(R.drawable.master_quiz_difuminado);
                                 }
                             }
                         }
