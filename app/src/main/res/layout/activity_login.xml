@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,14 +30,15 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables,UselessParent">
 
                 <TextView
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
-                    android:text="Bienvenidos a"
+                    android:text="@string/tv_bienvenida_login"
                     android:textColor="#6266F1"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -48,6 +50,7 @@
                     android:layout_height="150dp"
                     android:layout_marginTop="0dp"
                     android:layout_marginBottom="0dp"
+                    android:importantForAccessibility="no"
                     app:srcCompat="@drawable/nombre_master_quiz" />
 
             </LinearLayout>
@@ -72,7 +75,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Correo:"
+                android:text="@string/tv_correo_login"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -82,7 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/edit_text_background"
-                android:hint="Ingresa tu correo electrónico"
+                android:hint="@string/et_correo_login"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:paddingStart="20dp"
@@ -97,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="8dp"
-                android:text="Contraseña:"
+                android:text="@string/tv_password_login"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -107,7 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/edit_text_background"
-                android:hint="Ingresa tu contraseña"
+                android:hint="@string/et_password_login"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:paddingStart="20dp"
@@ -124,7 +127,7 @@
                 android:layout_marginTop="24dp"
                 android:backgroundTint="#fab441"
                 android:elevation="4dp"
-                android:text="Ingresar"
+                android:text="@string/btn_ingresar_login"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
@@ -151,7 +154,7 @@
                 android:gravity="center"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:text="Continuar con Google"
+                android:text="@string/tv_login_con_google"
                 android:textColor="#666666"
                 android:textSize="16sp"
                 android:textStyle="bold"
@@ -169,7 +172,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No tienes una cuenta? "
+                    android:text="@string/tv_no_cuenta"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
 
@@ -177,7 +180,7 @@
                     android:id="@+id/tvRegister"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Registrarse"
+                    android:text="@string/tv_registrarse_login"
                     android:textColor="#00E5CC"
                     android:textSize="14sp"
                     android:textStyle="bold" />
