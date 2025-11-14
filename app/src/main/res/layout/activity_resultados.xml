@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F9">
+    android:background="#F8F9FE">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- HEADER MORADO que cubre gran parte superior -->
+            <!-- HEADER MORADO mejorado -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -24,43 +24,57 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:paddingStart="24dp"
-                android:paddingTop="32dp"
+                android:paddingTop="40dp"
                 android:paddingEnd="24dp"
-                android:paddingBottom="40dp">
+                android:paddingBottom="80dp">
 
                 <!-- Título RESULTADOS DEL QUIZ -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="24dp"
-                    android:letterSpacing="0.05"
                     android:text="@string/tv_titulo_resultados_del_quiz"
                     android:textColor="@android:color/white"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.02" />
 
-                <!-- Card blanco con puntuación DENTRO del header -->
+            </LinearLayout>
+
+            <!-- Card flotante con puntuación -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginTop="-60dp"
+                android:paddingStart="24dp"
+                android:paddingEnd="24dp"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp"
+                android:clipToPadding="false"
+                android:clipChildren="false">
+
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
                     app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="0dp">
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="28dp">
+                        android:padding="32dp">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="16dp"
+                            android:layout_marginBottom="20dp"
                             android:text="@string/tv_msg_quiz_completado"
-                            android:textColor="#2D2D2D"
-                            android:textSize="18sp"
+                            android:textColor="#1A1A1A"
+                            android:textSize="20sp"
                             android:textStyle="bold" />
 
                         <!-- Puntuación dinámica según resultados (ej: 10/20) -->
@@ -70,20 +84,31 @@
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
                             android:text="@string/tv_puntuacion_dinamica"
-                            android:textColor="#2D2D2D"
-                            android:textSize="48sp"
+                            android:textColor="#6366F1"
+                            android:textSize="56sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_respuestas_correctas"
-                            android:textColor="#7A7A7A"
-                            android:textSize="14sp" />
+                            android:textColor="#6B7280"
+                            android:textSize="14sp"
+                            android:letterSpacing="0.03" />
 
                     </LinearLayout>
 
                 </androidx.cardview.widget.CardView>
+
+                <!-- Título para la sección de resultados -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Resumen de respuestas"
+                    android:textColor="#1A1A1A"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -92,29 +117,38 @@
                 android:id="@+id/rvResultadosQuiz"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginEnd="4dp"
                 android:clipToPadding="false"
+                android:clipChildren="false"
                 android:paddingBottom="100dp" />
 
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- Botón fijo al bottom -->
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnVolverInicio"
+    <!-- Botón fijo al bottom con diseño mejorado -->
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="20dp"
-        android:text="@string/btn_volver_al_inicio"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:backgroundTint="#6B7EF7"
-        app:cornerRadius="12dp"
-        app:elevation="0dp" />
+        app:cardBackgroundColor="#6366F1"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnVolverInicio"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:background="@android:color/transparent"
+            android:text="@string/btn_volver_al_inicio"
+            android:textAllCaps="false"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.02" />
+
+    </androidx.cardview.widget.CardView>
 
 </FrameLayout>
