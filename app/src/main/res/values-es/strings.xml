@@ -24,7 +24,7 @@
     <string name="tv_guardar_quizz">Guardar Quizz</string>
     <string name="asterisco">*</string>
     <string name="tv_generar_con_ia">Generar preguntas con IA</string>
-    <string name="tv_add_num_preguntas">Número de preguntas (5-20)</string>
+    <string name="tv_add_num_preguntas">Número de preguntas (5–20)</string>
     <string name="hint_num_preguntas">10</string>
     <string name="descripcion_subir_img">Subir imagen</string>
     <string name="descripcion_preguntas_icon">Preguntas icon</string>
@@ -184,7 +184,7 @@
     <string name="dialog_eliminar_quiz_titulo">Eliminar Quiz</string>
     <string name="dialog_eliminar_quiz_mensaje">¿Estás seguro de que quieres eliminar el quiz \"%1$s\"? Esta acción no se puede deshacer.</string>
     <string name="toast_error_id_quiz_invalido">Error: ID del quiz no válido</string>
-    <string name="toast_eliminando_quiz">Eliminando quiz...</string>
+    <string name="toast_eliminando_quiz">Eliminando quiz…</string>
     <string name="toast_quiz_eliminado_exito">Quiz eliminado exitosamente</string>
     <string name="toast_error_eliminar_quiz">Error al eliminar quiz: %1$s</string>
     <string name="toast_error_eliminar_preguntas">Error al eliminar preguntas: %1$s</string>
@@ -202,4 +202,53 @@
     <!--MENU de opciones-->
     <string name="menu_editar">Editar</string>
     <string name="menu_eliminar">Eliminar</string>
+    <string name="tv_bienvenida_login">Bienvenidos a</string>
+    <string name="tv_correo_login">Correo:</string>
+    <string name="et_correo_login">Ingresa tu correo electrónico</string>
+    <string name="tv_password_login">Contraseña:</string>
+    <string name="et_password_login">Ingresa tu contraseña</string>
+    <string name="btn_ingresar_login">Ingresar</string>
+    <string name="tv_login_con_google">Continuar con Google</string>
+    <string name="tv_no_cuenta">No tienes una cuenta?</string>
+    <string name="tv_registrarse_login">Registrarse</string>
+    <string name="tv_verifica_tu_email">Verifica tu email</string>
+    <string name="tv_enunciado_correoa">Hemos enviado un correo de verificación a:</string>
+    <string name="tv_para_activar_tu_cuenta">Para activar tu cuenta:</string>
+    <string name="tv_revisa_tu_bandeja">• Revisa tu bandeja de entrada\n• Si no encuentras el correo, revisa la carpeta SPAM\n• Haz clic en el enlace de verificación\n• Una vez verificado, podrás iniciar sesión</string>
+    <string name="tv_btn_reenviar">Reenviar correo de verificación</string>
+    <string name="tv_btn_iniciar_sesion">Ir a Iniciar Sesión</string>
+    <string name="tv_nombre_registro">Nombre:</string>
+    <string name="tv_correo_registro">Correo electrónico:</string>
+    <string name="et_correo_registro">Ingresa tu correo electrónico</string>
+    <string name="et_nombre_registro">Ingresa tu nombre</string>
+    <string name="tv_crear_cuenta_registro">Crear cuenta</string>
+    <string name="tv_password_registro">Contraseña:</string>
+    <string name="et_password_registro">Ingresa tu contraseña</string>
+    <string name="tv_confirmar_password_registro">Confirmar contraseña:</string>
+    <string name="et_reescribe_password_registro">Reescribe tu contraseña</string>
+    <string name="tv_rol_registro">Rol:</string>
+    <string name="tv_rol_estudiante">Estudiante</string>
+    <string name="tv_rol_profesor">Profesor</string>
+    <string name="tv_btn_registrarse">Registrarme</string>
+    <string name="tv_selecciona_rol">Selecciona tu rol</string>
+    <string name="tv_elige_como_seguir">Elige cómo deseas continuar</string>
+    <string name="rol_student">Estudiante</string>
+    <string name="rol_profesor">Profesor</string>
+    <!-- Resolver Quiz Activity -->
+    <string name="quiz_eliminado_titulo">Quiz Eliminado</string>
+    <string name="quiz_eliminado_mensaje">El profesor ha eliminado este quiz. Tu progreso no se guardará.</string>
+    <string name="quiz_no_disponible_titulo">Quiz No Disponible</string>
+    <string name="quiz_privado_mensaje">El profesor ha hecho este quiz privado.</string>
+    <string name="btn_entendido">Entendido</string>
+
+    <!-- Login Activity -->
+    <string name="iniciando">Iniciando…</string>
+    <string name="complete_campos">Por favor complete todos los campos</string>
+    <string name="iniciando_sesion">Iniciando sesión…</string>
+    <string name="verificar_correo">Por favor, verifica tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.</string>
+    <string name="error_iniciar_sesion">Error al iniciar sesión</string>
+    <string name="continuar_google">Continuar con Google</string>
+    <string name="iniciar_sesion">Iniciar Sesión</string>
+    <string name="error_autenticacion">Error en la autenticación: %s</string>
+    <string name="error_iniciar_sesion_google">Error al iniciar sesión con Google: %s</string>
 </resources>

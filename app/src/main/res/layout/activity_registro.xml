@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,13 +30,14 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                tools:ignore="UseCompoundDrawables,UselessParent">
 
                 <TextView
                     android:id="@+id/tvWelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Crear cuenta"
+                    android:text="@string/tv_crear_cuenta_registro"
                     android:textColor="#6266F1"
                     android:textSize="20sp"
                     android:textStyle="bold" />
@@ -44,6 +46,7 @@
                     android:id="@+id/ivMq"
                     android:layout_width="match_parent"
                     android:layout_height="150dp"
+                    android:importantForAccessibility="no"
                     app:srcCompat="@drawable/nombre_master_quiz" />
 
             </LinearLayout>
@@ -67,7 +70,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
-                android:text="Nombre:"
+                android:text="@string/tv_nombre_registro"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -77,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edit_text_background"
-                android:hint="Ingresa tu nombre"
+                android:hint="@string/et_nombre_registro"
                 android:importantForAutofill="no"
                 android:inputType="textPersonName"
                 android:paddingStart="20dp"
@@ -92,7 +95,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Correo electrónico:"
+                android:text="@string/tv_correo_registro"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -102,7 +105,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edit_text_background"
-                android:hint="Ingresa tu correo electrónico"
+                android:hint="@string/et_correo_registro"
                 android:importantForAutofill="no"
                 android:inputType="textEmailAddress"
                 android:paddingStart="20dp"
@@ -117,7 +120,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Contraseña:"
+                android:text="@string/tv_password_registro"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -127,7 +130,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edit_text_background"
-                android:hint="Ingresa tu contraseña"
+                android:hint="@string/et_password_registro"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:paddingStart="20dp"
@@ -142,7 +145,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:text="Confirmar contraseña:"
+                android:text="@string/tv_confirmar_password_registro"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -152,7 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:background="@drawable/edit_text_background"
-                android:hint="Reescribe tu contraseña"
+                android:hint="@string/et_reescribe_password_registro"
                 android:importantForAutofill="no"
                 android:inputType="textPassword"
                 android:paddingStart="20dp"
@@ -173,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
 
-                    android:text="Rol:"
+                    android:text="@string/tv_rol_registro"
                     android:textColor="#FFFFFF"
                     android:textSize="16sp"
                     android:textStyle="bold" />
@@ -189,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:text="Estudiante"
+                        android:text="@string/tv_rol_estudiante"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
 
@@ -198,7 +201,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="24dp"
-                        android:text="Profesor"
+                        android:text="@string/tv_rol_profesor"
                         android:textColor="#FFFFFF"
                         android:textStyle="bold" />
                 </RadioGroup>
@@ -213,7 +216,7 @@
                 android:layout_marginBottom="40dp"
                 android:backgroundTint="#fab441"
                 android:elevation="4dp"
-                android:text="Registrarme"
+                android:text="@string/tv_btn_registrarse"
                 android:textAllCaps="false"
                 android:textColor="#FFFFFF"
                 android:textSize="16sp"

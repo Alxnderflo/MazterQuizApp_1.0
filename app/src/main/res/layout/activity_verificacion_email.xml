@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,19 +22,21 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
             <ImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_marginBottom="16dp"
+                android:importantForAccessibility="no"
                 android:src="@drawable/ico_mail"
                 app:tint="#6266F1" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Verifica tu email"
+                android:text="@string/tv_verifica_tu_email"
                 android:textColor="#6266F1"
                 android:textSize="30sp"
                 android:textStyle="bold" />
@@ -44,6 +47,7 @@
                 android:layout_height="150dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
+                android:importantForAccessibility="no"
                 app:srcCompat="@drawable/nombre_master_quiz" />
 
         </LinearLayout>
@@ -65,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:text="Hemos enviado un correo de verificación a:"
+            android:text="@string/tv_enunciado_correoa"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"
@@ -83,11 +87,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:layout_marginBottom="8dp">
+                android:layout_marginBottom="8dp"
+                tools:ignore="UseCompoundDrawables">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ico_warning"
                     app:tint="#FFC107"
                     android:layout_marginEnd="8dp" />
@@ -95,7 +101,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Para activar tu cuenta:"
+                    android:text="@string/tv_para_activar_tu_cuenta"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
                     android:textStyle="bold" />
@@ -105,7 +111,7 @@
                 android:id="@+id/tvInstrucciones"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="• Revisa tu bandeja de entrada\n• Si no encuentras el correo, revisa la carpeta SPAM\n• Haz clic en el enlace de verificación\n• Una vez verificado, podrás iniciar sesión"
+                android:text="@string/tv_revisa_tu_bandeja"
                 android:textColor="#FFFFFF"
                 android:textSize="14sp"
                 android:gravity="center" />
@@ -119,7 +125,7 @@
             android:layout_marginBottom="16dp"
             android:backgroundTint="#fab441"
             android:elevation="4dp"
-            android:text="Reenviar correo de verificación"
+            android:text="@string/tv_btn_reenviar"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
@@ -133,7 +139,7 @@
             android:layout_height="48dp"
             android:backgroundTint="#66bb6a"
             android:elevation="4dp"
-            android:text="Ir a Iniciar Sesión"
+            android:text="@string/tv_btn_iniciar_sesion"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp"

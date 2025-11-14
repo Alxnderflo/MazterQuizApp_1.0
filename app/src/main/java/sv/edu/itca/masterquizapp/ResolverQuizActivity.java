@@ -130,9 +130,9 @@ public class ResolverQuizActivity extends AppCompatActivity {
 
         runOnUiThread(() -> {
             new AlertDialog.Builder(ResolverQuizActivity.this)
-                    .setTitle("Quiz Eliminado")
-                    .setMessage("El profesor ha eliminado este quiz. Tu progreso no se guardará.")
-                    .setPositiveButton("Entendido", (dialog, which) -> {
+                    .setTitle(R.string.quiz_eliminado_titulo)
+                    .setMessage(R.string.quiz_eliminado_mensaje)
+                    .setPositiveButton(R.string.btn_entendido, (dialog, which) -> {
                         notificarQuizEliminado(); // Notificar al TeacherFragment
                         finish();
                     })
@@ -151,9 +151,9 @@ public class ResolverQuizActivity extends AppCompatActivity {
 
         runOnUiThread(() -> {
             new AlertDialog.Builder(ResolverQuizActivity.this)
-                    .setTitle("Quiz No Disponible")
-                    .setMessage("El profesor ha hecho este quiz privado.")
-                    .setPositiveButton("Entendido", (dialog, which) -> {
+                    .setTitle(R.string.quiz_no_disponible_titulo)
+                    .setMessage(R.string.quiz_privado_mensaje)
+                    .setPositiveButton(R.string.btn_entendido, (dialog, which) -> {
                         notificarQuizEliminado(); // Notificar al TeacherFragment
                         finish();
                     })

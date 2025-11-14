@@ -211,6 +211,55 @@
     <!--Options MENU-->
     <string name="menu_editar">Edit</string>
     <string name="menu_eliminar">Delete</string>
+    <string name="tv_bienvenida_login">Welcome to</string>
+    <string name="tv_correo_login">Email:</string>
+    <string name="et_correo_login">Enter your email</string>
+    <string name="tv_password_login">Password:</string>
+    <string name="et_password_login">Enter your password</string>
+    <string name="btn_ingresar_login">Log in</string>
+    <string name="tv_login_con_google">Continue with Google</string>
+    <string name="tv_no_cuenta">Don\'t have an account?</string>
+    <string name="tv_registrarse_login">Sign up</string>
+    <string name="tv_verifica_tu_email">Verify your email</string>
+    <string name="tv_enunciado_correoa">We have sent a verification email to:</string>
+    <string name="tv_para_activar_tu_cuenta">To activate your account:</string>
+    <string name="tv_revisa_tu_bandeja">• Check your inbox\n• If you can\'t find the email, check your SPAM folder\n• Click the verification link\n• Once verified, you can log in</string>
+    <string name="tv_btn_reenviar">Resend verification email</string>
+    <string name="tv_btn_iniciar_sesion">Go to Log In</string>
+    <string name="tv_nombre_registro">Name:</string>
+    <string name="tv_correo_registro">Email address:</string>
+    <string name="et_correo_registro">Enter your email address</string>
+    <string name="et_nombre_registro">Enter your name</string>
+    <string name="tv_crear_cuenta_registro">Create account</string>
+    <string name="tv_password_registro">Password:</string>
+    <string name="et_password_registro">Enter your password</string>
+    <string name="tv_confirmar_password_registro">Confirm password:</string>
+    <string name="et_reescribe_password_registro">Re-enter your password</string>
+    <string name="tv_rol_registro">Role:</string>
+    <string name="tv_rol_estudiante">Student</string>
+    <string name="tv_rol_profesor">Teacher</string>
+    <string name="tv_btn_registrarse">Sign up</string>
+    <string name="tv_selecciona_rol">Select your role</string>
+    <string name="tv_elige_como_seguir">Choose how you want to continue</string>
+    <string name="rol_student">Student</string>
+    <string name="rol_profesor">Teacher</string>
+
+    <!-- Resolver Quiz Activity -->
+    <string name="quiz_eliminado_titulo">Quiz Deleted</string>
+    <string name="quiz_eliminado_mensaje">The teacher has deleted this quiz. Your progress will not be saved.</string>
+    <string name="quiz_no_disponible_titulo">Quiz Not Available</string>
+    <string name="quiz_privado_mensaje">The teacher has made this quiz private.</string>
+    <string name="btn_entendido">Got it</string>
+    <!-- Login Activity -->
+    <string name="iniciando">Starting…</string>
+    <string name="complete_campos">Please fill in all fields</string>
+    <string name="iniciando_sesion">Logging in…</string>
+    <string name="verificar_correo">Please verify your email before logging in. Check your inbox.</string>
+    <string name="error_iniciar_sesion">Error logging in</string>
+    <string name="continuar_google">Continue with Google</string>
+    <string name="iniciar_sesion">Log In</string>
+    <string name="error_autenticacion">Authentication error: %s</string>
+    <string name="error_iniciar_sesion_google">Error logging in with Google: %s</string>
 
 
 </resources>

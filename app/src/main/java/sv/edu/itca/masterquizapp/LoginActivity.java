@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // Cambiar estado de los botones
                 btnGoogle.setEnabled(false);
-                btnGoogle.setText("Iniciando...");
+                btnGoogle.setText(R.string.iniciando);
                 btnLogin.setEnabled(false);
 
                 Intent i = client.getSignInIntent();
@@ -94,13 +94,13 @@ public class LoginActivity extends AppCompatActivity {
                 String email = editEmail.getText().toString();
                 String password = editPassword.getText().toString();
                 if (email.isEmpty() || password.isEmpty()) {
-                    Toast.makeText(LoginActivity.this, "Por favor complete todos los campos", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, R.string.complete_campos, Toast.LENGTH_SHORT).show();
                     return;
                 }
 
                 // Cambiar estado de los botones
                 btnLogin.setEnabled(false);
-                btnLogin.setText("Iniciando sesión...");
+                btnLogin.setText(R.string.iniciando_sesion);
                 btnGoogle.setEnabled(false);
                 editEmail.setEnabled(false);
                 editPassword.setEnabled(false);
@@ -119,11 +119,11 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     // Correo no verificado, mostrar mensaje y cerrar sesión
                                     auth.signOut();
-                                    Toast.makeText(LoginActivity.this, "Por favor, verifica tu correo electrónico antes de iniciar sesión. Revisa tu bandeja de entrada.", Toast.LENGTH_LONG).show();
+                                    Toast.makeText(LoginActivity.this, R.string.verificar_correo, Toast.LENGTH_LONG).show();
 
                                     // Restaurar estado de los botones
                                     btnLogin.setEnabled(true);
-                                    btnLogin.setText("Iniciar Sesión");
+                                    btnLogin.setText(R.string.iniciar_sesion);
                                     btnGoogle.setEnabled(true);
                                     editEmail.setEnabled(true);
                                     editPassword.setEnabled(true);
@@ -132,12 +132,12 @@ public class LoginActivity extends AppCompatActivity {
                         } else {
                             // Restaurar estado de los botones en caso de error
                             btnLogin.setEnabled(true);
-                            btnLogin.setText("Iniciar Sesión");
+                            btnLogin.setText(R.string.iniciar_sesion);
                             btnGoogle.setEnabled(true);
                             editEmail.setEnabled(true);
                             editPassword.setEnabled(true);
 
-                            Toast.makeText(LoginActivity.this, "Error al iniciar sesión", Toast.LENGTH_LONG).show();
+                            Toast.makeText(LoginActivity.this, R.string.error_iniciar_sesion, Toast.LENGTH_LONG).show();
                         }
                     }
                 });
@@ -218,10 +218,11 @@ public class LoginActivity extends AppCompatActivity {
                                 } else {
                                     // Restaurar estado de los botones si hay errores
                                     btnGoogle.setEnabled(true);
-                                    btnGoogle.setText("Continuar con Google");
+                                    btnGoogle.setText(R.string.continuar_google);
                                     btnLogin.setEnabled(true);
 
-                                    Toast.makeText(LoginActivity.this, "Error en la autenticación: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    String errorMessage = getString(R.string.error_autenticacion, task.getException().getMessage());
+                                    Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
@@ -229,10 +230,11 @@ public class LoginActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Restaurar estado de los botones en caso de error
                 btnGoogle.setEnabled(true);
-                btnGoogle.setText("Continuar con Google");
+                btnGoogle.setText(R.string.continuar_google);
                 btnLogin.setEnabled(true);
 
-                Toast.makeText(LoginActivity.this, "Error al iniciar sesión con Google: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                String errorMessage = getString(R.string.error_iniciar_sesion_google, e.getMessage());
+                Toast.makeText(LoginActivity.this, errorMessage, Toast.LENGTH_LONG).show();
             }
         }
     }
