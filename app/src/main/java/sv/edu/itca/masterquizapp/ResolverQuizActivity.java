@@ -7,13 +7,17 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.ListenerRegistration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,10 @@ public class ResolverQuizActivity extends AppCompatActivity {
     private int totalPreguntas;
     private List<Pregunta> listaPreguntas;
     private List<ResultadoPregunta> resultados;
+
+    // Variables para control de quiz eliminado
+    private ListenerRegistration quizListener;
+    private boolean quizActivo = true;
 
     // Interfaz para comunicación con fragments
     public interface OnPreguntaRespondidaListener {
@@ -65,10 +73,93 @@ public class ResolverQuizActivity extends AppCompatActivity {
         };
 
         inicializarViews();
+
+        // Configurar listener para detectar borrado del quiz
+        configurarListenerQuiz();
+
         cargarPreguntas();
 
         // Configurar el manejo del botón de retroceso
         configurarBackPressed();
+    }
+
+    // Método para configurar listener del quiz
+    private void configurarListenerQuiz() {
+        quizListener = db.collection("quizzes").document(quizId)
+                .addSnapshotListener(new EventListener<DocumentSnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable DocumentSnapshot snapshot,
+                                        @Nullable FirebaseFirestoreException e) {
+
+                        // Si ya cerramos la actividad, ignorar
+                        if (!quizActivo) return;
+
+                        if (e != null) {
+                            Log.e("ResolverQuiz", "Error en listener del quiz: " + e.getMessage());
+                            return;
+                        }
+
+                        // Verificar si el quiz fue eliminado o hecho privado
+                        if (snapshot == null || !snapshot.exists()) {
+                            // Quiz eliminado
+                            mostrarQuizEliminado();
+                        } else {
+                            // Verificar si el profesor lo hizo privado
+                            Boolean esPublico = snapshot.getBoolean("esPublico");
+                            if (esPublico != null && !esPublico) {
+                                mostrarQuizPrivado();
+                            }
+                        }
+                    }
+                });
+    }
+
+    // Método para manejar quiz eliminado
+    private void mostrarQuizEliminado() {
+        quizActivo = false;
+
+        runOnUiThread(() -> {
+            new AlertDialog.Builder(ResolverQuizActivity.this)
+                    .setTitle("Quiz Eliminado")
+                    .setMessage("El profesor ha eliminado este quiz. Tu progreso no se guardará.")
+                    .setPositiveButton("Entendido", (dialog, which) -> {
+                        notificarQuizEliminado(); // Notificar al TeacherFragment
+                        finish();
+                    })
+                    .setOnDismissListener(dialog -> {
+                        notificarQuizEliminado(); // Notificar al TeacherFragment
+                        finish();
+                    })
+                    .setCancelable(false)
+                    .show();
+        });
+    }
+
+    // Método para manejar quiz hecho privado
+    private void mostrarQuizPrivado() {
+        quizActivo = false;
+
+        runOnUiThread(() -> {
+            new AlertDialog.Builder(ResolverQuizActivity.this)
+                    .setTitle("Quiz No Disponible")
+                    .setMessage("El profesor ha hecho este quiz privado.")
+                    .setPositiveButton("Entendido", (dialog, which) -> {
+                        notificarQuizEliminado(); // Notificar al TeacherFragment
+                        finish();
+                    })
+                    .setCancelable(false)
+                    .show();
+        });
+    }
+
+    // NUEVO: Método para notificar al TeacherFragment que debe recargar
+    private void notificarQuizEliminado() {
+        // Enviar broadcast para notificar a TeacherFragment
+        Intent intent = new Intent("QUIZ_ELIMINADO");
+        intent.putExtra("quiz_id", quizId);
+        sendBroadcast(intent);
+
+        Log.d("ResolverQuiz", "Notificando eliminación del quiz: " + quizId);
     }
 
     private void configurarBackPressed() {
@@ -113,6 +204,11 @@ public class ResolverQuizActivity extends AppCompatActivity {
                 .orderBy("orden")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
+                    // Verificar que el quiz sigue activo
+                    if (!quizActivo) {
+                        return;
+                    }
+
                     listaPreguntas.clear();
                     for (DocumentSnapshot snapshot : queryDocumentSnapshots.getDocuments()) {
                         Pregunta pregunta = snapshot.toObject(Pregunta.class);
@@ -136,6 +232,11 @@ public class ResolverQuizActivity extends AppCompatActivity {
                     inicializarResultados();
                 })
                 .addOnFailureListener(e -> {
+                    // Solo mostrar error si el quiz sigue activo
+                    if (!quizActivo) {
+                        return;
+                    }
+
                     String mensajeError = getString(R.string.toast_error_cargar_preguntas, e.getMessage());
                     Toast.makeText(this, mensajeError, Toast.LENGTH_SHORT).show();
                     Log.e("ResolverQuiz", "Error cargando preguntas: " + e.getMessage());
@@ -156,6 +257,11 @@ public class ResolverQuizActivity extends AppCompatActivity {
     }
 
     private void procesarRespuesta(int posicionPregunta, String respuestaUsuario, boolean esCorrecta) {
+        // Verificar que el quiz sigue activo
+        if (!quizActivo) {
+            return;
+        }
+
         if (posicionPregunta < resultados.size()) {
             ResultadoPregunta resultado = resultados.get(posicionPregunta);
             resultado.setRespuestaUsuario(respuestaUsuario);
@@ -168,6 +274,11 @@ public class ResolverQuizActivity extends AppCompatActivity {
     }
 
     private void avanzarSiguientePregunta() {
+        // Verificar que el quiz sigue activo
+        if (!quizActivo) {
+            return;
+        }
+
         int currentItem = vpPreguntas.getCurrentItem();
         if (currentItem < listaPreguntas.size() - 1) {
             // Avanzar a la siguiente pregunta
@@ -179,8 +290,13 @@ public class ResolverQuizActivity extends AppCompatActivity {
         }
     }
 
-    // ✅ CORREGIDO: Método para navegar a resultados
+    // Método para navegar a resultados
     private void irAResultados() {
+        // Verificar que el quiz sigue activo
+        if (!quizActivo) {
+            return;
+        }
+
         // Calcular puntuación
         int respuestasCorrectas = 0;
         for (ResultadoPregunta resultado : resultados) {
@@ -197,5 +313,15 @@ public class ResolverQuizActivity extends AppCompatActivity {
         intent.putParcelableArrayListExtra("resultados", new ArrayList<>(resultados));
         startActivity(intent);
         finish();
+    }
+
+    // Limpiar listener cuando se destruya la actividad
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        quizActivo = false;
+        if (quizListener != null) {
+            quizListener.remove();
+        }
     }
 }

@@ -1,0 +1,427 @@
+ Resumen Ejecutivo del Proyecto MasterQuizApp v1.1
+
+Visión General
+MasterQuizApp es una aplicación móvil Android desarrollada en Java que facilita la creación y resolución de quizzes educativos. Está diseñada para entornos académicos, permitiendo a profesores crear contenido personalizado y a estudiantes acceder a quizzes de manera organizada. La aplicación integra tecnologías modernas como Firebase para backend, IA generativa para creación automática de preguntas, y servicios en la nube para gestión de imágenes.
+
+Arquitectura y Tecnologías
+-Plataforma: Android nativo (minSdk 24, targetSdk 36)
+-Lenguaje: Java con View Binding
+-Backend: Firebase (Authentication, Firestore, Storage)
+-IA: Google Gemini (gemini-2.5-flash-lite) para generación automática de preguntas
+-Imágenes: Cloudinary para subida y gestión de imágenes de quizzes
+-Autenticación: Firebase Auth con verificación de email y Google Sign-In
+-Base de Datos: Firestore NoSQL para usuarios, quizzes, preguntas y resultados
+-Almacenamiento Local: SharedPreferences para gestión de sesiones
+-UI/UX: Material Design con navegación por fragments y ViewPager2
+
+Roles y Funcionalidades Principales
+
+Profesores:
+- Creación y edición de quizzes con título, descripción e imagen
+- Generación automática de preguntas usando IA (5-20 preguntas por quiz)
+- Control de visibilidad: quizzes públicos (compartibles) o privados
+- Gestión de estudiantes agregados mediante códigos únicos
+- Visualización de estadísticas de rendimiento de estudiantes
+- Acceso a menú de código profesor para compartir
+
+Estudiantes:
+- Creación y edición de quizzes con título, descripción e imagen
+- Resolución de quizzes disponibles (propios o de profesores agregados)
+- Visualización de resultados y estadísticas personales
+- Agregación de profesores mediante códigos para acceder a quizzes públicos
+- Navegación intuitiva por quizzes y profesores
+
+Características Técnicas Destacadas
+-Gestión de Sesiones: Sistema robusto con SessionManager para persistencia local y sincronización con Firestore
+-IA Integrada: Servicio GeminiAIService que genera preguntas de opción múltiple basadas en tema y descripción
+-Subida de Imágenes: Integración con Cloudinary con manejo de permisos y fallback offline
+-Navegación Dinámica: BottomNavigation adaptada por rol con fragments modulares
+-Actualizaciones en Tiempo Real: Snapshot listeners para sincronización automática de datos
+-Validaciones: Rango de preguntas (5-20), shuffling aleatorio de opciones, cálculo de porcentajes
+
+Estructura del Proyecto
+-Actividades: 12 activities principales (Main, Login, CrearQuiz, ResolverQuiz, etc.)
+-Fragments: 4 fragments principales (Home, Score, Student, Teacher)
+-Modelos: Quiz, Pregunta, Resultado, Usuario con Parcelable para navegación
+-Adapters: RecyclerView para listas de quizzes, preguntas, resultados y usuarios
+-Servicios: GeminiAIService para IA, SessionManager para sesiones
+
+Flujo de Usuario Típico
+1.Registro/Login: Autenticación con email/verificación o Google
+2.Selección de Rol: Elegir profesor o estudiante
+3.Profesores: Generar código único, crear quizzes con IA, gestionar estudiantes
+4.Estudiantes: Agregar profesores por código, resolver quizzes disponibles
+5.Resultados: Visualización inmediata con guardado automático en Firestore
+
+Aspectos de Seguridad y Rendimiento
+- Permisos granulares para cámara y almacenamiento
+- Validación de autenticación en cada activity crítica
+- Manejo de errores con logs detallados y feedback al usuario
+- Optimización con listeners eficientes y limpieza de memoria
+- Compatibilidad con Android moderno (API 24+)
+
+Estado del Proyecto
+El proyecto está completamente funcional con integración end-to-end de todas las características principales. Incluye manejo de casos edge (sin conexión, errores de IA), UI responsiva y arquitectura escalable. El código sigue buenas prácticas de Android con separación de responsabilidades y reutilización de componentes.
+
+Manejo de Casos Borde (Edge Cases)
+
+La aplicación MasterQuizApp incluye varios manejos de casos borde identificados durante la revisión del código:
+
+1. Conectividad de Red:
+   - Verificación de conexión a internet antes de subir imágenes a Cloudinary
+   - Fallback a imagen por defecto cuando no hay conexión
+   - Manejo de errores de red en llamadas a IA y Firebase
+
+2. Autenticación y Sesiones:
+   - Validación de email verificado en cada activity crítica
+   - Manejo de usuarios no autenticados con redirección automática
+   - Limpieza completa de sesiones al cerrar sesión (SharedPreferences + Firebase)
+
+3. Generación de Preguntas con IA:
+   - Validación de rango de preguntas (5-20)
+   - Parsing robusto de respuestas JSON con limpieza de markdown
+   - Manejo de errores de IA con fallback a creación manual
+   - Timeout y reintentos implícitos en el servicio
+
+4. Gestión de Imágenes:
+   - Permisos dinámicos según versión de Android (READ_EXTERNAL_STORAGE vs READ_MEDIA_IMAGES)
+   - Conversión automática de HTTP a HTTPS para compatibilidad
+   - Manejo de URIs nulos y cancelaciones de selección
+
+5. Navegación y UI:
+   - Bloqueo de deslizamiento manual en ViewPager2 durante resolución de quiz
+   - Diálogos de confirmación para acciones destructivas (eliminar, salir)
+   - Actualización de menús dinámicos según rol de usuario
+
+6. Validaciones de Datos:
+   - Campos obligatorios en formularios
+   - Longitud de códigos profesor (6 caracteres alfanuméricos)
+   - Rango de números de preguntas en IA (ajuste automático 5-20)
+
+7. Manejo de Colecciones Vacías:
+   - Estados vacíos en RecyclerViews con layouts específicos
+   - Mensajes informativos cuando no hay quizzes, estudiantes o resultados
+
+8. Actualizaciones en Tiempo Real:
+   - Listeners con manejo de errores y limpieza automática
+   - Sincronización de datos locales con Firestore
+   - Actualización de UI solo cuando hay cambios reales
+
+9. Gestión de Memoria:
+   - Limpieza de listeners al destruir fragments/activities
+   - Parcelable en modelos para navegación eficiente
+   - Manejo de contextos nulos en callbacks asíncronos
+
+10. Errores de Firestore:
+    - Reintentos con set() cuando update() falla
+    - Validación de existencia de documentos antes de operaciones
+    - Logs detallados para debugging
+
+Estos casos borde aseguran una experiencia robusta y profesional, manejando gracefully situaciones inesperadas sin crashes de la aplicación.
+
+# Informe Técnico Detallado - MasterQuizApp v1.1
+
+ Arquitectura General del Sistema
+
+ Patrón Arquitectónico
+La aplicación sigue una arquitectura MVVM (Model-View-ViewModel) implícita con separación clara de responsabilidades:
+- Model: Clases de datos (Quiz, Pregunta, Resultado, Usuario) y servicios (GeminiAIService, SessionManager)
+- View: Activities y Fragments con layouts XML
+- ViewModel: Lógica de negocio distribuida en Activities/Fragments con manejo de Firebase
+
+ Tecnologías y Frameworks
+- Android Framework: Activities, Fragments, RecyclerView, ViewPager2
+- Backend as a Service: Firebase (Authentication, Firestore, Storage)
+- IA Integration: Google Gemini AI para generación automática de preguntas
+- Image Management: Cloudinary para almacenamiento y procesamiento de imágenes
+- UI/UX: Material Design con navegación por BottomNavigationView
+
+ Modelo de Datos
+
+ 1. Clase `Quiz`
+```java
+public class Quiz {
+    private String titulo;
+    private String descripcion;
+    private String imagenUrl;
+    private Date fechaCreacion;
+    private int numPreguntas;
+    private String userId;
+    private String userNombre;
+    private String userRol;
+    private boolean esPublico; // Control de visibilidad para profesores
+}
+```
+Características:
+- Constructor sobrecargado para compatibilidad con Firestore
+- Campo `esPublico` para control de acceso (solo profesores pueden modificar)
+- Relación 1:N con preguntas (subcolección en Firestore)
+
+ 2. Clase `Pregunta`
+```java
+public class Pregunta implements Parcelable {
+    private String enunciado;
+    private String correcta;
+    private String incorrecta1, incorrecta2, incorrecta3;
+    private int orden;
+}
+```
+Métodos clave:
+- `getOpcionesMezcladas()`: Retorna Map<String, String> con opciones aleatorias (A, B, C, D)
+- `obtenerLetraCorrecta()`: Determina la letra de la respuesta correcta después del shuffle
+- Implementa `Parcelable` para navegación eficiente entre Activities
+
+ 3. Clase `Resultado`
+```java
+public class Resultado {
+    private String id; // Generado automáticamente por Firestore
+    private String userId;
+    private String quizId;
+    private String quizTitulo;
+    private int puntuacion; // 0-100
+    private Timestamp fecha;
+    private int totalPreguntas;
+    private int respuestasCorrectas;
+}
+```
+Características:
+- Historial completo de intentos por usuario
+- Cálculo automático de porcentaje basado en respuestas correctas
+- Timestamp para ordenamiento cronológico
+
+ 4. Clase `Usuario`
+```java
+public class Usuario {
+    private String id; // Solo para uso interno
+    private String nombre;
+    private String email;
+    private String rol; // "profesor" | "estudiante"
+    private String codigoProfesor; // Solo para profesores
+    private List<String> profesoresAgregados; // Solo para estudiantes
+    private Date fechaRegistro;
+    private String proveedor; // "email" | "google"
+}
+```
+Relaciones:
+- Profesores: Generan `codigoProfesor` único
+- Estudiantes: Mantienen lista de `profesoresAgregados` (IDs de profesores)
+
+ 5. Clase `ResultadoPregunta`
+```java
+public class ResultadoPregunta implements Parcelable {
+    private int numeroPregunta;
+    private String enunciado;
+    private String respuestaCorrecta;
+    private String respuestaUsuario;
+    private boolean esCorrecta;
+}
+```
+Uso: Detalle granular de cada pregunta en un intento de quiz
+
+ 6. Clase `EstadisticaQuiz`
+```java
+public class EstadisticaQuiz {
+    private String quizId;
+    private String titulo;
+    private int intentos; // Número total de intentos
+    private int mejorResultado; // Mejor porcentaje obtenido
+    private int ultimoPuntaje; // Último porcentaje
+    private Timestamp fechaUltimoIntento;
+}
+```
+Cálculo: Se agrupa por `quizId` y se procesa en `ScoreFragment`
+
+ Servicios Principales
+
+ 1. `GeminiAIService`
+Responsabilidades:
+- Integración con Google Gemini AI (gemini-2.5-flash-lite)
+- Generación automática de preguntas de opción múltiple
+- Parsing robusto de respuestas JSON con limpieza de markdown
+
+Método clave:
+```java
+public void generarPreguntas(String tema, String descripcion, int numPreguntas,
+                           PreguntasGeneratedCallback callback)
+```
+Prompt engineering:
+- Validación de rango (5-20 preguntas)
+- Formato JSON estricto requerido
+- Instrucciones específicas para dificultad media y variedad
+
+ 2. `SessionManager`
+Persistencia local:
+- SharedPreferences para estado de sesión
+- Campos: `user_role`, `professor_code`, `user_id`
+
+Métodos principales:
+- `saveUserRole()`: Guarda rol y ID de usuario
+- `saveProfessorCode()`: Almacena código único del profesor
+- `hasSessionData()`: Verifica existencia de sesión guardada
+
+ Sistema de Escuchas en Tiempo Real
+
+ 1. Snapshot Listeners en Fragments
+
+# `HomeFragment` - Quizzes Propios
+```java
+db.collection("quizzes")
+    .whereEqualTo("userId", userId)
+    .orderBy("fechaCreacion", Query.Direction.DESCENDING)
+    .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        @Override
+        public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
+            // Actualización automática de lista de quizzes
+        }
+    });
+```
+
+# `TeacherFragment` - Quizzes de Profesores Agregados
+```java
+db.collection("quizzes")
+    .whereIn("userId", profesoresIds)
+    .whereEqualTo("esPublico", true)
+    .orderBy("fechaCreacion", Query.Direction.DESCENDING)
+    .addSnapshotListener(/* listener */);
+```
+Optimización: Limita a 10 profesores por consulta Firestore
+
+# `StudentFragment` - Estudiantes Agregados (Profesores)
+```java
+db.collection("usuarios")
+    .whereArrayContains("profesoresAgregados", currentUser.getUid())
+    .whereEqualTo("rol", "estudiante")
+    .addSnapshotListener(/* listener */);
+```
+Características avanzadas:
+- Mapa `estudiantesListenersMap` para listeners individuales por estudiante
+- Eliminación automática si estudiante remueve al profesor
+
+# `ScoreFragment` - Resultados de Usuario
+```java
+db.collection("resultados")
+    .whereEqualTo("userId", currentUser.getUid())
+    .orderBy("fecha", Query.Direction.DESCENDING)
+    .addSnapshotListener(/* listener */);
+```
+Procesamiento: Agrupa por `quizId` para calcular estadísticas
+
+ 2. Gestión de Memoria y Ciclo de Vida
+
+Limpieza automática:
+```java
+@Override
+public void onDestroyView() {
+    super.onDestroyView();
+    if (listener != null) {
+        listener.remove();
+    }
+}
+```
+
+Reconección inteligente:
+```java
+@Override
+public void onResume() {
+    super.onResume();
+    if (listener == null) {
+        cargarDatos(); // Reconectar listener
+    }
+}
+```
+
+ Estructura de Archivos y Código
+
+ Activities Principales (12 total)
+- `MainActivity`: Punto de entrada, navegación por roles, menú de opciones
+- `LoginActivity`: Autenticación con email/verificación y Google Sign-In
+- `CrearQuizActivity`: Creación/edición de quizzes con IA integrada
+- `ResolverQuizActivity`: Resolución de quizzes con ViewPager2 bloqueado
+- `ResultadosActivity`: Visualización de resultados con guardado automático
+- `PreguntasActivity`: Gestión manual de preguntas (CRUD)
+- `RoleSelectionActivity`: Selección inicial de rol profesor/estudiante
+
+ Fragments (4 principales)
+- `HomeFragment`: Lista de quizzes propios con operaciones CRUD
+- `ScoreFragment`: Estadísticas personales y métricas generales
+- `StudentFragment`: Gestión de estudiantes agregados (vista profesor)
+- `TeacherFragment`: Gestión de profesores agregados (vista estudiante)
+
+ Adapters (7 total)
+- `QuizzesAdapter`: Lista de quizzes con menú contextual
+- `QuizzesProfesorAdapter`: Quizzes de profesores con colores diferenciados
+- `PreguntasAdapter`: Gestión de preguntas individuales
+- `ResultadosAdapter`: Detalle de respuestas por pregunta
+- `ProfesoresAdapter`: Lista horizontal de profesores
+- `EstudianteAdapter`: Lista de estudiantes con opciones de expulsión
+- `ScoreAdapter`: Estadísticas por quiz
+
+ Servicios y Utilidades
+- `GeminiAIService`: Integración con IA generativa
+- `SessionManager`: Gestión de sesiones persistentes
+- `MyApplication`: Inicialización de Cloudinary
+
+ Flujos de Datos y Navegación
+
+ 1. Flujo de Creación de Quiz
+1. `CrearQuizActivity` → Validación de campos
+2. Opción IA: `GeminiAIService.generarPreguntas()` → Parsing JSON
+3. Guardado: Firestore `quizzes/{id}` + subcolección `preguntas/`
+4. Navegación: `PreguntasActivity` para edición manual si es necesario
+
+ 2. Flujo de Resolución de Quiz
+1. `ResolverQuizActivity` → Carga preguntas desde Firestore
+2. `ViewPager2` con `QuizPagerAdapter` → Una pregunta por página
+3. Respuestas: Callback `OnPreguntaRespondidaListener`
+4. Finalización: `ResultadosActivity` → Guardado en `resultados/`
+
+ 3. Flujo de Autenticación y Sesiones
+1. `LoginActivity` → Firebase Auth + verificación email
+2. `RoleSelectionActivity` → Selección profesor/estudiante
+3. `MainActivity` → `SessionManager` para persistencia local
+4. Sincronización: Firestore listeners para datos en tiempo real
+
+ 4. Flujo de Gestión de Relaciones
+Profesores:
+- Generación automática de código único (6 caracteres alfanuméricos)
+- Consulta estudiantes: `whereArrayContains("profesoresAgregados", userId)`
+
+Estudiantes:
+- Agregación por código: Validación en `usuarios` con `rol="profesor"`
+- Acceso a quizzes: `whereIn("userId", profesoresIds)` + `esPublico=true`
+
+ Optimizaciones de Rendimiento
+
+ 1. Consultas Firestore Optimizadas
+- Índices compuestos para consultas complejas
+- Límite de 10 profesores en `TeacherFragment`
+- Ordenamiento descendente por fecha de creación
+
+ 2. Gestión de Memoria
+- `Parcelable` en modelos para navegación eficiente
+- Limpieza de listeners en `onDestroyView()`
+- Reutilización de adapters con `notifyDataSetChanged()`
+
+ 3. UI/UX Optimizada
+- Estados vacíos específicos en RecyclerViews
+- ProgressDialog durante operaciones de IA
+- Feedback visual con colores según rendimiento
+
+ Seguridad y Validaciones
+
+ 1. Autenticación
+- Verificación de email obligatoria
+- Validación de sesión en cada Activity crítica
+- Limpieza completa al cerrar sesión
+
+ 2. Autorización
+- Control de visibilidad basado en roles
+- Validación de propiedad en operaciones CRUD
+- Permisos granulares para cámara y almacenamiento
+
+ 3. Validaciones de Datos
+- Rango de preguntas IA: 5-20 (ajuste automático)
+- Longitud de códigos profesor: 6 caracteres
+- Campos obligatorios en formularios
+
+Este informe técnico proporciona una visión completa de la arquitectura, implementación y funcionamiento interno de MasterQuizApp v1.1, destacando las decisiones técnicas que permiten una experiencia de usuario fluida y escalable.
