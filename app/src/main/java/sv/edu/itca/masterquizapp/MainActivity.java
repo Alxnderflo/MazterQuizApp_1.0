@@ -22,6 +22,7 @@ import com.google.firebase.firestore.SetOptions;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Random;
 
 import sv.edu.itca.masterquizapp.databinding.ActivityMainBinding;
@@ -49,6 +50,10 @@ public class MainActivity extends AppCompatActivity {
         // ✅ NUEVO: Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // quitamos el título para que solo se vea la imagen
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowTitleEnabled(false);
+
 
         // Verificar autenticación
         FirebaseUser currentUser = auth.getCurrentUser();
