@@ -13,6 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -83,7 +85,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
         configurarBackPressed();
     }
 
-    // Método para configurar listener del quiz
+    // Método para configurar listener del quiz - CORREGIDO
     private void configurarListenerQuiz() {
         quizListener = db.collection("quizzes").document(quizId)
                 .addSnapshotListener(new EventListener<DocumentSnapshot>() {
@@ -99,16 +101,24 @@ public class ResolverQuizActivity extends AppCompatActivity {
                             return;
                         }
 
-                        // Verificar si el quiz fue eliminado o hecho privado
+                        // Verificar si el quiz fue eliminado
                         if (snapshot == null || !snapshot.exists()) {
                             // Quiz eliminado
                             mostrarQuizEliminado();
                         } else {
-                            // Verificar si el profesor lo hizo privado
+                            // Verificar si el quiz es privado y NO es del usuario actual
                             Boolean esPublico = snapshot.getBoolean("esPublico");
-                            if (esPublico != null && !esPublico) {
+                            String quizUserId = snapshot.getString("userId");
+
+                            // Obtener usuario actual
+                            FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                            String currentUserId = currentUser != null ? currentUser.getUid() : null;
+
+                            // Si el quiz es privado Y el usuario actual NO es el propietario
+                            if (esPublico != null && !esPublico && !currentUserId.equals(quizUserId)) {
                                 mostrarQuizPrivado();
                             }
+                            // En cualquier otro caso (público, o privado pero del usuario actual), permitir continuar
                         }
                     }
                 });
@@ -135,7 +145,7 @@ public class ResolverQuizActivity extends AppCompatActivity {
         });
     }
 
-    // Método para manejar quiz hecho privado
+    // Método para manejar quiz hecho privado - SOLO para quizzes de otros usuarios
     private void mostrarQuizPrivado() {
         quizActivo = false;
 
