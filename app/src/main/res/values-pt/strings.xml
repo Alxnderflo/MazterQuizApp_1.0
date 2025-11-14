@@ -259,6 +259,7 @@
     <string name="error_autenticacion">Erro na autenticação: %s</string>
     <string name="error_iniciar_sesion_google">Erro ao iniciar sessão com o Google: %s</string>
 
+    <string name="toast_error_eliminar_resultados">Erro ao excluir resultados: %s</string>
 
 
 </resources>

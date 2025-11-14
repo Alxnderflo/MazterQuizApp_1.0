@@ -260,6 +260,7 @@
     <string name="iniciar_sesion">Log In</string>
     <string name="error_autenticacion">Authentication error: %s</string>
     <string name="error_iniciar_sesion_google">Error logging in with Google: %s</string>
+    <string name="toast_error_eliminar_resultados">Error deleting results: %s</string>
 
 
 </resources>
