@@ -4,80 +4,164 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:clipToPadding="false"
+    android:clipChildren="false">
 
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:elevation="2dp"
-        android:background="@drawable/top_line"
-        app:cardBackgroundColor="@android:color/transparent"
-        app:cardCornerRadius="16dp">
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/top_line"
             android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Número y enunciado de la pregunta -->
+            <!-- Header con número de pregunta y botón eliminar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
 
-                <TextView
-                    android:id="@+id/tvNumPregunta"
+                <!-- Badge con número de pregunta -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:text="@string/tv_num_listar_pregunta"
-                    android:textColor="#2C2C4A"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_marginEnd="12dp"
+                    app:cardBackgroundColor="#6366F1"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
 
+                    <TextView
+                        android:id="@+id/tvNumPregunta"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingStart="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingEnd="12dp"
+                        android:paddingBottom="6dp"
+                        android:text="@string/tv_num_listar_pregunta"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Enunciado de la pregunta -->
                 <TextView
                     android:id="@+id/tvEnunciado"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/tv_listar_enunciado_pregunta"
-                    android:textColor="#2C2C4A"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textColor="#1A1A1A"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:ellipsize="end"
+                    android:maxLines="2" />
 
-                <!-- Botón para eliminar -->
-                <ImageButton
-                    android:id="@+id/btnElimP"
-                    android:layout_width="45dp"
-                    android:layout_height="35dp"
+                <!-- Botón eliminar mejorado -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginStart="8dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/descripcion_btn_eliminar_pregunta"
-                    android:padding="4dp"
-                    android:src="@drawable/ico_del_question"
-                    app:tint="#EF0909"
-                    tools:ignore="TouchTargetSizeCheck" />
+                    app:cardBackgroundColor="#FEE2E2"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
+
+                    <ImageButton
+                        android:id="@+id/btnElimP"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/descripcion_btn_eliminar_pregunta"
+                        android:padding="8dp"
+                        android:src="@drawable/ico_del_question"
+                        app:tint="#EF4444" />
+
+                </androidx.cardview.widget.CardView>
 
             </LinearLayout>
 
-            <!-- Respuesta correcta -->
-            <TextView
-                android:id="@+id/tvCorrecta"
+            <!-- Línea divisoria sutil -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="12dp"
+                android:background="#F3F4F6" />
+
+            <!-- Respuesta correcta con diseño mejorado -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:text="@string/tv_listar_respuesta_correcta"
-                android:textColor="#999797"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Ícono de check -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="8dp"
+                    app:cardBackgroundColor="#D1FAE5"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="✓"
+                        android:textColor="#10B981"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Label y respuesta correcta -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Respuesta correcta"
+                        android:textColor="#6B7280"
+                        android:textSize="11sp"
+                        android:textStyle="bold"
+                        android:letterSpacing="0.05" />
+
+                    <TextView
+                        android:id="@+id/tvCorrecta"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="@string/tv_listar_respuesta_correcta"
+                        android:textColor="#1A1A1A"
+                        android:textSize="14sp"
+                        android:ellipsize="end"
+                        android:maxLines="2" />
+
+                </LinearLayout>
+
+            </LinearLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
-
-    <!-- Línea divisoria debajo del CardView -->
 
 </LinearLayout>
