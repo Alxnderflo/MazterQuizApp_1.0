@@ -9,92 +9,181 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp">
+        app:cardCornerRadius="24dp"
+        app:cardElevation="6dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="5dp">
 
-            <!-- Contenedor de ícono con fondo -->
-            <androidx.cardview.widget.CardView
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                app:cardBackgroundColor="#E8E8F4"
-                app:cardCornerRadius="25dp"
-                app:cardElevation="0dp">
+            <!-- Contenedor de ícono con efecto de capas -->
+            <FrameLayout
+                android:layout_width="70dp"
+                android:layout_height="70dp">
 
-                <ImageView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:src="@drawable/ico_student"
-                    android:contentDescription="@string/descripcion_ico_student"
-                    app:tint="#6B7EF7"
-                    android:padding="12dp" />
+                <!-- Capa de fondo con gradiente simulado -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    app:cardBackgroundColor="#E0E7FF"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp" />
 
-            </androidx.cardview.widget.CardView>
+                <!-- Capa media -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="#C7D2FE"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp" />
+
+                <!-- Capa frontal con ícono -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="58dp"
+                    android:layout_height="58dp"
+                    android:layout_gravity="center"
+                    app:cardBackgroundColor="#6366F1"
+                    app:cardCornerRadius="14dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/ico_student"
+                        android:contentDescription="@string/descripcion_ico_student"
+                        app:tint="@android:color/white"
+                        android:padding="14dp" />
+
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
 
             <!-- Contenedor de información del estudiante -->
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="5dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/txtNombreEstudiante"
+                <!-- Badge + Nombre -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/tv_nombre_estudiante"
-                    android:textColor="#1F1F1F"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    tools:text="Juan Pérez" />
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
 
-                <TextView
-                    android:id="@+id/txtEmailEstudiante"
+                    <!-- Badge "Estudiante" -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        app:cardBackgroundColor="#DBEAFE"
+                        app:cardCornerRadius="6dp"
+                        app:cardElevation="0dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingStart="8dp"
+                            android:paddingTop="2dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="2dp"
+                            android:text="👤"
+                            android:textSize="10sp" />
+
+                    </androidx.cardview.widget.CardView>
+
+                    <TextView
+                        android:id="@+id/txtNombreEstudiante"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/tv_nombre_estudiante"
+                        android:textColor="#1A1A1A"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        tools:text="Juan Pérez" />
+
+                </LinearLayout>
+
+                <!-- Email con ícono -->
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:text="@string/tv_email"
-                    android:textColor="#7A7A7A"
-                    android:textSize="14sp"
-                    tools:text="juan.perez@email.com" />
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📧"
+                        android:textSize="12sp"
+                        android:layout_marginEnd="6dp" />
+
+                    <TextView
+                        android:id="@+id/txtEmailEstudiante"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="@string/tv_email"
+                        android:textColor="#6B7280"
+                        android:textSize="14sp"
+                        tools:text="juan.perez@email.com" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
-            <!-- Botón de expulsar -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnExpulsarEstudiante"
+            <!-- Botón de expulsar con diseño premium -->
+            <androidx.cardview.widget.CardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:minWidth="0dp"
-                android:minHeight="0dp"
-                android:insetTop="0dp"
-                android:insetBottom="0dp"
-                android:text="@string/tv_expulsar"
-                android:textSize="12sp"
-                app:backgroundTint="#EF0909"
-                app:cornerRadius="20dp"
-                app:icon="@drawable/ico_close"
-                app:iconGravity="textStart"
-                app:iconSize="14dp"
-                app:iconTint="@android:color/white"
-                style="?attr/materialButtonOutlinedStyle"
-                tools:ignore="TouchTargetSizeCheck" />
+                android:layout_marginStart="12dp"
+                app:cardBackgroundColor="#FEE2E2"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnExpulsarEstudiante"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:minWidth="0dp"
+                    android:minHeight="0dp"
+                    android:insetTop="0dp"
+                    android:insetBottom="0dp"
+                    android:paddingStart="5dp"
+                    android:paddingTop="5dp"
+                    android:paddingEnd="5dp"
+                    android:paddingBottom="5dp"
+                    app:backgroundTint="#EF4444"
+                    app:cornerRadius="10dp"
+                    app:icon="@drawable/ico_close"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconSize="18dp"
+                    app:iconTint="@android:color/white"
+                    app:elevation="4dp"
+
+                    android:contentDescription="@string/descripcion_btn_mas_opciones"
+                    tools:ignore="TouchTargetSizeCheck"
+                    android:layout_gravity="center"/>
+
+            </androidx.cardview.widget.CardView>
 
         </LinearLayout>
 
