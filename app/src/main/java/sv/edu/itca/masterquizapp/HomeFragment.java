@@ -145,20 +145,32 @@ public class HomeFragment extends Fragment {
         // Mostrar progreso
         Toast.makeText(getContext(), R.string.toast_eliminando_quiz, Toast.LENGTH_SHORT).show();
 
-        // PRIMERO eliminar las preguntas, LUEGO el quiz
+        // PRIMERO eliminar las preguntas, LUEGO los resultados, LUEGO el quiz
         eliminarPreguntasDeQuiz(quizId, new OnPreguntasEliminadasListener() {
             @Override
             public void onExito() {
-                // Ahora eliminar el quiz
-                bd.collection("quizzes").document(quizId)
-                        .delete()
-                        .addOnSuccessListener(aVoid -> {
-                            Toast.makeText(getContext(), R.string.toast_quiz_eliminado_exito, Toast.LENGTH_SHORT).show();
-                        })
-                        .addOnFailureListener(e -> {
-                            String mensajeError = getString(R.string.toast_error_eliminar_quiz, e.getMessage());
-                            Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
-                        });
+                // Ahora eliminar los resultados asociados al quiz
+                eliminarResultadosDeQuiz(quizId, new OnResultadosEliminadosListener() {
+                    @Override
+                    public void onExito() {
+                        // Finalmente eliminar el quiz
+                        bd.collection("quizzes").document(quizId)
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+                                    Toast.makeText(getContext(), R.string.toast_quiz_eliminado_exito, Toast.LENGTH_SHORT).show();
+                                })
+                                .addOnFailureListener(e -> {
+                                    String mensajeError = getString(R.string.toast_error_eliminar_quiz, e.getMessage());
+                                    Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
+                                });
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        String mensajeError = getString(R.string.toast_error_eliminar_resultados, error);
+                        Toast.makeText(getContext(), mensajeError, Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
             @Override
@@ -169,8 +181,14 @@ public class HomeFragment extends Fragment {
         });
     }
 
-    // Interface para callback
+    // Interface para callback de eliminación de preguntas
     interface OnPreguntasEliminadasListener {
+        void onExito();
+        void onError(String error);
+    }
+
+    // Interface para callback de eliminación de resultados
+    interface OnResultadosEliminadosListener {
         void onExito();
         void onError(String error);
     }
@@ -200,6 +218,37 @@ public class HomeFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     Log.e("HomeFragment", "Error al obtener preguntas para eliminar: " + e.getMessage());
+                    listener.onError(e.getMessage());
+                });
+    }
+
+    private void eliminarResultadosDeQuiz(String quizId, OnResultadosEliminadosListener listener) {
+        bd.collection("resultados")
+                .whereEqualTo("quizId", quizId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        WriteBatch batch = bd.batch();
+                        for (DocumentSnapshot documento : queryDocumentSnapshots) {
+                            batch.delete(documento.getReference());
+                        }
+                        batch.commit()
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("HomeFragment", "Resultados eliminados para el quiz: " + quizId);
+                                    listener.onExito();
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("HomeFragment", "Error al eliminar resultados: " + e.getMessage());
+                                    listener.onError(e.getMessage());
+                                });
+                    } else {
+                        // No hay resultados, continuar con eliminación del quiz
+                        Log.d("HomeFragment", "No hay resultados para eliminar del quiz: " + quizId);
+                        listener.onExito();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("HomeFragment", "Error al obtener resultados para eliminar: " + e.getMessage());
                     listener.onError(e.getMessage());
                 });
     }

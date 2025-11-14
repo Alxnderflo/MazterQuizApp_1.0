@@ -89,7 +89,8 @@
                         android:contentDescription="@string/descripcion_btn_eliminar_pregunta"
                         android:padding="8dp"
                         android:src="@drawable/ico_del_question"
-                        app:tint="#EF4444" />
+                        app:tint="#EF4444"
+                        tools:ignore="TouchTargetSizeCheck" />
 
                 </androidx.cardview.widget.CardView>
 
