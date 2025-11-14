@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F9">
+    android:background="#F8F9FE">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -15,123 +15,204 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Cards de resumen -->
+            <!-- Cards de resumen con diseño creativo -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="24dp"
-                android:layout_marginEnd="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="16dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 
-                <!-- Card Quizzes Realizados -->
+                <!-- Card Quizzes Realizados - Diseño Índigo -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    app:cardBackgroundColor="#6366F1"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="15dp">
+
+                        <!-- Contenedor circular para el ícono -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="12dp"
+                            app:cardBackgroundColor="#818CF8"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ico_list"
+                                app:tint="@android:color/white"
+                                android:importantForAccessibility="no" />
+
+                        </androidx.cardview.widget.CardView>
 
                         <TextView
                             android:id="@+id/tvTotalQuizzes"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_num_quizes_resueltos"
-                            android:textColor="#1F1F1F"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:textColor="@android:color/white"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:shadowColor="#4338CA"
+                            android:shadowDx="0"
+                            android:shadowDy="2"
+                            android:shadowRadius="4" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="@string/tv_titulo_num_quizes_resueltos"
-                            android:textColor="#7A7A7A"
-                            android:textSize="14sp" />
+                            android:textColor="#C7D2FE"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:alpha="0.9" />
 
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Card Promedio % -->
+                <!-- Card Promedio % - Diseño Ámbar -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    app:cardBackgroundColor="#F59E0B"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="15dp">
+
+                        <!-- Contenedor circular para el ícono -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="12dp"
+                            app:cardBackgroundColor="#FBBF24"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ico_date"
+                                app:tint="@android:color/white"
+                                android:importantForAccessibility="no" />
+
+                        </androidx.cardview.widget.CardView>
 
                         <TextView
                             android:id="@+id/tvPromedio"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_promedio_quizes_resueltos"
-                            android:textColor="#1F1F1F"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:textColor="@android:color/white"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:shadowColor="#D97706"
+                            android:shadowDx="0"
+                            android:shadowDy="2"
+                            android:shadowRadius="4" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="@string/tv_titulo_promedio_quizes_resueltos"
-                            android:textColor="#7A7A7A"
-                            android:textSize="14sp" />
+                            android:textColor="#FEF3C7"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:alpha="0.9" />
 
                     </LinearLayout>
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- Card Mejor Puntaje -->
+                <!-- Card Mejor Puntaje - Diseño Esmeralda -->
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
-                    app:cardBackgroundColor="@android:color/white"
-                    app:cardCornerRadius="12dp"
-                    app:cardElevation="2dp">
+                    app:cardBackgroundColor="#10B981"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="8dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:padding="16dp">
+                        android:padding="15dp">
+
+                        <!-- Contenedor circular para el ícono -->
+                        <androidx.cardview.widget.CardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:layout_marginBottom="12dp"
+                            app:cardBackgroundColor="#34D399"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="0dp">
+
+                            <ImageView
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/cup"
+                                app:tint="@android:color/white"
+                                android:importantForAccessibility="no" />
+
+                        </androidx.cardview.widget.CardView>
 
                         <TextView
                             android:id="@+id/tvMejorPuntaje"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/tv_mayor_puntaje_quizes_resueltos"
-                            android:textColor="#1F1F1F"
-                            android:textSize="24sp"
-                            android:textStyle="bold" />
+                            android:textColor="@android:color/white"
+                            android:textSize="32sp"
+                            android:textStyle="bold"
+                            android:shadowColor="#059669"
+                            android:shadowDx="0"
+                            android:shadowDy="2"
+                            android:shadowRadius="4" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
                             android:text="@string/tv_titulo_mayor_puntaje_quizes_resueltos"
-                            android:textColor="#7A7A7A"
-                            android:textSize="14sp" />
+                            android:textColor="#D1FAE5"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            android:gravity="center"
+                            android:alpha="0.9" />
 
                     </LinearLayout>
 
@@ -139,17 +220,34 @@
 
             </LinearLayout>
 
-            <!-- Título Tus Quizzes -->
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Contenedor del título con diseño creativo -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="36dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="16dp"
-                android:text="@string/tv_tus_quizzes_resueltos"
-                android:textColor="#1F1F1F"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <!-- Barra decorativa -->
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="12dp"
+                    android:background="#6366F1"
+                    android:alpha="0.8" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tv_tus_quizzes_resueltos"
+                    android:textColor="#1A1A1A"
+                    android:textSize="26sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <!-- RecyclerView para los quizzes con estadísticas -->
             <androidx.recyclerview.widget.RecyclerView
@@ -162,7 +260,7 @@
                 android:paddingBottom="100dp"
                 android:visibility="gone" />
 
-            <!-- Vista vacía para cuando no hay estadísticas -->
+            <!-- Vista vacía con diseño premium -->
             <LinearLayout
                 android:id="@+id/layoutVacio"
                 android:layout_width="match_parent"
@@ -171,39 +269,65 @@
                 android:layout_marginBottom="100dp"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="24dp"
+                android:padding="32dp"
                 android:visibility="visible">
 
-                <!-- Ícono de quiz vacío -->
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="120dp"
+                <!-- Contenedor con gradiente visual -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="24dp"
-                    android:alpha="0.8"
-                    android:importantForAccessibility="no"
-                    android:src="@drawable/ico_empty_quiz"
-                    app:tint="#A855F7" />
+                    android:layout_marginBottom="28dp"
+                    app:cardBackgroundColor="#EDE9FE"
+                    app:cardCornerRadius="80dp"
+                    app:cardElevation="0dp">
 
-                <!-- Texto "No hay estadísticas disponibles" -->
+                    <!-- Círculo interno -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:layout_gravity="center"
+                        app:cardBackgroundColor="#DDD6FE"
+                        app:cardCornerRadius="60dp"
+                        app:cardElevation="0dp">
+
+                        <!-- Ícono central -->
+                        <ImageView
+                            android:layout_width="64dp"
+                            android:layout_height="64dp"
+                            android:layout_gravity="center"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ico_empty_quiz"
+                            app:tint="#A855F7" />
+
+                    </androidx.cardview.widget.CardView>
+
+                </androidx.cardview.widget.CardView>
+
+                <!-- Texto principal con estilo -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="10dp"
                     android:gravity="center"
                     android:text="@string/tv_no_hay_stats"
-                    android:textColor="#5A5A5A"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:textColor="#1A1A1A"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.01" />
 
-                <!-- Texto "Resuelve algunos quizzes para ver tus resultados" -->
+                <!-- Texto secundario -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:paddingStart="32dp"
+                    android:paddingEnd="32dp"
                     android:text="@string/tv_resuelve_quizzes"
-                    android:textColor="#9E9E9E"
-                    android:textSize="15sp" />
+                    android:textColor="#6B7280"
+                    android:textSize="16sp"
+                    android:lineSpacingExtra="4dp"
+                    android:alpha="0.9" />
 
             </LinearLayout>
 

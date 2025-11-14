@@ -9,38 +9,38 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginEnd="4dp"
-        android:layout_marginBottom="6dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="8dp"
         app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp">
+        app:cardCornerRadius="20dp"
+        app:cardElevation="4dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="5dp">
 
             <!-- Contenedor de imagen con fondo redondeado -->
             <androidx.cardview.widget.CardView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                app:cardBackgroundColor="#E8E8F4"
-                app:cardCornerRadius="12dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                app:cardBackgroundColor="#6366F1"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="0dp">
 
                 <ImageView
                     android:id="@+id/imgQuiz"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-
                     android:importantForAccessibility="no"
                     android:scaleType="centerCrop"
                     android:src="@drawable/ico_play"
-                    app:tint="#A855F7" />
+                    app:tint="@android:color/white"
+                    android:padding="0dp" />
 
             </androidx.cardview.widget.CardView>
 
@@ -48,7 +48,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -58,17 +58,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
-                    android:maxLines="1"
+                    android:maxLines="2"
                     android:text="@string/tv_score_titulo_quiz"
-                    android:textColor="#1F1F1F"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
+                    android:textColor="#1A1A1A"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:lineSpacingExtra="2dp" />
 
                 <!-- Información de estadísticas -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
+                    android:layout_marginTop="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -77,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_score_titulo_intentos"
-                        android:textColor="#7A7A7A"
+                        android:textColor="#6B7280"
                         android:textSize="13sp" />
 
                     <TextView
@@ -85,24 +86,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_score_num_intentos"
-                        android:textColor="#1F1F1F"
+                        android:textColor="#6366F1"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <!-- Separador -->
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="12dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="#E0E0E0" />
+                        android:layout_width="4dp"
+                        android:layout_height="4dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="#D1D5DB"
+                        android:rotation="45" />
 
                     <!-- Mejor resultado -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_score_titulo_mejor"
-                        android:textColor="#7A7A7A"
+                        android:textColor="#6B7280"
                         android:textSize="13sp" />
 
                     <TextView
@@ -110,24 +112,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_score_promedio_mejor"
-                        android:textColor="#1F1F1F"
+                        android:textColor="#10B981"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <!-- Separador -->
                     <View
-                        android:layout_width="1dp"
-                        android:layout_height="12dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="10dp"
-                        android:background="#E0E0E0" />
+                        android:layout_width="4dp"
+                        android:layout_height="4dp"
+                        android:layout_marginStart="5dp"
+                        android:layout_marginEnd="5dp"
+                        android:background="#D1D5DB"
+                        android:rotation="45" />
 
                     <!-- Último puntaje -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_score_titulo_ultimo"
-                        android:textColor="#7A7A7A"
+                        android:textColor="#6B7280"
                         android:textSize="13sp" />
 
                     <TextView
@@ -135,7 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/tv_score_promedio_ultimo"
-                        android:textColor="#1F1F1F"
+                        android:textColor="#F59E0B"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
