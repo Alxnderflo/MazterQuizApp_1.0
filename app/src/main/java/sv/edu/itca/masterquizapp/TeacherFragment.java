@@ -1,7 +1,11 @@
 package sv.edu.itca.masterquizapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.util.Log;
@@ -58,6 +62,10 @@ public class TeacherFragment extends Fragment {
     private ListenerRegistration quizzesListener;
     private ListenerRegistration profesoresListener;
 
+    // NUEVO: Control de recarga
+    private boolean necesitaRecarga = true;
+    private BroadcastReceiver quizEliminadoReceiver;
+
     // Interface para callback de eliminación
     interface OnProfesorEliminadoListener {
         void onExito();
@@ -100,7 +108,14 @@ public class TeacherFragment extends Fragment {
         tvQuizzesProfesores = view.findViewById(R.id.tvQuizzesProfesores);
 
         // Inicializar colores
-        coloresProfesores = new int[]{ContextCompat.getColor(requireContext(), R.color.color_profesor_1), ContextCompat.getColor(requireContext(), R.color.color_profesor_2), ContextCompat.getColor(requireContext(), R.color.color_profesor_3), ContextCompat.getColor(requireContext(), R.color.color_profesor_4), ContextCompat.getColor(requireContext(), R.color.color_profesor_5), ContextCompat.getColor(requireContext(), R.color.color_profesor_6)};
+        coloresProfesores = new int[]{
+                ContextCompat.getColor(requireContext(), R.color.color_profesor_1),
+                ContextCompat.getColor(requireContext(), R.color.color_profesor_2),
+                ContextCompat.getColor(requireContext(), R.color.color_profesor_3),
+                ContextCompat.getColor(requireContext(), R.color.color_profesor_4),
+                ContextCompat.getColor(requireContext(), R.color.color_profesor_5),
+                ContextCompat.getColor(requireContext(), R.color.color_profesor_6)
+        };
 
         // Verificar autenticación
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -110,9 +125,74 @@ public class TeacherFragment extends Fragment {
             return;
         }
 
+        // Configurar BroadcastReceiver para quizzes eliminados
+        configurarBroadcastReceiver();
+
         // Inicializar directamente para estudiante
         inicializarAdaptersParaEstudiante();
+
+        // Recargar datos con pequeño delay para asegurar que la UI está lista
+        new Handler().postDelayed(() -> {
+            if (isAdded() && getActivity() != null) {
+                recargarDatosCompletos();
+            }
+        }, 100);
+    }
+
+    // NUEVO: Configurar BroadcastReceiver para detectar quizzes eliminados
+    private void configurarBroadcastReceiver() {
+        quizEliminadoReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if ("QUIZ_ELIMINADO".equals(intent.getAction())) {
+                    String quizIdEliminado = intent.getStringExtra("quiz_id");
+                    Log.d("TeacherFragment", "Recibido broadcast - quiz eliminado: " + quizIdEliminado);
+
+                    // Forzar recarga inmediata
+                    if (isAdded() && getActivity() != null) {
+                        recargarDatosCompletos();
+                    }
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter("QUIZ_ELIMINADO");
+        ContextCompat.registerReceiver(requireContext(), quizEliminadoReceiver, filter, ContextCompat.RECEIVER_NOT_EXPORTED);
+    }
+
+    // NUEVO: Método para recargar todos los datos
+    private void recargarDatosCompletos() {
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) return;
+
+        Log.d("TeacherFragment", "Recargando datos completos...");
+
+        // Limpiar listeners anteriores
+        if (profesoresListener != null) {
+            profesoresListener.remove();
+            profesoresListener = null;
+        }
+        if (quizzesListener != null) {
+            quizzesListener.remove();
+            quizzesListener = null;
+        }
+
+        // Limpiar listas
+        listaProfesores.clear();
+        listaQuizzesProfesores.clear();
+        listaQuizzesIdsProfesores.clear();
+
+        // Notificar adapters
+        if (adapterProfesores != null) {
+            adapterProfesores.notifyDataSetChanged();
+        }
+        if (adapterQuizzesProfesores != null) {
+            adapterQuizzesProfesores.notifyDataSetChanged();
+        }
+
+        // Recargar datos
         cargarProfesoresAgregados();
+        necesitaRecarga = false;
     }
 
     // MÉTODO: Inicializar todos los adapters para estudiante
@@ -399,6 +479,22 @@ public class TeacherFragment extends Fragment {
         }
     }
 
+    // NUEVO: Forzar recarga cuando el fragment se hace visible
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // Forzar recarga cada vez que el fragment se muestra
+        if (necesitaRecarga) {
+            new Handler().postDelayed(() -> {
+                if (isAdded() && getActivity() != null) {
+                    recargarDatosCompletos();
+                }
+            }, 100);
+        }
+        necesitaRecarga = true;
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
@@ -411,24 +507,11 @@ public class TeacherFragment extends Fragment {
             profesoresListener.remove();
             profesoresListener = null;
         }
-    }
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (quizzesListener != null) {
-            quizzesListener.remove();
-        }
-        if (profesoresListener != null) {
-            profesoresListener.remove();
-        }
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        if (quizzesListener == null || profesoresListener == null) {
-            cargarProfesoresAgregados();
+        // Limpiar BroadcastReceiver
+        if (quizEliminadoReceiver != null) {
+            requireContext().unregisterReceiver(quizEliminadoReceiver);
+            quizEliminadoReceiver = null;
         }
     }
 }
