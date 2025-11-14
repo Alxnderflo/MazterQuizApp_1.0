@@ -41,7 +41,7 @@
                     android:layout_height="match_parent"
                     android:contentDescription="@string/descripcion_quiz_imagen"
                     android:scaleType="centerCrop"
-                    android:padding="15dp"
+                    android:padding="0dp"
                     />
 
             </androidx.cardview.widget.CardView>
